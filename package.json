@@ -1,6 +1,6 @@
 {
   "name": "d3-bumps-chart",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Draw bumps charts.",
   "keywords": [
     "d3",
@@ -27,7 +27,10 @@
     "postpublish": "zip -j build/d3-bumps-chart.zip -- LICENSE README.md build/d3-bumps-chart.js build/d3-bumps-chart.min.js"
   },
   "dependencies": {
-    "d3": "^4.2.2"
+    "d3": "^4.2.2",
+    "d3-array": "^1.0.1",
+    "d3-dsv": "^1.0.1",
+    "lodash": "^4.15.0"
   },
   "devDependencies": {
     "babel-preset-es2015-rollup": "^1.2.0",
