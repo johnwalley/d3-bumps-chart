@@ -1,8 +1,11 @@
 import babel from 'rollup-plugin-babel';
+import nodeResolve from 'rollup-plugin-node-resolve';
 
 export default {
-  entry: 'src/main.js',
+  entry: 'index.js',
   format: 'cjs',
-  plugins: [ babel() ],
+  plugins: [  nodeResolve(), babel({
+      exclude: 'node_modules/**'
+    }) ],
   dest: 'bundle.js'
 };

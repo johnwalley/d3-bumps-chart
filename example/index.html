@@ -1,0 +1,49 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="./example/bumps.css" >
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="../build/d3-bumps-chart.js"></script>
+</head>
+
+<body>
+  <div id="bumps-chart">
+    <svg width="100%" preserveAspectRatio="xMidYMin">
+    </svg>
+  </div>
+  <script>
+    var el = document.getElementById('bumps-chart');
+    var svg = bumpsChart.bumpsChart().setup(el);
+
+    d3.json("./example/results.json", function(error, events) {
+
+      var gender = "Women";
+      var set = "Town Bumps";
+
+      var transformedEvents = events
+        .filter(e => e.gender.toLowerCase() === gender.toLowerCase())
+        .filter(e => e.set === set)
+        .sort((a, b) => a.year - b.year)
+        .map(event => bumpsChart.transformData(event));
+
+      var data = bumpsChart.joinEvents(transformedEvents, set, gender);
+
+      console.log(data);
+
+      var props = {
+        data: data,
+        year: { start: 2015, end: 2016 },
+        selectedCrews: new Set(),
+        highlightedCrew: null,
+        addSelectedCrew: null,
+        removeSelectedCrew: null,
+        highlightCrew: null,
+        windowWidth: window.width
+      };
+
+      bumpsChart.bumpsChart().update(props, svg);
+    });
+  </script>
+</body>
+
+</html>
