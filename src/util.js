@@ -1,4 +1,4 @@
-import {uniq, uniqBy} from 'lodash-es';
+import {uniq, uniqBy} from 'lodash';
 import {csvParse} from 'd3-dsv';
 import {min, max} from 'd3-array';
 

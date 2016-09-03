@@ -1,4 +1,7 @@
-import * as d3 from 'd3';
+import {select} from 'd3-selection';
+import {scaleLinear} from 'd3-scale';
+import {line} from 'd3-shape';
+import {max, range} from 'd3-array';
 
 const abbrevCamCollege = {
   'A': 'Addenbrooke\'s',
@@ -148,11 +151,13 @@ function crewColor(name) {
 }
 
 export default function() {
+  var selectedCrews = new Set();
+
   function bumpsChart() {
   }
 
   bumpsChart.setup = function(el) {
-    const svg = d3.select(el).select('svg');
+    const svg = select(el).select('svg');
 
     const clipPathId = 'clip' + Math.random(100000); // TODO: Require a unique id
 
@@ -224,13 +229,13 @@ export default function() {
     crews.forEach(crew => crew.highlighted = selectedCrews.has(crew.name));
     crews.forEach(crew => crew.hover = highlightedCrew === crew.name);
 
-    const x = d3.scaleLinear();
-    const y = d3.scaleLinear();
+    const x = scaleLinear();
+    const y = scaleLinear();
 
     x.domain([0, 4]);
     x.range([0, xRangeMax]);
 
-    const yDomainMax = d3.max(crews, c => d3.max(c.values.filter(d => d !== null), v => v.pos));
+    const yDomainMax = max(crews, c => max(c.values.filter(d => d !== null), v => v.pos));
 
     y.domain([-1, yDomainMax]);
     y.range([yMarginTop, yDomainMax * heightOfOneCrew - yMarginTop]);
@@ -248,7 +253,7 @@ export default function() {
     const labelsGroup = svg.select('.labels');
     const lines = svg.select('.lines');
 
-    const line = d3.line()
+    const lineFunc = line()
             .defined(d => d !== null && d.pos > -1)
             .x((d) => x(d.day))
             .y((d) => y(d.pos));
@@ -262,7 +267,7 @@ export default function() {
     const startLabelIndex = yearRelative * 5;
     let finishLabelIndex = startLabelIndex + numYearsToView * 5 - 1;
 
-    const maxDays = d3.max(data.crews.map(c => c.values.length));
+    const maxDays = max(data.crews.map(c => c.values.length));
 
     if (finishLabelIndex > maxDays - 1) {
       finishLabelIndex = maxDays - 1;
@@ -329,7 +334,7 @@ export default function() {
 
     // Years
     const years = yearsGroup.selectAll('.year')
-            .data(d3.range(startYear, endYear + 1), d => d);
+            .data(range(startYear, endYear + 1), d => d);
 
     years.enter()
             .append('text')
@@ -384,7 +389,7 @@ export default function() {
 
     crewYear.enter()
             .append('path')
-            .attr('d', d => line(d.values))
+            .attr('d', d => lineFunc(d.values))
             .attr('class', 'active')
             .classed('blades', d => d.blades)
             .classed('spoons', d => d.spoons)
@@ -392,7 +397,7 @@ export default function() {
 
     crewYear.transition()
             .duration(transitionLength)
-            .attr('d', d => line(d.values));
+            .attr('d', d => lineFunc(d.values));
 
     crewYear.exit()
             .transition()
@@ -421,13 +426,13 @@ export default function() {
             .on('mouseout', () => {
               highlightCrew(null);
             })
-            .attr('d', d => line(d.values))
+            .attr('d', d => lineFunc(d.values))
             .attr('class', 'background')
             .style('cursor', 'pointer');
 
     crewBackground.transition()
             .duration(transitionLength)
-            .attr('d', d => line(d.values));
+            .attr('d', d => lineFunc(d.values));
 
     crewBackground.exit()
             .transition()
@@ -525,7 +530,7 @@ export default function() {
 
     // NumbersRight
     const numbersRight = labelsGroup.selectAll('.position-label-right')
-            .data(d3.range(0, crews.filter(d =>
+            .data(range(0, crews.filter(d =>
               d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos > -1).length),
               d => d);
 
@@ -579,6 +584,17 @@ export default function() {
 
     numbersLeft.exit()
             .remove();
+  }
+
+  bumpsChart.addSelectedCrew = function(name) {
+    selectedCrews.add(name);
+  }
+
+  bumpsChart.removeSelectedCrew = function(name) {
+    selectedCrews.delete(name);
+  }
+
+  bumpsChart.highlightCrew = function() {
   }
 
   return bumpsChart;

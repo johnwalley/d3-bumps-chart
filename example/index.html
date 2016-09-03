@@ -3,6 +3,7 @@
 <head>
   <link rel="stylesheet" href="./example/bumps.css" >
   <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/lodash/4.15.0/lodash.min.js"></script>
   <script src="../build/d3-bumps-chart.js"></script>
 </head>
 
@@ -28,16 +29,14 @@
 
       var data = bumpsChart.joinEvents(transformedEvents, set, gender);
 
-      console.log(data);
-
       var props = {
         data: data,
         year: { start: 2015, end: 2016 },
         selectedCrews: new Set(),
         highlightedCrew: null,
-        addSelectedCrew: null,
-        removeSelectedCrew: null,
-        highlightCrew: null,
+        addSelectedCrew: bumpsChart.bumpsChart().addSelectedCrew,
+        removeSelectedCrew: bumpsChart.bumpsChart().removeSelectedCrew,
+        highlightCrew: bumpsChart.bumpsChart().highlightCrew,
         windowWidth: window.width
       };
 
