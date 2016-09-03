@@ -1,6 +1,6 @@
 {
   "name": "d3-bumps-chart",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Draw bumps charts.",
   "keywords": [
     "d3",
@@ -21,20 +21,22 @@
     "url": "https://github.com/johnwalley/d3-bumps-chart.git"
   },
   "scripts": {
-    "pretest": "rm -rf build && mkdir build && rollup -c --banner \"$(preamble)\" -f umd -n bumpsChart -o build/d3-bumps-chart.js -- index.js",
+    "pretest": "rm -rf build && mkdir build && rollup -c --banner \"$(preamble)\" -f umd -g d3-array:d3,d3-dsv:d3,d3-selection:d3,d3-scale:d3,d3-shape:d3,lodash:_ -n bumpsChart -o build/d3-bumps-chart.js -- index.js",
     "test": "tape 'test/**/*-test.js' && eslint index.js src",
     "prepublish": "npm run test && uglifyjs --preamble \"$(preamble)\" build/d3-bumps-chart.js -c -m -o build/d3-bumps-chart.min.js",
     "postpublish": "zip -j build/d3-bumps-chart.zip -- LICENSE README.md build/d3-bumps-chart.js build/d3-bumps-chart.min.js"
   },
   "dependencies": {
+    "d3-array": "^1.0.1",
+    "d3-dsv": "^1.0.1",
+    "d3-scale": "^1.0.3",
+    "d3-selection": "^1.0.2",
+    "d3-shape": "^1.0.3",
+    "lodash": "^4.15.0"
   },
   "devDependencies": {
     "babel-preset-es2015-rollup": "^1.2.0",
-    "d3": "^4.2.2",
-    "d3-array": "^1.0.1",
-    "d3-dsv": "^1.0.1",
     "eslint": "2",
-    "lodash-es": "^4.15.0",
     "package-preamble": "0.0.2",
     "rollup": "0.34",
     "rollup-plugin-babel": "^2.6.1",
