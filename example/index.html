@@ -14,7 +14,9 @@
   </div>
   <script>
     var el = document.getElementById('bumps-chart');
-    var svg = bumpsChart.bumpsChart().setup(el);
+    var chart = bumpsChart.bumpsChart();
+
+    var svg = chart.setup(el);
 
     d3.json("./example/results.json", function(error, events) {
 
@@ -40,7 +42,7 @@
         windowWidth: window.width
       };
 
-      bumpsChart.bumpsChart().update(props, svg);
+      chart.update(props, svg);
     });
   </script>
 </body>
