@@ -2,6 +2,7 @@ import {select} from 'd3-selection';
 import {scaleLinear} from 'd3-scale';
 import {line} from 'd3-shape';
 import {max, range} from 'd3-array';
+import 'd3-transition';
 
 const abbrevCamCollege = {
   'A': 'Addenbrooke\'s',
