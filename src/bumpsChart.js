@@ -364,7 +364,7 @@ export default function() {
 
     const crewEnter = crew.enter()
             .append('g')
-            .attr('class', d => `line ${d.name}`)
+            .attr('class', d => `line ${d.name.replace(/ /g, '-')}`)
             .attr('transform', `translate(${x(-dayShift)},0)`)
             .classed('highlighted', d => d.highlighted)
             .classed('background', d => d.background)
