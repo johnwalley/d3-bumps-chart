@@ -176,7 +176,8 @@ export default function() {
     const defs = svg.append('defs');
 
     const dropShadowFilter = defs.append('filter')
-      .attr('id', 'dropShadow');
+      .attr('id', 'dropShadow')
+      .attr('filterUnits', 'userSpaceOnUse');
 
     dropShadowFilter.append('feGaussianBlur')
       .attr('stdDeviation', 0)
