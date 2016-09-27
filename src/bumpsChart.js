@@ -176,8 +176,7 @@ export default function() {
     const defs = svg.append('defs');
 
     const dropShadowFilter = defs.append('filter')
-      .attr('id', 'dropShadow')
-      .attr('filterUnits', 'userSpaceOnUse');
+      .attr('id', 'dropShadow');
 
     dropShadowFilter.append('feGaussianBlur')
       .attr('stdDeviation', 0)
@@ -368,12 +367,10 @@ export default function() {
             .attr('transform', `translate(${x(-dayShift)},0)`)
             .classed('highlighted', d => d.highlighted)
             .classed('background', d => d.background)
-            .style('filter', d => (d.highlighted || d.hover ? 'url(#dropShadow)' : ''))
             .style('stroke', d => (d.highlighted || d.hover ? crewColor(d.name) : '#000000'));
 
     crew.classed('highlighted', d => d.highlighted)
             .classed('background', d => d.background)
-            .style('filter', d => (d.highlighted || d.hover ? 'url(#dropShadow)' : ''))
             .style('stroke', d => (d.highlighted || d.hover ? crewColor(d.name) : '#000000'))
             .transition()
             .duration(transitionLength)
@@ -395,11 +392,13 @@ export default function() {
             .attr('class', 'active')
             .classed('blades', d => d.blades)
             .classed('spoons', d => d.spoons)
+            .style('filter', d => (d.highlighted || d.hover ? 'url(#dropShadow)' : ''))
             .style('cursor', 'pointer');
 
     crewYear.transition()
             .duration(transitionLength)
-            .attr('d', d => lineFunc(d.values));
+            .attr('d', d => lineFunc(d.values))
+            .style('filter', d => (d.highlighted || d.hover ? 'url(#dropShadow)' : ''));
 
     crewYear.exit()
             .transition()
