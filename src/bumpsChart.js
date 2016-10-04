@@ -367,10 +367,12 @@ export default function() {
             .attr('transform', `translate(${x(-dayShift)},0)`)
             .classed('highlighted', d => d.highlighted)
             .classed('background', d => d.background)
+            .style('filter', d => (d.highlighted || d.hover ? 'url(#dropShadow)' : ''))
             .style('stroke', d => (d.highlighted || d.hover ? crewColor(d.name) : '#000000'));
 
     crew.classed('highlighted', d => d.highlighted)
             .classed('background', d => d.background)
+            .style('filter', d => (d.highlighted || d.hover ? 'url(#dropShadow)' : ''))
             .style('stroke', d => (d.highlighted || d.hover ? crewColor(d.name) : '#000000'))
             .transition()
             .duration(transitionLength)
@@ -392,13 +394,11 @@ export default function() {
             .attr('class', 'active')
             .classed('blades', d => d.blades)
             .classed('spoons', d => d.spoons)
-            .style('filter', d => (d.highlighted || d.hover ? 'url(#dropShadow)' : ''))
             .style('cursor', 'pointer');
 
     crewYear.transition()
             .duration(transitionLength)
-            .attr('d', d => lineFunc(d.values))
-            .style('filter', d => (d.highlighted || d.hover ? 'url(#dropShadow)' : ''));
+            .attr('d', d => lineFunc(d.values));
 
     crewYear.exit()
             .transition()
