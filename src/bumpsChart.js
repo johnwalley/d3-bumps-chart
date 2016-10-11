@@ -1,7 +1,7 @@
-import {select} from 'd3-selection';
-import {scaleLinear} from 'd3-scale';
-import {line} from 'd3-shape';
-import {max, range} from 'd3-array';
+import { select } from 'd3-selection';
+import { scaleLinear } from 'd3-scale';
+import { line } from 'd3-shape';
+import { max, range } from 'd3-array';
 import 'd3-transition';
 
 const abbrevCamCollege = {
@@ -47,7 +47,7 @@ const abbrevCamCollege = {
 };
 
 const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
-    'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX'];
+  'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX'];
 
 function renderName(name) {
   // College crews are stored as an abbrevation and we replace the number with Roman numerals
@@ -166,7 +166,7 @@ export default function() {
       .attr('width', 80)
       .attr('height', 800);
 
-    const clipPathUrl = 'url(#' + clipPathId + ')'; 
+    const clipPathUrl = 'url(#' + clipPathId + ')';
 
     svg.append('g').attr('class', 'divisions').attr('clip-path', clipPathUrl);
     svg.append('g').attr('class', 'years').attr('clip-path', clipPathUrl);
@@ -176,6 +176,8 @@ export default function() {
     const defs = svg.append('defs');
 
     const dropShadowFilter = defs.append('filter')
+      .attr('filterUnits', 'userSpaceOnUse')
+      .attr('width', 10000) // FIXME: Should depend on data
       .attr('id', 'dropShadow');
 
     dropShadowFilter.append('feGaussianBlur')
@@ -255,9 +257,9 @@ export default function() {
     const lines = svg.select('.lines');
 
     const lineFunc = line()
-            .defined(d => d !== null && d.pos > -1)
-            .x((d) => x(d.day))
-            .y((d) => y(d.pos));
+      .defined(d => d !== null && d.pos > -1)
+      .x((d) => x(d.day))
+      .y((d) => y(d.pos));
 
     const startYear = data.startYear;
     const endYear = data.endYear;
@@ -276,283 +278,283 @@ export default function() {
 
     // ClipPath
     const clipPath = svg.select('clipPath').select('rect')
-            .datum(numYearsToView);
+      .datum(numYearsToView);
 
     clipPath.transition()
-            .duration(transitionLength)
-            .attr('width', w => x(5 * w - 1))
-            .attr('height', viewBoxHeight);
+      .duration(transitionLength)
+      .attr('width', w => x(5 * w - 1))
+      .attr('height', viewBoxHeight);
 
     // Divisions
     const divisions = divisionsGroup.selectAll('.divisionYear')
-            .data(data.divisions, (d, i) => d.gender + d.set.replace(/ /g, '') + i);
+      .data(data.divisions, (d, i) => d.gender + d.set.replace(/ /g, '') + i);
 
     const divisionsEnter = divisions.enter()
-            .append('g')
-            .attr('class', 'divisionYear')
-            .attr('id', d => d.year)
-            .attr('transform', `translate(${x(-dayShift)},0)`);
+      .append('g')
+      .attr('class', 'divisionYear')
+      .attr('id', d => d.year)
+      .attr('transform', `translate(${x(-dayShift)},0)`);
 
     divisions.transition()
-            .duration(transitionLength)
-            .attr('transform', `translate(${x(-dayShift)},0)`);
+      .duration(transitionLength)
+      .attr('transform', `translate(${x(-dayShift)},0)`);
 
     divisions.exit()
-            .remove();
+      .remove();
 
     // DivisionsYear
     const divisionsYear = divisionsEnter.selectAll('rect.division')
-            .data(d => d.divisions, d => d.start);
+      .data(d => d.divisions, d => d.start);
 
     divisionsYear.enter()
-            .append('rect')
-            .attr('class', 'division')
-            .attr('id', d => d.start)
-            .style('stroke', 'black')
-            .style('fill', (d, i) => (i % 2 ? '#E0E0E0' : '#FFFFFF'))
-            .attr('x', d => x(d.year - startYear) * 5)
-            .attr('y', d => y(d.start - 0.5))
-            .attr('width', x(4) - x(0))
-            .attr('height', d => y(d.start + d.length) - y(d.start))
-            .style('opacity', 1e-6)
-            .transition()
-            .duration(transitionLength)
-            .style('opacity', 1);
+      .append('rect')
+      .attr('class', 'division')
+      .attr('id', d => d.start)
+      .style('stroke', 'black')
+      .style('fill', (d, i) => (i % 2 ? '#E0E0E0' : '#FFFFFF'))
+      .attr('x', d => x(d.year - startYear) * 5)
+      .attr('y', d => y(d.start - 0.5))
+      .attr('width', x(4) - x(0))
+      .attr('height', d => y(d.start + d.length) - y(d.start))
+      .style('opacity', 1e-6)
+      .transition()
+      .duration(transitionLength)
+      .style('opacity', 1);
 
     divisionsYear
-            .transition()
-            .duration(transitionLength)
-            .attr('x', d => x(d.year - startYear) * 5)
-            .attr('y', d => y(d.start - 0.5))
-            .attr('width', x(4) - x(0))
-            .attr('height', d => y(d.start + d.length) - y(d.start));
+      .transition()
+      .duration(transitionLength)
+      .attr('x', d => x(d.year - startYear) * 5)
+      .attr('y', d => y(d.start - 0.5))
+      .attr('width', x(4) - x(0))
+      .attr('height', d => y(d.start + d.length) - y(d.start));
 
     divisionsYear.exit()
-            .transition()
-            .duration(transitionLength)
-            .style('opacity', 1e-6)
-            .remove();
+      .transition()
+      .duration(transitionLength)
+      .style('opacity', 1e-6)
+      .remove();
 
     // Years
     const years = yearsGroup.selectAll('.year')
-            .data(range(startYear, endYear + 1), d => d);
+      .data(range(startYear, endYear + 1), d => d);
 
     years.enter()
-            .append('text')
-            .attr('class', 'year')
-            .attr('x', d => x((d - startYear) * 5 + 2))
-            .attr('y', y(0))
-            .attr('text-anchor', 'middle')
-            .attr('transform', `translate(${x(-dayShift)},0)`)
-            .text(d => d);
+      .append('text')
+      .attr('class', 'year')
+      .attr('x', d => x((d - startYear) * 5 + 2))
+      .attr('y', y(0))
+      .attr('text-anchor', 'middle')
+      .attr('transform', `translate(${x(-dayShift)},0)`)
+      .text(d => d);
 
     years.transition()
-            .duration(transitionLength)
-            .attr('x', d => x((d - startYear) * 5 + 2))
-            .attr('transform', `translate(${x(-dayShift)},0)`);
+      .duration(transitionLength)
+      .attr('x', d => x((d - startYear) * 5 + 2))
+      .attr('transform', `translate(${x(-dayShift)},0)`);
 
     years.exit()
-            .transition()
-            .duration(transitionLength)
-            .style('opacity', 1e-6)
-            .remove();
+      .transition()
+      .duration(transitionLength)
+      .style('opacity', 1e-6)
+      .remove();
 
     // Crew
     const crew = lines.selectAll('.line')
-            .data(crews, d => d.gender + d.set.replace(/ /g, '') + d.name);
+      .data(crews, d => d.gender + d.set.replace(/ /g, '') + d.name);
 
     const crewEnter = crew.enter()
-            .append('g')
-            .attr('class', d => `line ${d.name.replace(/ /g, '-')}`)
-            .attr('transform', `translate(${x(-dayShift)},0)`)
-            .classed('highlighted', d => d.highlighted)
-            .classed('background', d => d.background)
-            .style('filter', d => (d.highlighted || d.hover ? 'url(#dropShadow)' : ''))
-            .style('stroke', d => (d.highlighted || d.hover ? crewColor(d.name) : '#000000'));
+      .append('g')
+      .attr('class', d => `line ${d.name.replace(/ /g, '-')}`)
+      .attr('transform', `translate(${x(-dayShift)},0)`)
+      .classed('highlighted', d => d.highlighted)
+      .classed('background', d => d.background)
+      .style('filter', d => (d.highlighted || d.hover ? 'url(#dropShadow)' : ''))
+      .style('stroke', d => (d.highlighted || d.hover ? crewColor(d.name) : '#000000'));
 
     crew.classed('highlighted', d => d.highlighted)
-            .classed('background', d => d.background)
-            .style('filter', d => (d.highlighted || d.hover ? 'url(#dropShadow)' : ''))
-            .style('stroke', d => (d.highlighted || d.hover ? crewColor(d.name) : '#000000'))
-            .transition()
-            .duration(transitionLength)
-            .attr('transform', `translate(${x(-dayShift)},0)`);
+      .classed('background', d => d.background)
+      .style('filter', d => (d.highlighted || d.hover ? 'url(#dropShadow)' : ''))
+      .style('stroke', d => (d.highlighted || d.hover ? crewColor(d.name) : '#000000'))
+      .transition()
+      .duration(transitionLength)
+      .attr('transform', `translate(${x(-dayShift)},0)`);
 
     crew.exit()
-            .transition()
-            .duration(transitionLength)
-            .style('opacity', 1e-6)
-            .remove();
+      .transition()
+      .duration(transitionLength)
+      .style('opacity', 1e-6)
+      .remove();
 
     // CrewYear
     const crewYear = crewEnter.selectAll('path.active')
-            .data(d => d.valuesSplit, d => d.gender + d.set.replace(/ /g, '') + d.name + d.day);
+      .data(d => d.valuesSplit, d => d.gender + d.set.replace(/ /g, '') + d.name + d.day);
 
     crewYear.enter()
-            .append('path')
-            .attr('d', d => lineFunc(d.values))
-            .attr('class', 'active')
-            .classed('blades', d => d.blades)
-            .classed('spoons', d => d.spoons)
-            .style('cursor', 'pointer');
+      .append('path')
+      .attr('d', d => lineFunc(d.values))
+      .attr('class', 'active')
+      .classed('blades', d => d.blades)
+      .classed('spoons', d => d.spoons)
+      .style('cursor', 'pointer');
 
     crewYear.transition()
-            .duration(transitionLength)
-            .attr('d', d => lineFunc(d.values));
+      .duration(transitionLength)
+      .attr('d', d => lineFunc(d.values));
 
     crewYear.exit()
-            .transition()
-            .duration(transitionLength)
-            .style('opacity', 1e-6)
-            .remove();
+      .transition()
+      .duration(transitionLength)
+      .style('opacity', 1e-6)
+      .remove();
 
     // CrewBackground
     const crewBackground = crewEnter.selectAll('path.background')
-            .data(d => [d], d => d.gender + d.set.replace(/ /g, '') + d.name);
+      .data(d => [d], d => d.gender + d.set.replace(/ /g, '') + d.name);
 
     crewBackground.enter()
-            .append('path')
-            .on('click', d => {
-              const index = crews.map(c => c.name).indexOf(d.name);
+      .append('path')
+      .on('click', d => {
+        const index = crews.map(c => c.name).indexOf(d.name);
 
-              if (crews[index].highlighted === true) {
-                removeSelectedCrew(d.name);
-              } else {
-                addSelectedCrew(d.name);
-              }
-            })
-            .on('mouseover', d => {
-              highlightCrew(d.name);
-            })
-            .on('mouseout', () => {
-              highlightCrew(null);
-            })
-            .attr('d', d => lineFunc(d.values))
-            .attr('class', 'background')
-            .style('cursor', 'pointer');
+        if (crews[index].highlighted === true) {
+          removeSelectedCrew(d.name);
+        } else {
+          addSelectedCrew(d.name);
+        }
+      })
+      .on('mouseover', d => {
+        highlightCrew(d.name);
+      })
+      .on('mouseout', () => {
+        highlightCrew(null);
+      })
+      .attr('d', d => lineFunc(d.values))
+      .attr('class', 'background')
+      .style('cursor', 'pointer');
 
     crewBackground.transition()
-            .duration(transitionLength)
-            .attr('d', d => lineFunc(d.values));
+      .duration(transitionLength)
+      .attr('d', d => lineFunc(d.values));
 
     crewBackground.exit()
-            .transition()
-            .duration(transitionLength)
-            .style('opacity', 1e-6)
-            .remove();
+      .transition()
+      .duration(transitionLength)
+      .style('opacity', 1e-6)
+      .remove();
 
     // FinishLabel
     const finishLabel = labelsGroup.selectAll('.finish-label')
-            .data(crews.filter(d => d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos > -1),
-            d => d.set.replace(/ /g, '') + d.gender + d.name);
+      .data(crews.filter(d => d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos > -1),
+      d => d.set.replace(/ /g, '') + d.gender + d.name);
 
     finishLabel.enter()
-            .filter(d =>
-              d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos > -1)
-            .append('text')
-            .on('click', d => {
-              const index = crews.map(c => c.name).indexOf(d.name);
+      .filter(d =>
+        d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos > -1)
+      .append('text')
+      .on('click', d => {
+        const index = crews.map(c => c.name).indexOf(d.name);
 
-              if (crews[index].highlighted === true) {
-                removeSelectedCrew(d.name);
-              } else {
-                addSelectedCrew(d.name);
-              }
-            })
-            .on('mouseover', d => {
-              highlightCrew(d.name);
-            })
-            .on('mouseout', () => {
-              highlightCrew(null);
-            })
-            .classed('label finish-label', true)
-            .classed('highlighted', d => d.highlighted)
-            .datum(d => ({ name: d.name, set: d.set, gender: d.gender, value: d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex] }))
-            .attr('x', 10)
-            .attr('dy', '.35em')
-            .text(d => renderName(d.name))
-            .attr('transform', d =>
-              `translate(${x(finishLabelPosition + 5 * (numYearsToView - 1))},${y(d.value.pos)})`)
-            .style('cursor', 'pointer');
+        if (crews[index].highlighted === true) {
+          removeSelectedCrew(d.name);
+        } else {
+          addSelectedCrew(d.name);
+        }
+      })
+      .on('mouseover', d => {
+        highlightCrew(d.name);
+      })
+      .on('mouseout', () => {
+        highlightCrew(null);
+      })
+      .classed('label finish-label', true)
+      .classed('highlighted', d => d.highlighted)
+      .datum(d => ({ name: d.name, set: d.set, gender: d.gender, value: d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex] }))
+      .attr('x', 10)
+      .attr('dy', '.35em')
+      .text(d => renderName(d.name))
+      .attr('transform', d =>
+        `translate(${x(finishLabelPosition + 5 * (numYearsToView - 1))},${y(d.value.pos)})`)
+      .style('cursor', 'pointer');
 
     finishLabel.classed('highlighted', d => d.highlighted || d.hover)
-            .filter(d =>
-              d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos > -1)
-            .transition()
-            .duration(transitionLength)
-            .attr('transform', d =>
-              `translate(${x(finishLabelPosition + 5 * (numYearsToView - 1))},${y(d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos)})`);
+      .filter(d =>
+        d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos > -1)
+      .transition()
+      .duration(transitionLength)
+      .attr('transform', d =>
+        `translate(${x(finishLabelPosition + 5 * (numYearsToView - 1))},${y(d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos)})`);
 
     finishLabel.exit()
-            .remove();
+      .remove();
 
     // StartLabel
     const startLabel = labelsGroup.selectAll('.start-label')
-            .data(crews.filter(d => d.values[startLabelIndex].pos > -1),
-            d => d.set.replace(/ /g, '') + d.gender + d.name);
+      .data(crews.filter(d => d.values[startLabelIndex].pos > -1),
+      d => d.set.replace(/ /g, '') + d.gender + d.name);
 
     startLabel.enter()
-            .filter(d => d.values[startLabelIndex].pos > -1)
-            .append('text')
-            .on('click', d => {
-              const index = crews.map(c => c.name).indexOf(d.name);
+      .filter(d => d.values[startLabelIndex].pos > -1)
+      .append('text')
+      .on('click', d => {
+        const index = crews.map(c => c.name).indexOf(d.name);
 
-              if (crews[index].highlighted === true) {
-                removeSelectedCrew(d.name);
-              } else {
-                addSelectedCrew(d.name);
-              }
-            })
-            .on('mouseover', d => {
-              highlightCrew(d.name);
-            })
-            .on('mouseout', () => {
-              highlightCrew(null);
-            })
-            .classed('label start-label', true)
-            .classed('highlighted', d => d.highlighted)
-            .datum(d => ({ name: d.name, set: d.set, gender: d.gender, value: d.values[startLabelIndex] }))
-            .attr('x', -10)
-            .attr('dy', '.35em')
-            .attr('text-anchor', 'end')
-            .text(d => renderName(d.name))
-            .attr('transform', d => `translate(${x(startLabelPosition)},${y(d.value.pos)})`)
-            .style('cursor', 'pointer');
+        if (crews[index].highlighted === true) {
+          removeSelectedCrew(d.name);
+        } else {
+          addSelectedCrew(d.name);
+        }
+      })
+      .on('mouseover', d => {
+        highlightCrew(d.name);
+      })
+      .on('mouseout', () => {
+        highlightCrew(null);
+      })
+      .classed('label start-label', true)
+      .classed('highlighted', d => d.highlighted)
+      .datum(d => ({ name: d.name, set: d.set, gender: d.gender, value: d.values[startLabelIndex] }))
+      .attr('x', -10)
+      .attr('dy', '.35em')
+      .attr('text-anchor', 'end')
+      .text(d => renderName(d.name))
+      .attr('transform', d => `translate(${x(startLabelPosition)},${y(d.value.pos)})`)
+      .style('cursor', 'pointer');
 
 
     startLabel.classed('highlighted', d => d.highlighted || d.hover)
-            .filter(d => d.values[startLabelIndex].pos > -1)
-            .transition()
-            .duration(transitionLength)
-            .attr('transform', d => `translate(${x(startLabelPosition)},${y(d.values[startLabelIndex].pos)})`);
+      .filter(d => d.values[startLabelIndex].pos > -1)
+      .transition()
+      .duration(transitionLength)
+      .attr('transform', d => `translate(${x(startLabelPosition)},${y(d.values[startLabelIndex].pos)})`);
 
     startLabel.exit()
-            .remove();
+      .remove();
 
     // NumbersRight
     const numbersRight = labelsGroup.selectAll('.position-label-right')
-            .data(range(0, crews.filter(d =>
-              d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos > -1).length),
-              d => d);
+      .data(range(0, crews.filter(d =>
+        d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos > -1).length),
+      d => d);
 
     numbersRight.enter()
-            .append('text')
-            .attr('class', 'position-label-right')
-            .text((d, i) => i + 1)
-            .style('fill', '#888888')
-            .attr('dy', '.35em')
-            .attr('text-anchor', 'end')
-            .attr('transform', (d, i) => `translate(${x(numbersRightPosition + 5 * numYearsToView)},${y(i + 1)})`)
-            .transition()
-            .duration(transitionLength)
-            .style('opacity', 1);
+      .append('text')
+      .attr('class', 'position-label-right')
+      .text((d, i) => i + 1)
+      .style('fill', '#888888')
+      .attr('dy', '.35em')
+      .attr('text-anchor', 'end')
+      .attr('transform', (d, i) => `translate(${x(numbersRightPosition + 5 * numYearsToView)},${y(i + 1)})`)
+      .transition()
+      .duration(transitionLength)
+      .style('opacity', 1);
 
     numbersRight.transition()
-            .duration(transitionLength)
-            .attr('transform', (d, i) => `translate(${x(numbersRightPosition + 5 * numYearsToView)},${y(i + 1)})`);
+      .duration(transitionLength)
+      .attr('transform', (d, i) => `translate(${x(numbersRightPosition + 5 * numYearsToView)},${y(i + 1)})`);
 
     numbersRight.exit()
-            .remove();
+      .remove();
 
     // NumbersLeft
     const numbers = [];
@@ -564,27 +566,27 @@ export default function() {
     });
 
     const numbersLeft = labelsGroup.selectAll('.position-label-left')
-            .data(numbers, (d, i) => i);
+      .data(numbers, (d, i) => i);
 
     numbersLeft.enter()
-            .append('text')
-            .attr('class', 'position-label-left')
-            .text(d => d)
-            .style('fill', '#888888')
-            .attr('dy', '.35em')
-            .attr('text-anchor', 'start')
-            .attr('transform', (d, i) => `translate(${x(numbersLeftPosition)},${y(i + 1)})`)
-            .transition()
-            .duration(transitionLength)
-            .style('opacity', 1);
+      .append('text')
+      .attr('class', 'position-label-left')
+      .text(d => d)
+      .style('fill', '#888888')
+      .attr('dy', '.35em')
+      .attr('text-anchor', 'start')
+      .attr('transform', (d, i) => `translate(${x(numbersLeftPosition)},${y(i + 1)})`)
+      .transition()
+      .duration(transitionLength)
+      .style('opacity', 1);
 
     numbersLeft.transition()
-            .duration(transitionLength)
-            .text(d => d)
-            .attr('transform', (d, i) => `translate(${x(numbersLeftPosition)},${y(i + 1)})`);
+      .duration(transitionLength)
+      .text(d => d)
+      .attr('transform', (d, i) => `translate(${x(numbersLeftPosition)},${y(i + 1)})`);
 
     numbersLeft.exit()
-            .remove();
+      .remove();
   }
 
   bumpsChart.addSelectedCrew = function(name) {
