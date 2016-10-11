@@ -1,6 +1,6 @@
-import {uniq, uniqBy} from 'lodash';
-import {csvParse} from 'd3-dsv';
-import {min, max} from 'd3-array';
+import { findKey, uniq, uniqBy } from 'lodash';
+import { csvParse } from 'd3-dsv';
+import { min, max } from 'd3-array';
 
 const abbrevCamCollege = {
   'A': 'Addenbrooke\'s',
@@ -96,7 +96,7 @@ const abbrevCamTown = {
   'CH': 'Clare Hall',
   'Cl': 'Clare',
   'CC': 'Corpus Christi',
-  'COT': 'Champion of Thames',
+  'COT': 'Champs',
   'Dn': 'Domino',
   'Dw': 'Darwin',
   'D': 'Downing',
@@ -141,8 +141,36 @@ const abbrevCamTown = {
   'X': 'X-Press'
 };
 
+const abbrev = Object.assign({}, abbrevCamTown, abbrevCamCollege, abbrevOxCollege);
+
 const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
   'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX'];
+
+export function abbreviate(event) {
+  for (let div = 0; div < event.divisions.length; div++) {
+    for (let pos = 0; pos < event.divisions[div].length; pos++) {
+      event.divisions[div][pos] = abbreviateCrew(event.divisions[div][pos]);
+    }
+  }
+
+  for (let div = 0; div < event.finish.length; div++) {
+    for (let pos = 0; pos < event.finish[div].length; pos++) {
+      event.finish[div][pos] = abbreviateCrew(event.finish[div][pos]);
+    }
+  }
+
+  return event;
+}
+
+function abbreviateCrew(crew) {
+  const name = crew.replace(/[0-9]+$/, '').trim();
+  const num = +crew.substring(name.length);
+  if (findKey(abbrev, club => club === name) !== undefined) {
+    return findKey(abbrev, club => club === name) + (num > 1 ? num : '');
+  } else {
+    return crew;
+  }
+}
 
 export function renderName(name) {
   // College crews are stored as an abbrevation and we replace the number with Roman numerals
@@ -316,7 +344,7 @@ export function joinEvents(events, set, gender) {
       if (match.length > 0) {
         const values = match[0].values.map(v => ({ day: v.day + day, pos: v.pos }));
         newCrew.values = newCrew.values
-                    .concat(values);
+          .concat(values);
 
         const positions = match[0].values.map(v => v.pos);
 
@@ -462,7 +490,7 @@ function calculatePositionInDivision(position, numDivisions, divisionSizes) {
 
 function calculateDivisionBreaks(divisions) {
   const divisionSizes = divisions
-        .map(d => d.length);
+    .map(d => d.length);
 
   const divisionBreaks = divisionSizes.reduce((r, a) => {
     if (r.length > 0) {
@@ -561,7 +589,7 @@ function processBump(move, divNum, crew, up) {
 
   move[divNum - 1][crew - 1 - up] = -up;
   if (crew > move[divNum - 1].length) {
-        // sandwich crew, need to find where it started
+    // sandwich crew, need to find where it started
     for (var p = 0; p < move[divNum].length; p++) {
       if (p - move[divNum][p] == 0) {
         move[divNum][p] += up;
