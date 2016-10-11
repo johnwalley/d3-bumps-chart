@@ -4,160 +4,15 @@ import { line } from 'd3-shape';
 import { max, range } from 'd3-array';
 import 'd3-transition'; // We require the side-effects of importing
 
-const abbrevCamCollege = {
-  'A': 'Addenbrooke\'s',
-  'AR': 'Anglia Ruskin',
-  'Ca': 'Caius',
-  'CC': 'Corpus Christi',
-  'CH': 'Clare Hall',
-  'Cl': 'Clare',
-  'Cr': 'Christ\'s',
-  'CT': 'CCAT',
-  'Cu': 'Churchill',
-  'D': 'Downing',
-  'Dw': 'Darwin',
-  'E': 'Emmanuel',
-  'F': 'Fitzwilliam',
-  'G': 'Girton',
-  'H': 'Homerton',
-  'HH': 'Hughes Hall',
-  'HHL': 'Hughes/Lucy',
-  'J': 'Jesus',
-  'K': 'King\'s',
-  'L': 'LMBC',
-  'LC': 'Lucy Cavendish',
-  'M': 'Magdalene',
-  'ME': 'Murray Edwards',
-  'N': 'Newnham',
-  'NH': 'New Hall',
-  'Pb': 'Pembroke',
-  'Ph': 'Peterhouse',
-  'Q': 'Queens\'',
-  'QM': 'QMABC',
-  'R': 'Robinson',
-  'S': 'Selwyn',
-  'SC': 'St Catharine\'s',
-  'SE': 'St Edmund\'s',
-  'SS': 'Sidney Sussex',
-  'T': '1st and 3rd',
-  'TC': 'Theological Colleges',
-  'TH': 'Trinity Hall',
-  'VS': 'Vet School',
-  'W': 'Wolfson'
-};
+import { crewColor, renderName } from './util.js';
 
-const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
-  'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX'];
-
-function renderName(name) {
-  // College crews are stored as an abbrevation and we replace the number with Roman numerals
-  const sh = name.replace(/[0-9]/, '');
-
-  if (abbrevCamCollege.hasOwnProperty(sh)) {
-    const num = name.substring(sh.length);
-    name = abbrevCamCollege[sh];
-
-    if (num.length > 0) {
-      name = name + ' ' + roman[+num - 1];
-    }
-
-    return name;
-  }
-
-  // Town first boats (ending ' 1') do not have the 1 displayed
-  if (name.substring(name.length - 2) === ' 1') {
-    return name.substring(0, name.length - 2);
-  }
-
-  return name;
-}
-
-function crewColor(name) {
-  const collegeColor = {
-    'A': '#0000ff',
-    'AR': '#ffff00',
-    'Ca': '#afe9c6',
-    'CC': '#800000',
-    'CH': '#ffff00',
-    'Cl': '#ffff00',
-    'Cr': '#000080',
-    'CT': '##ffff00',
-    'Cu': '#ff55dd',
-    'D': '#d400aa',
-    'Dw': '#000080',
-    'E': '#eeaaff',
-    'F': '#808080',
-    'G': '#005500',
-    'H': '#000000',
-    'HH': '#0096ff',
-    'HHL': '#0044aa',
-    'J': '#8b0000',
-    'K': '#5a2ca0',
-    'L': '#ff0000',
-    'LC': '#0044aa',
-    'M': '#672178',
-    'ME': '#000000',
-    'N': '#010040',
-    'NH': '#000000',
-    'Pb': '#afe9dd',
-    'Ph': '#003380',
-    'Q': '#008001',
-    'QM': '#808080',
-    'R': '#007fff',
-    'S': '#f9cc00',
-    'SC': '#9d0064',
-    'SE': '#0300fd',
-    'SS': '#000080',
-    'T': '#000080',
-    'TC': '#000000',
-    'TH': '#000000',
-    'VS': '#000000',
-    'W': '#5599ff'
-  };
-
-  const townColor = {
-    'City': '#f44336',
-    'Champs': '#f57400',
-    'Rob Roy': '#8b0000',
-    'Cantabs': '#00008b',
-    '99': '#5197ff',
-    'Chesterton': '#ffff00',
-    'Simoco': '#ffff00',
-    'Pye': '#ffff00',
-    'St Neots': '#b9dcff',
-    'X-Press': '#000000',
-    'Camb Blue': '#000000',
-    'Free Press': '#000000',
-    'St Radegund': '#ffff00',
-    'Camb Veterans': '#91b9a4',
-    'Isle of Ely': '#9ed5b8',
-    'Max Entropy': '#f44336',
-    'St Ives': '#e90000',
-    'Sharks': '#e90000'
-  };
-
-  const sh = name.replace(/[0-9]/, '');
-
-  if (collegeColor.hasOwnProperty(sh)) {
-    return collegeColor[sh];
-  }
-
-  const club = name.substring(0, name.length - 2).trim();
-
-  if (townColor.hasOwnProperty(club)) {
-    return townColor[club];
-  }
-
-  return '#f44336';
-}
-
-export default function() {
+export default function () {
   var selectedCrews = new Set();
 
   function bumpsChart() {
   }
 
-  bumpsChart.setup = function(el) {
+  bumpsChart.setup = function (el) {
     const svg = select(el).select('svg');
 
     const clipPathId = 'clip' + Math.random(100000); // TODO: Require a unique id
@@ -589,15 +444,15 @@ export default function() {
       .remove();
   }
 
-  bumpsChart.addSelectedCrew = function(name) {
+  bumpsChart.addSelectedCrew = function (name) {
     selectedCrews.add(name);
   }
 
-  bumpsChart.removeSelectedCrew = function(name) {
+  bumpsChart.removeSelectedCrew = function (name) {
     selectedCrews.delete(name);
   }
 
-  bumpsChart.highlightCrew = function() {
+  bumpsChart.highlightCrew = function () {
   }
 
   return bumpsChart;
