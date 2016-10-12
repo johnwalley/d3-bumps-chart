@@ -52,7 +52,6 @@ export default function () {
       .attr('in', 'SourceGraphic');
   }
 
-  // TODO: Clearly we could call this render to make the React analogy clear
   chart.render = function render(props) {
     state = Object.assign({}, props);
 
