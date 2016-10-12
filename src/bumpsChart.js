@@ -7,13 +7,14 @@ import 'd3-transition'; // We require the side-effects of importing
 import { crewColor, renderName } from './util.js';
 
 export default function () {
-  var selectedCrews = new Set();
+  let svg;
+  const selectedCrews = new Set();
 
   function bumpsChart() {
   }
 
   bumpsChart.setup = function (el) {
-    const svg = select(el).select('svg');
+    svg = select(el).select('svg');
 
     const clipPathId = 'clip' + Math.random(100000); // TODO: Require a unique id
 
@@ -49,11 +50,9 @@ export default function () {
 
     dropShadowMerge.append('feMergeNode')
       .attr('in', 'SourceGraphic');
-
-    return svg;
   };
 
-  bumpsChart.update = function update(props, svg) {
+  bumpsChart.update = function update(props) {
     const data = props.data;
     const year = props.year;
     const selectedCrews = props.selectedCrews;
