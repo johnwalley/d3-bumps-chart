@@ -207,7 +207,7 @@ export function renderName(name) {
 }
 
 export function crewColor(name) {
-  const collegeColor = {
+  const camCollegeColor = {
     'A': '#0000ff',
     'AR': '#ffff00',
     'Ca': '#afe9c6',
@@ -249,6 +249,10 @@ export function crewColor(name) {
     'W': '#5599ff'
   };
 
+  const oxCollegeColor = {
+    'Oriel': '#372e63'
+  }
+
   const townColor = {
     'City': '#f44336',
     'Champs': '#f57400',
@@ -272,14 +276,16 @@ export function crewColor(name) {
 
   const sh = name.replace(/[0-9]/, '');
 
-  if (collegeColor.hasOwnProperty(sh)) {
-    return collegeColor[sh];
+  if (camCollegeColor.hasOwnProperty(sh)) {
+    return camCollegeColor[sh];
   }
 
   const club = name.substring(0, name.length - 2).trim();
 
   if (townColor.hasOwnProperty(club)) {
     return townColor[club];
+  } else if (oxCollegeColor.hasOwnProperty(club)) {
+    return oxCollegeColor[club];
   }
 
   return '#f44336';
