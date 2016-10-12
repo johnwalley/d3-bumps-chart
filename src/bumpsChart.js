@@ -455,7 +455,9 @@ export default function () {
     bumpsChart.update(state);
   }
 
-  bumpsChart.highlightCrew = function () {
+  bumpsChart.highlightCrew = function (crewName) {
+    state.highlightedCrew = crewName;
+    bumpsChart.update(state);
   }
 
   return bumpsChart;
