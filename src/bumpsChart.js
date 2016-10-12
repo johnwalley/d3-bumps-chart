@@ -8,7 +8,7 @@ import { crewColor, renderName } from './util.js';
 
 export default function () {
   let svg;
-  const selectedCrews = new Set();
+  let state;
 
   function bumpsChart() {
   }
@@ -53,6 +53,8 @@ export default function () {
   };
 
   bumpsChart.update = function update(props) {
+    state = Object.assign({}, props);
+
     const data = props.data;
     const year = props.year;
     const selectedCrews = props.selectedCrews;
@@ -444,11 +446,13 @@ export default function () {
   }
 
   bumpsChart.addSelectedCrew = function (name) {
-    selectedCrews.add(name);
+    state.selectedCrews.add(name);
+    bumpsChart.update(state);
   }
 
   bumpsChart.removeSelectedCrew = function (name) {
-    selectedCrews.delete(name);
+    state.selectedCrews.delete(name);
+    bumpsChart.update(state);
   }
 
   bumpsChart.highlightCrew = function () {

@@ -16,7 +16,7 @@
     var el = document.getElementById('bumps-chart');
     var chart = bumpsChart.bumpsChart();
 
-    var svg = chart.setup(el);
+    chart.setup(el);
 
     d3.json("./example/results.json", function(error, events) {
 
@@ -36,13 +36,13 @@
         year: { start: 2015, end: 2016 },
         selectedCrews: new Set(),
         highlightedCrew: null,
-        addSelectedCrew: bumpsChart.bumpsChart().addSelectedCrew,
-        removeSelectedCrew: bumpsChart.bumpsChart().removeSelectedCrew,
-        highlightCrew: bumpsChart.bumpsChart().highlightCrew,
+        addSelectedCrew: chart.addSelectedCrew,
+        removeSelectedCrew: chart.removeSelectedCrew,
+        highlightCrew: chart.highlightCrew,
         windowWidth: window.width
       };
 
-      chart.update(props, svg);
+      chart.update(props);
     });
   </script>
 </body>
