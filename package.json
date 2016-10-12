@@ -1,6 +1,6 @@
 {
   "name": "d3-bumps-chart",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Draw bumps charts.",
   "keywords": [
     "d3",
@@ -21,7 +21,7 @@
     "url": "https://github.com/johnwalley/d3-bumps-chart.git"
   },
   "scripts": {
-    "pretest": "rm -rf build && mkdir build && rollup -c --banner \"$(preamble)\" -f umd -g d3-array:d3,d3-dsv:d3,d3-selection:d3,d3-scale:d3,d3-shape:d3,d3-transition:d3,lodash:_ -n bumpsChart -o build/d3-bumps-chart.js -- index.js",
+    "pretest": "rm -rf build && mkdir build && rollup -c --banner \"$(preamble)\" -f umd -g d3-array:d3,d3-dsv:d3,d3-selection:d3,d3-scale:d3,d3-shape:d3,d3-transition:d3,lodash:_ -n d3_bumps_chart -o build/d3-bumps-chart.js -- index.js",
     "test": "tape 'test/**/*-test.js' && eslint index.js src",
     "prepublish": "npm run test && uglifyjs --preamble \"$(preamble)\" build/d3-bumps-chart.js -c -m -o build/d3-bumps-chart.min.js",
     "postpublish": "zip -j build/d3-bumps-chart.zip -- LICENSE README.md build/d3-bumps-chart.js build/d3-bumps-chart.min.js"

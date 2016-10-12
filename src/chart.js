@@ -10,10 +10,10 @@ export default function () {
   let svg;
   let state;
 
-  function bumpsChart() {
+  function chart() {
   }
-
-  bumpsChart.setup = function (el) {
+  
+  chart.setup = function setup(el) {
     svg = select(el).select('svg');
 
     const clipPathId = 'clip' + Math.random(100000); // TODO: Require a unique id
@@ -50,9 +50,10 @@ export default function () {
 
     dropShadowMerge.append('feMergeNode')
       .attr('in', 'SourceGraphic');
-  };
+  }
 
-  bumpsChart.update = function update(props) {
+  // TODO: Clearly we could call this render to make the React analogy clear
+  chart.render = function render(props) {
     state = Object.assign({}, props);
 
     const data = props.data;
@@ -445,20 +446,20 @@ export default function () {
       .remove();
   }
 
-  bumpsChart.addSelectedCrew = function (name) {
+  chart.addSelectedCrew = function (name) {
     state.selectedCrews.add(name);
-    bumpsChart.update(state);
+    chart.render(state);
   }
 
-  bumpsChart.removeSelectedCrew = function (name) {
+  chart.removeSelectedCrew = function (name) {
     state.selectedCrews.delete(name);
-    bumpsChart.update(state);
+    chart.render(state);
   }
 
-  bumpsChart.highlightCrew = function (crewName) {
+  chart.highlightCrew = function (crewName) {
     state.highlightedCrew = crewName;
-    bumpsChart.update(state);
+    chart.render(state);
   }
 
-  return bumpsChart;
+  return chart;
 }

@@ -9,7 +9,7 @@ See a demo [here](https://bl.ocks.org/johnwalley/a0734cf335b44365026adae40cce594
 
 ## Installing
 
-If you use NPM, `npm install d3-bumps-chart`. Otherwise, download the [latest release](https://github.com/johnwalley/d3-bumps-chart/releases/latest). AMD, CommonJS, and vanilla environments are supported. In vanilla, a `bumpsChart` global is exported:
+If you use NPM, `npm install d3-bumps-chart`. Otherwise, download the [latest release](https://github.com/johnwalley/d3-bumps-chart/releases/latest). AMD, CommonJS, and vanilla environments are supported. In vanilla, a `d3_bumps_chart` global is exported:
 
 ```html
 <script src="https://d3js.org/d3.v4.min.js"></script>
@@ -19,7 +19,7 @@ If you use NPM, `npm install d3-bumps-chart`. Otherwise, download the [latest re
 <script>
   var el = document.getElementById('bumps-chart');
   var chart = bumpsChart.bumpsChart();
-  var svg = chart.setup(el);
+  chart.setup(el);
 
   d3.json("./example/results.json", function(error, events) {
 
@@ -45,21 +45,21 @@ If you use NPM, `npm install d3-bumps-chart`. Otherwise, download the [latest re
       windowWidth: window.width
     };
 
-    chart.update(props, svg);
+    chart.update(props);
   });
 </script>
 ```
 
 ## API Reference
 
-<a name="bumpsChart" href="#bumpsChart">#</a> bumpsChart.<b>bumpsChart</b>() [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/bumpsChart.js "Source")
+<a name="chart" href="#chart">#</a> d3_bumps_chart.<b>chart</b>() [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/chart.js "Source")
 
 Constructs a new bumps chart generator with the default settings.
 
-<a name="bumpsChart_setup" href="#bumpsChart_setup">#</a> <i>bumpsChart</i>.<b>setup</b>(<i>element</i>) [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/bumpsChart.js#L159 "Source")
+<a name="chart_setup" href="#chart_setup">#</a> <i>chart</i>.<b>setup</b>(<i>element</i>) [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/chart.js#L159 "Source")
 
 Sets up the svg elements which are independent of any data. Selects the *element* passed in.
 
-<a name="bumpsChart_update" href="#bumpsChart_update">#</a> <i>bumpsChart</i>.<b>update</b>(<i>props</i>) [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/bumpsChart.js#L198 "Source")
+<a name="chart_update" href="#chart_update">#</a> <i>chart</i>.<b>update</b>(<i>props</i>) [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/chart.js#L198 "Source")
 
 Renders the bumps chart based on *props*.

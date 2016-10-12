@@ -14,7 +14,7 @@
   </div>
   <script>
     var el = document.getElementById('bumps-chart');
-    var chart = bumpsChart.bumpsChart();
+    var chart = d3_bumps_chart.chart();
 
     chart.setup(el);
 
@@ -27,9 +27,9 @@
         .filter(e => e.gender.toLowerCase() === gender.toLowerCase())
         .filter(e => e.set === set)
         .sort((a, b) => a.year - b.year)
-        .map(event => bumpsChart.transformData(event));
+        .map(event => d3_bumps_chart.transformData(event));
 
-      var data = bumpsChart.joinEvents(transformedEvents, set, gender);
+      var data = d3_bumps_chart.joinEvents(transformedEvents, set, gender);
 
       var props = {
         data: data,
@@ -42,7 +42,7 @@
         windowWidth: window.width
       };
 
-      chart.update(props);
+      chart.render(props);
     });
   </script>
 </body>
