@@ -58,9 +58,15 @@ Division,Cantabs 2,City 2\n\
 Division,Champs 1\n\
 \n\
 Results\n\
- r ur rrrrr\n\
- r ur ro3u\n\
- r ru urrr\n';
+ r\n\
+ ur\n\
+ rrrrr\n\
+ r\n\
+ ur\n\
+ ro3u\n\
+ r\n\
+ ru\n\
+ urrr\n';
 
   var expected = {
     completed: [[true, true, true], [true, true, true], [true, true, true]],

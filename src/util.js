@@ -872,13 +872,13 @@ export function read_tg(input) {
 
       for (let j = 1; j < m.length; j++) {
         if (m[j].indexOf('#') !== 0) {
-          event.results.push(m[j]);
+          Array.prototype.push.apply(event.results, m[j].split(' '));
         }
       }
     } else {
       for (let j = 0; j < m.length; j++) {
         if (inresults === 1 && m[j].indexOf('#') !== 0) {
-          event.results.push(m[j]);
+          Array.prototype.push.apply(event.results, m[j].split(' '));
         } else if (indivision === 1) {
           addcrew(curdiv, m[j]);
         }
@@ -886,7 +886,15 @@ export function read_tg(input) {
     }
   }
 
-  event.results = event.results.filter(r => r !== '').map(r => r.trim()).join('\n');
+  const results = [];
+
+  for (let i = 0; i < event.days; i++) {
+    results.push([]);
+  }
+
+  event.results.filter(r => r !== '').map((r, i) => results[Math.floor(i / event.divisions.length)].push(r.trim()));
+
+  event.results = results.map(r => r.join(' ')).join('\n');
 
   if (curdiv.length > 0) {
     event.divisions.push(curdiv);
