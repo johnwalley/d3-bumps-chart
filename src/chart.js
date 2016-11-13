@@ -328,7 +328,7 @@ export default function () {
       .datum(d => ({ name: d.name, set: d.set, gender: d.gender, value: d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex] }))
       .attr('x', 10)
       .attr('dy', '.35em')
-      .text(d => renderName(d.name))
+      .text(d => renderName(d.name, d.set))
       .attr('transform', d =>
         `translate(${x(finishLabelPosition + 5 * (numYearsToView - 1))},${y(d.value.pos)})`)
       .style('cursor', 'pointer');
@@ -373,7 +373,7 @@ export default function () {
       .attr('x', -10)
       .attr('dy', '.35em')
       .attr('text-anchor', 'end')
-      .text(d => renderName(d.name))
+      .text(d => renderName(d.name, d.set))
       .attr('transform', d => `translate(${x(startLabelPosition)},${y(d.value.pos)})`)
       .style('cursor', 'pointer');
 

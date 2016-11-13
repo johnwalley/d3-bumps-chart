@@ -2,7 +2,7 @@ import { findKey, uniq, uniqBy } from 'lodash';
 import { csvParse } from 'd3-dsv';
 import { min, max } from 'd3-array';
 
-const abbrevCamCollege = {
+export const abbrevCamCollege = {
   'A': 'Addenbrooke\'s',
   'AR': 'Anglia Ruskin',
   'Ca': 'Caius',
@@ -44,7 +44,7 @@ const abbrevCamCollege = {
   'W': 'Wolfson'
 };
 
-const abbrevOxCollege = {
+export const abbrevOxCollege = {
   'B': 'Balliol',
   'Br': 'Brasenose',
   'Ch': 'Christ Church',
@@ -83,7 +83,7 @@ const abbrevOxCollege = {
 };
 
 // eslint-disable-next-line no-unused-vars
-const abbrevCamTown = {
+export const abbrevCamTown = {
   'A': 'Addenbrooke\'s',
   'CB': 'Camb Blue',
   'CV': 'Camb Veterans',
@@ -144,30 +144,47 @@ const abbrevCamTown = {
   'X': 'X-Press'
 };
 
-const abbrev = Object.assign({}, abbrevCamTown, abbrevCamCollege, abbrevOxCollege);
-
 const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
   'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX'];
 
 export function abbreviate(event) {
   for (let div = 0; div < event.divisions.length; div++) {
     for (let pos = 0; pos < event.divisions[div].length; pos++) {
-      event.divisions[div][pos] = abbreviateCrew(event.divisions[div][pos]);
+      event.divisions[div][pos] = abbreviateCrew(event.divisions[div][pos], event.set);
     }
   }
 
   for (let div = 0; div < event.finish.length; div++) {
     for (let pos = 0; pos < event.finish[div].length; pos++) {
-      event.finish[div][pos] = abbreviateCrew(event.finish[div][pos]);
+      event.finish[div][pos] = abbreviateCrew(event.finish[div][pos], event.set);
     }
   }
 
   return event;
 }
 
-function abbreviateCrew(crew) {
+function abbreviateCrew(crew, set) {
   const name = crew.replace(/[0-9]+$/, '').trim();
   const num = +crew.substring(name.length);
+
+  let abbrev;
+
+  switch (set) {
+    case 'Lent Bumps':
+    case 'May Bumps':
+      abbrev = abbrevCamCollege;
+      break;
+    case 'Torpids':
+    case 'Summer Eights':
+      abbrev = abbrevOxCollege;
+      break;
+    case 'Town Bumps':
+      abbrev = abbrevCamTown;
+      break;
+    default:
+      throw 'Unrecognised set: ' + set;
+  }
+
   if (findKey(abbrev, club => club === name) !== undefined) {
     return findKey(abbrev, club => club === name) + (num > 1 ? num : '');
   } else {
@@ -175,35 +192,56 @@ function abbreviateCrew(crew) {
   }
 }
 
-export function renderName(name) {
+export function renderName(name, set) {
   // College crews are stored as an abbrevation and we replace the number with Roman numerals
   const sh = name.replace(/[0-9]/, '');
 
-  if (abbrevCamCollege.hasOwnProperty(sh)) {
-    const num = name.substring(sh.length);
-    name = abbrevCamCollege[sh];
+  let abbrev;
+  let type;
 
-    if (num.length > 0) {
+  switch (set) {
+    case 'Lent Bumps':
+    case 'May Bumps':
+      abbrev = abbrevCamCollege;
+      type = 'college';
+      break;
+    case 'Torpids':
+    case 'Summer Eights':
+      abbrev = abbrevOxCollege;
+      type = 'college';
+      break;
+    case 'Town Bumps':
+      abbrev = abbrevCamTown;
+      type = 'town';
+      break;
+    default:
+      throw 'Unrecognised set: ' + set;
+  }
+
+  if (abbrev.hasOwnProperty(sh)) {
+    const num = name.substring(sh.length);
+    name = abbrev[sh];
+
+    if (type === 'college' && num.length > 0) {
       name = name + ' ' + roman[+num - 1];
+    } else if (type === 'town' && num.length > 0 && (+num) > 1) {
+      name = name + ' ' + (+num);
     }
 
     return name;
-  }
+  } else {
+    // First boats should not have a number rendered
+    if (type === 'college') {
+      const num = name.substring(sh.length);
 
-  if (abbrevOxCollege.hasOwnProperty(sh)) {
-    const num = name.substring(sh.length);
-    name = abbrevOxCollege[sh];
+      if (num.length > 0) {
+        name = sh.trim() + (((+num) > 1) ? ' ' + roman[+num - 1] : '');
+      }
 
-    if (num.length > 0) {
-      name = name + ' ' + roman[+num - 1];
+      return name;
+    } else if (type === 'town' && name.substring(name.length - 2) === ' 1') {
+      return name.substring(0, name.length - 2);
     }
-
-    return name;
-  }
-
-  // Town first boats (ending ' 1') do not have the 1 displayed
-  if (name.substring(name.length - 2) === ' 1') {
-    return name.substring(0, name.length - 2);
   }
 
   return name;

@@ -1,7 +1,7 @@
 var tape = require("tape");
 var bumps = require('../');
 
-tape("Transform data correctly.", function (test) {
+tape("Abbreviate club names correctly.", function (test) {
     var data = {
         completed: [[true, true, true], [true, true, true], [true, true, true], [true, true, true]],
         days: 4,
@@ -40,4 +40,4 @@ r rrr rrrrr',
 
     test.deepEqual(actual, expected);
     test.end();
-})
+});
