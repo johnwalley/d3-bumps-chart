@@ -22,21 +22,27 @@ a {
     justify-content: flex-start;
 }
 
+.share {
+    display: flex;
+    align-items: center;
+}
+
+.facebook-share-button {
+    display: inline-block;
+    padding-right: 4px;
+    cursor: pointer;
+}
+
+.twitter-share-button {
+    display: inline-block;
+    padding-left: 4px;
+    cursor: pointer;
+}
+
 .chart {
     display: flex;
     flex-direction: row;
     justify-content: center;
-}
-
-.line {
-    fill: none;
-    stroke: black;
-    stroke-width: 5px;
-}
-
-.background {
-    fill: none;
-    stroke-opacity: 0.1;
 }
 
 .blades {
@@ -45,16 +51,6 @@ a {
 
 .spoons {
     stroke-dasharray: 5,5;
-}
-
-.line.highlighted {
-    fill: none;
-    stroke-width: 6px;
-}
-
-.line.hover {
-    fill: none;
-    stroke-width: 6px;
 }
 
 .year {
@@ -75,21 +71,4 @@ a {
 
 .position-label-right {
     font-size: 16px;
-}
-
-.share {
-    display: flex;
-    align-items: center;
-}
-
-.facebook-share-button {
-    display: inline-block;
-    padding-right: 4px;
-    cursor: pointer;
-}
-
-.twitter-share-button {
-    display: inline-block;
-    padding-left: 4px;
-    cursor: pointer;
 }
