@@ -12,7 +12,7 @@ export default function () {
 
   function chart() {
   }
-  
+
   chart.setup = function setup(el) {
     svg = select(el).select('svg');
 
@@ -167,7 +167,7 @@ export default function () {
       .attr('class', 'division')
       .attr('id', d => d.start)
       .style('stroke', 'black')
-      .style('fill', (d, i) => (i % 2 ? '#E0E0E0' : '#FFFFFF'))
+      .style('fill', (d, i) => (i % 2 ? '#F4F4F4' : '#FFFFFF'))
       .attr('x', d => x(d.year - startYear) * 5)
       .attr('y', d => y(d.start - 0.5))
       .attr('width', x(4) - x(0))
@@ -224,14 +224,15 @@ export default function () {
       .attr('class', d => `line ${d.name.replace(/ /g, '-')}`)
       .attr('transform', `translate(${x(-dayShift)},0)`)
       .classed('highlighted', d => d.highlighted)
-      .classed('background', d => d.background)
       .style('filter', d => (d.highlighted || d.hover ? 'url(#dropShadow)' : ''))
-      .style('stroke', d => (d.highlighted || d.hover ? crewColor(d.name) : '#000000'));
+      .style('fill', 'none')
+      .style('stroke', d => (d.highlighted || d.hover ? crewColor(d.name) : '#000000'))
+      .style('stroke-width', d => (d.highlighted || d.hover ? '3px' : '2px'));
 
     crew.classed('highlighted', d => d.highlighted)
-      .classed('background', d => d.background)
       .style('filter', d => (d.highlighted || d.hover ? 'url(#dropShadow)' : ''))
       .style('stroke', d => (d.highlighted || d.hover ? crewColor(d.name) : '#000000'))
+      .style('stroke-width', d => (d.highlighted || d.hover ? '3px' : '2px'))
       .transition()
       .duration(transitionLength)
       .attr('transform', `translate(${x(-dayShift)},0)`);
@@ -287,6 +288,7 @@ export default function () {
       })
       .attr('d', d => lineFunc(d.values))
       .attr('class', 'background')
+      .style('stroke-opacity', '0.1')
       .style('cursor', 'pointer');
 
     crewBackground.transition()
