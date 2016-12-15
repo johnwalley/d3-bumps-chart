@@ -253,6 +253,8 @@ export default function () {
       .attr('class', 'active')
       .classed('blades', d => d.blades)
       .classed('spoons', d => d.spoons)
+      .style('stroke-dasharray', d => d.blades ? '10,5' : null)
+      .style('stroke-dasharray', d => d.spoons ? '5,5' : null)
       .style('cursor', 'pointer');
 
     crewYear.transition()

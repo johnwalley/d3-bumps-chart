@@ -45,14 +45,6 @@ a {
     justify-content: center;
 }
 
-.blades {
-    stroke-dasharray: 10,5;
-}
-
-.spoons {
-    stroke-dasharray: 5,5;
-}
-
 .year {
     font-size: 22px;
 }
