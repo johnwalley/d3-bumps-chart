@@ -163,7 +163,7 @@ export function abbreviate(event) {
   return event;
 }
 
-function abbreviateCrew(crew, set) {
+export function abbreviateCrew(crew, set) {
   const name = crew.replace(/[0-9]+$/, '').trim();
   const num = +crew.substring(name.length);
 
@@ -187,6 +187,35 @@ function abbreviateCrew(crew, set) {
 
   if (findKey(abbrev, club => club === name) !== undefined) {
     return findKey(abbrev, club => club === name) + (num > 1 ? num : '');
+  } else {
+    return crew;
+  }
+}
+
+export function expandCrew(crew, set) {
+  const name = crew.replace(/[0-9]+$/, '').trim();
+  const num = +crew.substring(name.length);
+
+  let abbrev;
+
+  switch (set) {
+    case 'Lent Bumps':
+    case 'May Bumps':
+      abbrev = abbrevCamCollege;
+      break;
+    case 'Torpids':
+    case 'Summer Eights':
+      abbrev = abbrevOxCollege;
+      break;
+    case 'Town Bumps':
+      abbrev = abbrevCamTown;
+      break;
+    default:
+      throw 'Unrecognised set: ' + set;
+  }
+
+  if (abbrev.hasOwnProperty(name)) {
+    return abbrev[name] + (num > 1 ? num : '');
   } else {
     return crew;
   }
