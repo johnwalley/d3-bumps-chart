@@ -76,7 +76,7 @@ export default function () {
     const widthWithoutLines = 310;
     const initialViewBoxX = -165;
     const initialViewBoxY = 0;
-    const transitionLength = 500;
+    const transitionLength = 400;
     const startLabelPosition = 0;
     const finishLabelPosition = 4;
     const numbersLeftPosition = -8;
@@ -227,12 +227,14 @@ export default function () {
       .style('filter', d => (d.highlighted || d.hover ? 'url(#dropShadow)' : ''))
       .style('fill', 'none')
       .style('stroke', d => (d.highlighted || d.hover ? crewColor(d.name) : '#000000'))
-      .style('stroke-width', d => (d.highlighted || d.hover ? '3px' : '2px'));
+      .style('stroke-width', d => (d.highlighted || d.hover ? '3px' : '2px'))
+      .style('stroke-opacity', d => selectedCrews.size > 0 ? (d.highlighted || d.hover ? '1' : '0.5') : '1');
 
     crew.classed('highlighted', d => d.highlighted)
       .style('filter', d => (d.highlighted || d.hover ? 'url(#dropShadow)' : ''))
       .style('stroke', d => (d.highlighted || d.hover ? crewColor(d.name) : '#000000'))
       .style('stroke-width', d => (d.highlighted || d.hover ? '3px' : '2px'))
+      .style('stroke-opacity', d => selectedCrews.size > 0 ? (d.highlighted || d.hover ? '1' : '0.5') : '1')
       .transition()
       .duration(transitionLength)
       .attr('transform', `translate(${x(-dayShift)},0)`);
