@@ -244,7 +244,7 @@ export function renderName(name, set) {
       type = 'town';
       break;
     default:
-      throw 'Unrecognised set: ' + set;
+      return name;
   }
 
   if (abbrev.hasOwnProperty(sh)) {

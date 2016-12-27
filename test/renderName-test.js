@@ -91,3 +91,13 @@ tape("Town boats > 10 should work.", function(test) {
   test.end();
 })
 
+tape("Unreconginised set should result in returning input", function(test) { 
+  var name = 'A';
+  
+  var expected = 'A';
+  var actual = bumps.renderName(name, 'Custom');
+  
+  test.equal(actual, expected);
+  test.end();
+})
+
