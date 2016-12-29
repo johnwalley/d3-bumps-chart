@@ -12,8 +12,6 @@ See a demo [here](https://bl.ocks.org/johnwalley/a0734cf335b44365026adae40cce594
 If you use NPM, `npm install d3-bumps-chart`. Otherwise, download the [latest release](https://github.com/johnwalley/d3-bumps-chart/releases/latest). AMD, CommonJS, and vanilla environments are supported. In vanilla, a `d3_bumps_chart` global is exported:
 
 ```html
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/lodash/4.15.0/lodash.min.js"></script>
 <script src="../build/d3-bumps-chart.js"></script>
 
 <script>

@@ -1,4 +1,7 @@
-import { findKey, uniq, uniqBy } from 'lodash';
+import findKey from 'lodash-es/findKey';
+import uniq from 'lodash-es/uniq';
+import uniqBy from 'lodash-es/uniqBy';
+
 import { csvParse } from 'd3-dsv';
 import { min, max } from 'd3-array';
 
