@@ -16,6 +16,120 @@ export default function () {
   chart.setup = function setup(el) {
     svg = select(el).select('svg');
 
+    createClipPath(svg);
+    createDropShadowFilter(svg);
+  }
+
+  chart.render = function render(props) {
+    state = Object.assign({}, props);
+
+    const results = props.data;
+    const yearRange = props.year;
+    const selectedCrews = props.selectedCrews;
+    const highlightedCrew = props.highlightedCrew;
+    const addSelectedCrew = props.addSelectedCrew;
+    const removeSelectedCrew = props.removeSelectedCrew;
+    const highlightCrew = props.highlightCrew;
+    const windowWidth = props.windowWidth;
+
+    const fullWidth = !props.focus;
+
+    if (results === undefined || yearRange === null) {
+      return;
+    }
+
+    const crews = results.crews;
+
+    const widthOfOneYear = 80;
+    const heightOfOneCrew = 20;
+    const widthWithoutLines = 310;
+    const initialViewBoxX = -165;
+    const initialViewBoxY = 0;
+    const startLabelPosition = 0;
+    const finishLabelPosition = 4;
+    const numbersLeftPosition = -8;
+    const numbersRightPosition = 7;
+    const numYearsToView = yearRange.end - yearRange.start + 1;
+    const yMarginTop = 10;
+
+    const transitionLength = 400;
+
+    crews.forEach(crew => crew.highlighted = selectedCrews.has(crew.name));
+    crews.forEach(crew => crew.hover = highlightedCrew === crew.name);
+
+    const xRangeMax = widthOfOneYear;
+    const yDomainMax = max(crews, c => max(c.values.filter(d => d !== null), v => v.pos));
+
+    const xScale = scaleLinear()
+      .domain([0, 4])
+      .range([0, xRangeMax]);
+      
+    const yScale = scaleLinear()
+      .domain([-1, yDomainMax])
+      .range([yMarginTop, yDomainMax * heightOfOneCrew - yMarginTop]);
+
+    const viewBoxWidth = (widthWithoutLines + widthOfOneYear * 5 / 4 * numYearsToView);
+    const viewBoxHeight = yDomainMax * heightOfOneCrew;
+
+    const width = fullWidth ? window.innerWidth : windowWidth;
+
+    svg.attr('height', viewBoxHeight / viewBoxWidth * width)
+      .attr('viewBox', `${initialViewBoxX}, ${initialViewBoxY}, ${viewBoxWidth}, ${viewBoxHeight}`);
+
+    const divisionsGroup = svg.select('.divisions');
+    const yearsGroup = svg.select('.years');
+    const labelsGroup = svg.select('.labels');
+    const linesGroup = svg.select('.lines');
+
+    const lineFunc = line()
+      .defined(d => d !== null && d.pos > -1)
+      .x((d) => xScale(d.day))
+      .y((d) => yScale(d.pos));
+
+    const startYear = results.startYear;
+    const endYear = results.endYear;
+
+    const yearDiff = yearRange.start - startYear;
+
+    const dayShift = yearDiff * 5;
+    const startLabelIndex = yearDiff * 5;
+    let finishLabelIndex = startLabelIndex + numYearsToView * 5 - 1;
+
+    const maxDays = max(results.crews.map(c => c.values.length));
+
+    if (finishLabelIndex > maxDays - 1) {
+      finishLabelIndex = maxDays - 1;
+    }
+
+    renderClipPath(svg, numYearsToView, viewBoxHeight, xScale);
+    const divisionsEnter = renderDivisions(results, divisionsGroup, dayShift, xScale, transitionLength);
+    renderDivisionsYear(divisionsEnter, startYear, xScale, yScale, transitionLength);
+    renderYears(yearsGroup, startYear, endYear, xScale, yScale, dayShift, transitionLength);
+    const crewEnter = renderCrew(crews, linesGroup, selectedCrews, xScale, yScale, dayShift, transitionLength);
+    renderCrewYear(crewEnter, lineFunc, transitionLength);
+    renderCrewBackground(crews, crewEnter, lineFunc, transitionLength, removeSelectedCrew, addSelectedCrew, highlightCrew);
+    renderFinishLabel(crews, labelsGroup, finishLabelIndex, finishLabelPosition, numYearsToView, xScale, yScale, transitionLength, removeSelectedCrew, addSelectedCrew, highlightCrew)
+    renderStartLabel(crews, labelsGroup, startLabelIndex, startLabelPosition, xScale, yScale, transitionLength, removeSelectedCrew, addSelectedCrew, highlightCrew);
+    renderNumbersRight(crews, labelsGroup, finishLabelIndex, numYearsToView, numbersRightPosition, xScale, yScale, transitionLength)
+    renderNumbersLeft(results.divisions, labelsGroup, yearDiff, numbersLeftPosition, xScale, yScale, transitionLength);
+  }
+
+  chart.addSelectedCrew = function (name) {
+    state.selectedCrews.add(name);
+    chart.render(state);
+  }
+
+  chart.removeSelectedCrew = function (name) {
+    state.selectedCrews.delete(name);
+    chart.render(state);
+  }
+
+  chart.highlightCrew = function (name) {
+    state.highlightedCrew = name;
+    chart.render(state);
+  }
+
+  function createClipPath(svg) {
     const clipPathId = 'clip' + Math.random(100000); // TODO: Require a unique id
 
     svg.append('clipPath').attr('id', clipPathId).append('rect')
@@ -28,7 +142,9 @@ export default function () {
     svg.append('g').attr('class', 'years').attr('clip-path', clipPathUrl);
     svg.append('g').attr('class', 'labels');
     svg.append('g').attr('class', 'lines').attr('clip-path', clipPathUrl);
+  }
 
+  function createDropShadowFilter(svg) {
     const defs = svg.append('defs');
 
     const dropShadowFilter = defs.append('filter')
@@ -52,113 +168,34 @@ export default function () {
       .attr('in', 'SourceGraphic');
   }
 
-  chart.render = function render(props) {
-    state = Object.assign({}, props);
-
-    const data = props.data;
-    const year = props.year;
-    const selectedCrews = props.selectedCrews;
-    const highlightedCrew = props.highlightedCrew;
-    const addSelectedCrew = props.addSelectedCrew;
-    const removeSelectedCrew = props.removeSelectedCrew;
-    const highlightCrew = props.highlightCrew;
-    const windowWidth = props.windowWidth;
-
-    const focus = props.focus;
-
-    if (data === undefined || year === null) {
-      return;
-    }
-
-    const crews = data.crews;
-    const widthOfOneYear = 80;
-    const heightOfOneCrew = 20;
-    const widthWithoutLines = 310;
-    const initialViewBoxX = -165;
-    const initialViewBoxY = 0;
-    const transitionLength = 400;
-    const startLabelPosition = 0;
-    const finishLabelPosition = 4;
-    const numbersLeftPosition = -8;
-    const numbersRightPosition = 7;
-    const xRangeMax = widthOfOneYear;
-    const numYearsToView = year.end - year.start + 1;
-    const yMarginTop = 10;
-
-    crews.forEach(crew => crew.highlighted = selectedCrews.has(crew.name));
-    crews.forEach(crew => crew.hover = highlightedCrew === crew.name);
-
-    const x = scaleLinear();
-    const y = scaleLinear();
-
-    x.domain([0, 4]);
-    x.range([0, xRangeMax]);
-
-    const yDomainMax = max(crews, c => max(c.values.filter(d => d !== null), v => v.pos));
-
-    y.domain([-1, yDomainMax]);
-    y.range([yMarginTop, yDomainMax * heightOfOneCrew - yMarginTop]);
-
-    const viewBoxWidth = (widthWithoutLines + widthOfOneYear * 5 / 4 * numYearsToView);
-    const viewBoxHeight = yDomainMax * heightOfOneCrew;
-
-    const width = focus ? windowWidth : window.innerWidth;
-
-    svg.attr('height', viewBoxHeight / viewBoxWidth * width)
-      .attr('viewBox', `${initialViewBoxX}, ${initialViewBoxY}, ${viewBoxWidth}, ${viewBoxHeight}`);
-
-    const divisionsGroup = svg.select('.divisions');
-    const yearsGroup = svg.select('.years');
-    const labelsGroup = svg.select('.labels');
-    const lines = svg.select('.lines');
-
-    const lineFunc = line()
-      .defined(d => d !== null && d.pos > -1)
-      .x((d) => x(d.day))
-      .y((d) => y(d.pos));
-
-    const startYear = data.startYear;
-    const endYear = data.endYear;
-
-    const yearRelative = year.start - startYear;
-
-    const dayShift = yearRelative * 5;
-    const startLabelIndex = yearRelative * 5;
-    let finishLabelIndex = startLabelIndex + numYearsToView * 5 - 1;
-
-    const maxDays = max(data.crews.map(c => c.values.length));
-
-    if (finishLabelIndex > maxDays - 1) {
-      finishLabelIndex = maxDays - 1;
-    }
-
-    // ClipPath
-    const clipPath = svg.select('clipPath').select('rect')
-      .datum(numYearsToView);
-
-    clipPath.transition()
-      .duration(transitionLength)
-      .attr('width', w => x(5 * w - 1))
+  function renderClipPath(svg, numYearsToView, viewBoxHeight, xScale) {
+    svg.select('clipPath').select('rect')
+      .datum(numYearsToView)
+      .attr('width', w => xScale(5 * w - 1))
       .attr('height', viewBoxHeight);
+  }
 
-    // Divisions
+  function renderDivisions(results, divisionsGroup, dayShift, xScale, transitionLength) {
     const divisions = divisionsGroup.selectAll('.divisionYear')
-      .data(data.divisions, (d, i) => d.gender + d.set.replace(/ /g, '') + i);
+      .data(results.divisions, (d, i) => d.gender + d.set.replace(/ /g, '') + i);
 
     const divisionsEnter = divisions.enter()
       .append('g')
       .attr('class', 'divisionYear')
       .attr('id', d => d.year)
-      .attr('transform', `translate(${x(-dayShift)},0)`);
+      .attr('transform', `translate(${xScale(-dayShift)},0)`);
 
     divisions.transition()
       .duration(transitionLength)
-      .attr('transform', `translate(${x(-dayShift)},0)`);
+      .attr('transform', `translate(${xScale(-dayShift)},0)`);
 
     divisions.exit()
       .remove();
 
-    // DivisionsYear
+    return divisionsEnter;
+  }
+
+  function renderDivisionsYear(divisionsEnter, startYear, xScale, yScale, transitionLength) {
     const divisionsYear = divisionsEnter.selectAll('rect.division')
       .data(d => d.divisions, d => d.start);
 
@@ -168,10 +205,10 @@ export default function () {
       .attr('id', d => d.start)
       .style('stroke', 'black')
       .style('fill', (d, i) => (i % 2 ? '#F4F4F4' : '#FFFFFF'))
-      .attr('x', d => x(d.year - startYear) * 5)
-      .attr('y', d => y(d.start - 0.5))
-      .attr('width', x(4) - x(0))
-      .attr('height', d => y(d.start + d.length) - y(d.start))
+      .attr('x', d => xScale(d.year - startYear) * 5)
+      .attr('y', d => yScale(d.start - 0.5))
+      .attr('width', xScale(4) - xScale(0))
+      .attr('height', d => yScale(d.start + d.length) - yScale(d.start))
       .style('opacity', 1e-6)
       .transition()
       .duration(transitionLength)
@@ -180,49 +217,51 @@ export default function () {
     divisionsYear
       .transition()
       .duration(transitionLength)
-      .attr('x', d => x(d.year - startYear) * 5)
-      .attr('y', d => y(d.start - 0.5))
-      .attr('width', x(4) - x(0))
-      .attr('height', d => y(d.start + d.length) - y(d.start));
+      .attr('x', d => xScale(d.year - startYear) * 5)
+      .attr('y', d => yScale(d.start - 0.5))
+      .attr('width', xScale(4) - xScale(0))
+      .attr('height', d => yScale(d.start + d.length) - yScale(d.start));
 
     divisionsYear.exit()
       .transition()
       .duration(transitionLength)
       .style('opacity', 1e-6)
       .remove();
+  }
 
-    // Years
+  function renderYears(yearsGroup, startYear, endYear, xScale, yScale, dayShift, transitionLength) {
     const years = yearsGroup.selectAll('.year')
       .data(range(startYear, endYear + 1), d => d);
 
     years.enter()
       .append('text')
       .attr('class', 'year')
-      .attr('x', d => x((d - startYear) * 5 + 2))
-      .attr('y', y(0))
+      .attr('x', d => xScale((d - startYear) * 5 + 2))
+      .attr('y', yScale(0))
       .attr('text-anchor', 'middle')
-      .attr('transform', `translate(${x(-dayShift)},0)`)
+      .attr('transform', `translate(${xScale(-dayShift)},0)`)
       .text(d => d);
 
     years.transition()
       .duration(transitionLength)
-      .attr('x', d => x((d - startYear) * 5 + 2))
-      .attr('transform', `translate(${x(-dayShift)},0)`);
+      .attr('x', d => xScale((d - startYear) * 5 + 2))
+      .attr('transform', `translate(${xScale(-dayShift)},0)`);
 
     years.exit()
       .transition()
       .duration(transitionLength)
       .style('opacity', 1e-6)
       .remove();
+  }
 
-    // Crew
-    const crew = lines.selectAll('.line')
+  function renderCrew(crews, linesGroup, selectedCrews, xScale, yScale, dayShift, transitionLength) {
+    const crew = linesGroup.selectAll('.line')
       .data(crews, d => d.gender + d.set.replace(/ /g, '') + d.name);
 
     const crewEnter = crew.enter()
       .append('g')
       .attr('class', d => `line ${d.name.replace(/ /g, '-')}`)
-      .attr('transform', `translate(${x(-dayShift)},0)`)
+      .attr('transform', `translate(${xScale(-dayShift)},0)`)
       .classed('highlighted', d => d.highlighted)
       .style('filter', d => (d.highlighted || d.hover ? 'url(#dropShadow)' : ''))
       .style('fill', 'none')
@@ -237,7 +276,7 @@ export default function () {
       .style('stroke-opacity', d => selectedCrews.size > 0 ? (d.highlighted || d.hover ? '1' : '0.5') : '1')
       .transition()
       .duration(transitionLength)
-      .attr('transform', `translate(${x(-dayShift)},0)`);
+      .attr('transform', `translate(${xScale(-dayShift)},0)`);
 
     crew.exit()
       .transition()
@@ -245,7 +284,10 @@ export default function () {
       .style('opacity', 1e-6)
       .remove();
 
-    // CrewYear
+    return crewEnter;
+  }
+
+  function renderCrewYear(crewEnter, lineFunc, transitionLength) {
     const crewYear = crewEnter.selectAll('path.active')
       .data(d => d.valuesSplit, d => d.gender + d.set.replace(/ /g, '') + d.name + d.day);
 
@@ -267,8 +309,9 @@ export default function () {
       .duration(transitionLength)
       .style('opacity', 1e-6)
       .remove();
+  }
 
-    // CrewBackground
+  function renderCrewBackground(crews, crewEnter, lineFunc, transitionLength, removeSelectedCrew, addSelectedCrew, highlightCrew) {
     const crewBackground = crewEnter.selectAll('path.background')
       .data(d => [d], d => d.gender + d.set.replace(/ /g, '') + d.name);
 
@@ -303,8 +346,9 @@ export default function () {
       .duration(transitionLength)
       .style('opacity', 1e-6)
       .remove();
+  }
 
-    // FinishLabel
+  function renderFinishLabel(crews, labelsGroup, finishLabelIndex, finishLabelPosition, numYearsToView, xScale, yScale, transitionLength, removeSelectedCrew, addSelectedCrew, highlightCrew) {
     const finishLabel = labelsGroup.selectAll('.finish-label')
       .data(crews.filter(d => d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos > -1),
       d => d.set.replace(/ /g, '') + d.gender + d.name);
@@ -335,7 +379,7 @@ export default function () {
       .attr('dy', '.35em')
       .text(d => renderName(d.name, d.set))
       .attr('transform', d =>
-        `translate(${x(finishLabelPosition + 5 * (numYearsToView - 1))},${y(d.value.pos)})`)
+        `translate(${xScale(finishLabelPosition + 5 * (numYearsToView - 1))},${yScale(d.value.pos)})`)
       .style('cursor', 'pointer');
 
     finishLabel.classed('highlighted', d => d.highlighted || d.hover)
@@ -344,12 +388,13 @@ export default function () {
       .transition()
       .duration(transitionLength)
       .attr('transform', d =>
-        `translate(${x(finishLabelPosition + 5 * (numYearsToView - 1))},${y(d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos)})`);
+        `translate(${xScale(finishLabelPosition + 5 * (numYearsToView - 1))},${yScale(d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos)})`);
 
     finishLabel.exit()
       .remove();
+  }
 
-    // StartLabel
+  function renderStartLabel(crews, labelsGroup, startLabelIndex, startLabelPosition, xScale, yScale, transitionLength, removeSelectedCrew, addSelectedCrew, highlightCrew) {
     const startLabel = labelsGroup.selectAll('.start-label')
       .data(crews.filter(d => d.values[startLabelIndex].pos > -1),
       d => d.set.replace(/ /g, '') + d.gender + d.name);
@@ -379,7 +424,7 @@ export default function () {
       .attr('dy', '.35em')
       .attr('text-anchor', 'end')
       .text(d => renderName(d.name, d.set))
-      .attr('transform', d => `translate(${x(startLabelPosition)},${y(d.value.pos)})`)
+      .attr('transform', d => `translate(${xScale(startLabelPosition)},${yScale(d.value.pos)})`)
       .style('cursor', 'pointer');
 
 
@@ -387,12 +432,13 @@ export default function () {
       .filter(d => d.values[startLabelIndex].pos > -1)
       .transition()
       .duration(transitionLength)
-      .attr('transform', d => `translate(${x(startLabelPosition)},${y(d.values[startLabelIndex].pos)})`);
+      .attr('transform', d => `translate(${xScale(startLabelPosition)},${yScale(d.values[startLabelIndex].pos)})`);
 
     startLabel.exit()
       .remove();
+  }
 
-    // NumbersRight
+  function renderNumbersRight(crews, labelsGroup, finishLabelIndex, numYearsToView, numbersRightPosition, xScale, yScale, transitionLength) {
     const numbersRight = labelsGroup.selectAll('.position-label-right')
       .data(range(0, crews.filter(d =>
         d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos > -1).length),
@@ -405,22 +451,23 @@ export default function () {
       .style('fill', '#888888')
       .attr('dy', '.35em')
       .attr('text-anchor', 'end')
-      .attr('transform', (d, i) => `translate(${x(numbersRightPosition + 5 * numYearsToView)},${y(i + 1)})`)
+      .attr('transform', (d, i) => `translate(${xScale(numbersRightPosition + 5 * numYearsToView)},${yScale(i + 1)})`)
       .transition()
       .duration(transitionLength)
       .style('opacity', 1);
 
     numbersRight.transition()
       .duration(transitionLength)
-      .attr('transform', (d, i) => `translate(${x(numbersRightPosition + 5 * numYearsToView)},${y(i + 1)})`);
+      .attr('transform', (d, i) => `translate(${xScale(numbersRightPosition + 5 * numYearsToView)},${yScale(i + 1)})`);
 
     numbersRight.exit()
       .remove();
+  }
 
-    // NumbersLeft
+  function renderNumbersLeft(divisions, labelsGroup, yearDiff, numbersLeftPosition, xScale, yScale, transitionLength) {
     const numbers = [];
 
-    data.divisions[yearRelative].divisions.forEach(d => {
+    divisions[yearDiff].divisions.forEach(d => {
       for (let i = 0; i < d.length; i++) {
         numbers.push(i + 1);
       }
@@ -436,7 +483,7 @@ export default function () {
       .style('fill', '#888888')
       .attr('dy', '.35em')
       .attr('text-anchor', 'start')
-      .attr('transform', (d, i) => `translate(${x(numbersLeftPosition)},${y(i + 1)})`)
+      .attr('transform', (d, i) => `translate(${xScale(numbersLeftPosition)},${yScale(i + 1)})`)
       .transition()
       .duration(transitionLength)
       .style('opacity', 1);
@@ -444,25 +491,10 @@ export default function () {
     numbersLeft.transition()
       .duration(transitionLength)
       .text(d => d)
-      .attr('transform', (d, i) => `translate(${x(numbersLeftPosition)},${y(i + 1)})`);
+      .attr('transform', (d, i) => `translate(${xScale(numbersLeftPosition)},${yScale(i + 1)})`);
 
     numbersLeft.exit()
       .remove();
-  }
-
-  chart.addSelectedCrew = function (name) {
-    state.selectedCrews.add(name);
-    chart.render(state);
-  }
-
-  chart.removeSelectedCrew = function (name) {
-    state.selectedCrews.delete(name);
-    chart.render(state);
-  }
-
-  chart.highlightCrew = function (crewName) {
-    state.highlightedCrew = crewName;
-    chart.render(state);
   }
 
   return chart;

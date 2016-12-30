@@ -85,7 +85,6 @@ export const abbrevOxCollege = {
   'Wt': 'Worcester'
 };
 
-// eslint-disable-next-line no-unused-vars
 export const abbrevCamTown = {
   'A': 'Addenbrooke\'s',
   'CB': 'Camb Blue',
@@ -374,11 +373,7 @@ export function isBlades(positions) {
   return true;
 }
 
-export function isSpoons(positions, bottomPosition) {
-  if (bottomPosition === undefined) {
-    bottomPosition = Number.MAX_SAFE_INTEGER;
-  }
-
+export function isSpoons(positions, bottomPosition = Number.MAX_SAFE_INTEGER) {
   for (let i = 0; i < positions.length - 1; i++) {
     if (positions[i + 1] - positions[i] <= 0 && positions[i + 1] !== bottomPosition) {
       return false;
