@@ -16,6 +16,11 @@ export default function () {
   chart.setup = function setup(el) {
     svg = select(el).select('svg');
 
+    svg.append('g').attr('class', 'divisions');
+    svg.append('g').attr('class', 'years');
+    svg.append('g').attr('class', 'lines');
+    svg.append('g').attr('class', 'labels');
+
     createClipPath(svg);
     createDropShadowFilter(svg);
   }
@@ -138,10 +143,9 @@ export default function () {
 
     const clipPathUrl = 'url(#' + clipPathId + ')';
 
-    svg.append('g').attr('class', 'divisions').attr('clip-path', clipPathUrl);
-    svg.append('g').attr('class', 'years').attr('clip-path', clipPathUrl);
-    svg.append('g').attr('class', 'labels');
-    svg.append('g').attr('class', 'lines').attr('clip-path', clipPathUrl);
+    svg.select('.divisions').attr('clip-path', clipPathUrl);
+    svg.select('.years').attr('clip-path', clipPathUrl);
+    svg.select('.lines').attr('clip-path', clipPathUrl);
   }
 
   function createDropShadowFilter(svg) {
