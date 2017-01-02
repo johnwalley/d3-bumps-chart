@@ -911,13 +911,18 @@ export function read_tg(input) {
   for (let i = 0; i < input.length; i++) {
     const m = input[i].split(',');
     if (m[0] === 'Set') {
-      event.set = m[1];
+      if (m.length > 1) {
+        event.set = m[1];
+      }
     } else if (m[0] === 'Short') {
       event.small = m[1];
     } else if (m[0] === 'Gender') {
       event.gender = m[1];
     } else if (m[0] === 'Year') {
-      event.year = parseInt(m[1], 10);
+      const year = parseInt(m[1], 10);
+      if (!isNaN(year)) {
+        event.year = year;
+      }
     } else if (m[0] === 'Days') {
       event.days = parseInt(m[1], 10);
     } else if (m[0] === 'Division') {

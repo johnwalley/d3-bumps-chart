@@ -63,7 +63,7 @@ export default function () {
     crews.forEach(crew => crew.hover = highlightedCrew === crew.name);
 
     const xRangeMax = widthOfOneYear;
-    const yDomainMax = max(crews, c => max(c.values.filter(d => d !== null), v => v.pos));
+    const yDomainMax = crews.length > 0 ? max(crews, c => max(c.values.filter(d => d !== null), v => v.pos)) : 0;
 
     const xScale = scaleLinear()
       .domain([0, 4])
