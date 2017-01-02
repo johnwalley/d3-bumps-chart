@@ -962,7 +962,7 @@ export function read_tg(input) {
 
   event.results.filter(r => r !== '').map((r, i) => results[Math.floor(i / event.divisions.length)].push(r.trim()));
 
-  event.results = results.map(r => r.join(' ')).join('\n');
+  event.results = results.filter(r => r.length > 0).map(r => r.join(' ')).join('\n');
 
   if (curdiv.length > 0) {
     event.divisions.push(curdiv);
