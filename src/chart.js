@@ -32,8 +32,7 @@ export default function () {
     const yearRange = props.year;
     const selectedCrews = props.selectedCrews;
     const highlightedCrew = props.highlightedCrew;
-    const addSelectedCrew = props.addSelectedCrew;
-    const removeSelectedCrew = props.removeSelectedCrew;
+    const toggleSelectedCrew = props.toggleSelectedCrew;
     const highlightCrew = props.highlightCrew;
     const windowWidth = props.windowWidth;
 
@@ -68,7 +67,7 @@ export default function () {
     const xScale = scaleLinear()
       .domain([0, 4])
       .range([0, xRangeMax]);
-      
+
     const yScale = scaleLinear()
       .domain([-1, yDomainMax])
       .range([yMarginTop, yDomainMax * heightOfOneCrew - yMarginTop]);
@@ -112,9 +111,9 @@ export default function () {
     renderYears(yearsGroup, startYear, endYear, xScale, yScale, dayShift, transitionLength);
     const crewEnter = renderCrew(crews, linesGroup, selectedCrews, xScale, yScale, dayShift, transitionLength);
     renderCrewYear(crewEnter, lineFunc, transitionLength);
-    renderCrewBackground(crews, crewEnter, lineFunc, transitionLength, removeSelectedCrew, addSelectedCrew, highlightCrew);
-    renderFinishLabel(crews, labelsGroup, finishLabelIndex, finishLabelPosition, numYearsToView, xScale, yScale, transitionLength, removeSelectedCrew, addSelectedCrew, highlightCrew)
-    renderStartLabel(crews, labelsGroup, startLabelIndex, startLabelPosition, xScale, yScale, transitionLength, removeSelectedCrew, addSelectedCrew, highlightCrew);
+    renderCrewBackground(crews, crewEnter, lineFunc, transitionLength, toggleSelectedCrew, highlightCrew);
+    renderFinishLabel(crews, labelsGroup, finishLabelIndex, finishLabelPosition, numYearsToView, xScale, yScale, transitionLength, toggleSelectedCrew, highlightCrew)
+    renderStartLabel(crews, labelsGroup, startLabelIndex, startLabelPosition, xScale, yScale, transitionLength, toggleSelectedCrew, highlightCrew);
     renderNumbersRight(crews, labelsGroup, finishLabelIndex, numYearsToView, numbersRightPosition, xScale, yScale, transitionLength)
     renderNumbersLeft(results.divisions, labelsGroup, yearDiff, numbersLeftPosition, xScale, yScale, transitionLength);
   }
@@ -315,20 +314,14 @@ export default function () {
       .remove();
   }
 
-  function renderCrewBackground(crews, crewEnter, lineFunc, transitionLength, removeSelectedCrew, addSelectedCrew, highlightCrew) {
+  function renderCrewBackground(crews, crewEnter, lineFunc, transitionLength, toggleSelectedCrew, highlightCrew) {
     const crewBackground = crewEnter.selectAll('path.background')
       .data(d => [d], d => d.gender + d.set.replace(/ /g, '') + d.name);
 
     crewBackground.enter()
       .append('path')
       .on('click', d => {
-        const index = crews.map(c => c.name).indexOf(d.name);
-
-        if (crews[index].highlighted === true) {
-          removeSelectedCrew(d.name);
-        } else {
-          addSelectedCrew(d.name);
-        }
+        toggleSelectedCrew(d.name);
       })
       .on('mouseover', d => {
         highlightCrew(d.name);
@@ -352,7 +345,7 @@ export default function () {
       .remove();
   }
 
-  function renderFinishLabel(crews, labelsGroup, finishLabelIndex, finishLabelPosition, numYearsToView, xScale, yScale, transitionLength, removeSelectedCrew, addSelectedCrew, highlightCrew) {
+  function renderFinishLabel(crews, labelsGroup, finishLabelIndex, finishLabelPosition, numYearsToView, xScale, yScale, transitionLength, toggleSelectedCrew, highlightCrew) {
     const finishLabel = labelsGroup.selectAll('.finish-label')
       .data(crews.filter(d => d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos > -1),
       d => d.set.replace(/ /g, '') + d.gender + d.name);
@@ -362,13 +355,7 @@ export default function () {
         d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos > -1)
       .append('text')
       .on('click', d => {
-        const index = crews.map(c => c.name).indexOf(d.name);
-
-        if (crews[index].highlighted === true) {
-          removeSelectedCrew(d.name);
-        } else {
-          addSelectedCrew(d.name);
-        }
+        toggleSelectedCrew(d.name);
       })
       .on('mouseover', d => {
         highlightCrew(d.name);
@@ -398,7 +385,7 @@ export default function () {
       .remove();
   }
 
-  function renderStartLabel(crews, labelsGroup, startLabelIndex, startLabelPosition, xScale, yScale, transitionLength, removeSelectedCrew, addSelectedCrew, highlightCrew) {
+  function renderStartLabel(crews, labelsGroup, startLabelIndex, startLabelPosition, xScale, yScale, transitionLength, toggleSelectedCrew, highlightCrew) {
     const startLabel = labelsGroup.selectAll('.start-label')
       .data(crews.filter(d => d.values[startLabelIndex].pos > -1),
       d => d.set.replace(/ /g, '') + d.gender + d.name);
@@ -407,13 +394,7 @@ export default function () {
       .filter(d => d.values[startLabelIndex].pos > -1)
       .append('text')
       .on('click', d => {
-        const index = crews.map(c => c.name).indexOf(d.name);
-
-        if (crews[index].highlighted === true) {
-          removeSelectedCrew(d.name);
-        } else {
-          addSelectedCrew(d.name);
-        }
+        toggleSelectedCrew(d.name);
       })
       .on('mouseover', d => {
         highlightCrew(d.name);
