@@ -38,9 +38,8 @@ If you use NPM, `npm install d3-bumps-chart`. Otherwise, download the [latest re
       year: { start: 2015, end: 2016 },
       selectedCrews: new Set(),
       highlightedCrew: null,
-      addSelectedCrew: bumpsChart.bumpsChart().addSelectedCrew,
-      removeSelectedCrew: bumpsChart.bumpsChart().removeSelectedCrew,
-      highlightCrew: bumpsChart.bumpsChart().highlightCrew,
+      toggleSelectedCrew: chart.toggleSelectedCrew,
+      highlightCrew: chart.highlightCrew,
       windowWidth: window.width
     };
 

@@ -118,13 +118,13 @@ export default function () {
     renderNumbersLeft(results.divisions, labelsGroup, yearDiff, numbersLeftPosition, xScale, yScale, transitionLength);
   }
 
-  chart.addSelectedCrew = function (name) {
-    state.selectedCrews.add(name);
-    chart.render(state);
-  }
+  chart.toggleSelectedCrew = function (name) {
+    if (state.selectedCrews.has(name)) {
+      state.selectedCrews.delete(name);
+    } else {
+      state.selectedCrews.add(name);
+    }
 
-  chart.removeSelectedCrew = function (name) {
-    state.selectedCrews.delete(name);
     chart.render(state);
   }
 

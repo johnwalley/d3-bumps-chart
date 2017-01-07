@@ -18,7 +18,6 @@
     chart.setup(el);
 
     d3.json("./results.json", function(error, events) {
-
       var gender = "Women";
       var set = "Town Bumps";
 
@@ -35,8 +34,7 @@
         year: { start: 2015, end: 2016 },
         selectedCrews: new Set(),
         highlightedCrew: null,
-        addSelectedCrew: chart.addSelectedCrew,
-        removeSelectedCrew: chart.removeSelectedCrew,
+        toggleSelectedCrew: chart.toggleSelectedCrew,
         highlightCrew: chart.highlightCrew,
         windowWidth: window.width
       };
