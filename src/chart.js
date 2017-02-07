@@ -45,7 +45,7 @@ export default function () {
     const crews = results.crews;
 
     const widthOfOneYear = 80;
-    const heightOfOneCrew = 20;
+    const heightOfOneCrew = 24;
     const widthWithoutLines = 310;
     const initialViewBoxX = -165;
     const initialViewBoxY = 0;
