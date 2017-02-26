@@ -417,6 +417,11 @@ export function joinEvents(events, set, gender) {
 
       if (match.length > 0) {
         const values = match[0].values.map(v => ({ day: v.day + day, pos: v.pos }));
+
+        for (let i = values.length; i <= numDays; i++) {
+          values.push({ day: i + day, pos: -1 });
+        }
+
         newCrew.values = newCrew.values
           .concat(values);
 
