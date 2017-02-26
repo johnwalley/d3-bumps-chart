@@ -99,7 +99,7 @@ export default function () {
     const startLabelIndex = yearDiff * 5;
     let finishLabelIndex = startLabelIndex + numYearsToView * 5 - 1;
 
-    const maxDays = max(results.crews.map(c => c.values.length));
+    const maxDays = max(results.crews.map(c => c.values.filter(v => v.pos > -1).length));
 
     if (finishLabelIndex > maxDays - 1) {
       finishLabelIndex = maxDays - 1;
