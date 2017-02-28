@@ -99,7 +99,7 @@ export default function () {
     const startLabelIndex = yearDiff * 5;
     let finishLabelIndex = startLabelIndex + numYearsToView * 5 - 1;
 
-    const maxDays = max(results.crews.map(c => c.values.filter(v => v.pos > -1).length));
+    const maxDays = max(results.crews.map(c => c.values.filter(v => v.pos > -1 || v.day < finishLabelIndex - 5).length));
 
     if (finishLabelIndex > maxDays - 1) {
       finishLabelIndex = maxDays - 1;
@@ -347,12 +347,12 @@ export default function () {
 
   function renderFinishLabel(crews, labelsGroup, finishLabelIndex, finishLabelPosition, numYearsToView, xScale, yScale, transitionLength, toggleSelectedCrew, highlightCrew) {
     const finishLabel = labelsGroup.selectAll('.finish-label')
-      .data(crews.filter(d => d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos > -1),
+      .data(crews.filter(d => d.values[d.values[finishLabelIndex].pos === -1 ? finishLabelIndex - 1 : finishLabelIndex].pos > -1),
       d => d.set.replace(/ /g, '') + d.gender + d.name);
 
     finishLabel.enter()
       .filter(d =>
-        d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos > -1)
+        d.values[d.values[finishLabelIndex].pos === -1  ? finishLabelIndex - 1 : finishLabelIndex].pos > -1)
       .append('text')
       .on('click', d => {
         toggleSelectedCrew(d.name);
@@ -365,7 +365,7 @@ export default function () {
       })
       .classed('label finish-label', true)
       .classed('highlighted', d => d.highlighted)
-      .datum(d => ({ name: d.name, set: d.set, gender: d.gender, value: d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex] }))
+      .datum(d => ({ name: d.name, set: d.set, gender: d.gender, value: d.values[d.values[finishLabelIndex].pos === -1 ? finishLabelIndex - 1 : finishLabelIndex] }))
       .attr('x', 10)
       .attr('dy', '.35em')
       .text(d => renderName(d.name, d.set))
@@ -375,11 +375,11 @@ export default function () {
 
     finishLabel.classed('highlighted', d => d.highlighted || d.hover)
       .filter(d =>
-        d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos > -1)
+        d.values[d.values[finishLabelIndex].pos === -1  ? finishLabelIndex - 1 : finishLabelIndex].pos > -1)
       .transition()
       .duration(transitionLength)
       .attr('transform', d =>
-        `translate(${xScale(finishLabelPosition + 5 * (numYearsToView - 1))},${yScale(d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos)})`);
+        `translate(${xScale(finishLabelPosition + 5 * (numYearsToView - 1))},${yScale(d.values[d.values[finishLabelIndex].pos === -1  ? finishLabelIndex - 1 : finishLabelIndex].pos)})`);
 
     finishLabel.exit()
       .remove();
@@ -426,7 +426,7 @@ export default function () {
   function renderNumbersRight(crews, labelsGroup, finishLabelIndex, numYearsToView, numbersRightPosition, xScale, yScale, transitionLength) {
     const numbersRight = labelsGroup.selectAll('.position-label-right')
       .data(range(0, crews.filter(d =>
-        d.values[d.values.length === finishLabelIndex ? finishLabelIndex - 1 : finishLabelIndex].pos > -1).length),
+        d.values[d.values[finishLabelIndex].pos === -1 ? finishLabelIndex - 1 : finishLabelIndex].pos > -1).length),
       d => d);
 
     numbersRight.enter()
