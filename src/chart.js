@@ -134,7 +134,7 @@ export default function () {
   }
 
   function createClipPath(svg) {
-    const clipPathId = 'clip' +(Math.random() * 100000 | 0); // TODO: Require a unique id
+    const clipPathId = 'clip' + (Math.random() * 100000 | 0); // TODO: Require a unique id
 
     svg.append('clipPath').attr('id', clipPathId).append('rect')
       .attr('width', 80)
@@ -175,7 +175,7 @@ export default function () {
     svg.select('clipPath').select('rect')
       .datum(numYearsToView)
       .attr('width', w => xScale(5 * w - 1))
-      .attr('height', viewBoxHeight);
+      .attr('height', viewBoxHeight + 2); // TODO: Work out why we need to extend the height
   }
 
   function renderDivisions(results, divisionsGroup, dayShift, xScale, transitionLength) {
