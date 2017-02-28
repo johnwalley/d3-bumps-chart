@@ -134,7 +134,7 @@ export default function () {
   }
 
   function createClipPath(svg) {
-    const clipPathId = 'clip' + Math.random(100000); // TODO: Require a unique id
+    const clipPathId = 'clip' +(Math.random() * 100000 | 0); // TODO: Require a unique id
 
     svg.append('clipPath').attr('id', clipPathId).append('rect')
       .attr('width', 80)
