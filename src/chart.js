@@ -36,8 +36,6 @@ export default function () {
     const highlightCrew = props.highlightCrew;
     const windowWidth = props.windowWidth;
 
-    const fullWidth = !props.focus;
-
     // If we have no results or no range of years return early
     if (results === undefined || yearRange === null) {
       return;
@@ -76,7 +74,7 @@ export default function () {
     const viewBoxWidth = (widthWithoutLines + widthOfOneYear * 5 / 4 * numYearsToView);
     const viewBoxHeight = yDomainMax * heightOfOneCrew;
 
-    const width = fullWidth ? window.innerWidth : windowWidth;
+    const width = windowWidth;
 
     svg.attr('height', viewBoxHeight / viewBoxWidth * width)
       .attr('viewBox', `${initialViewBoxX}, ${initialViewBoxY}, ${viewBoxWidth}, ${viewBoxHeight}`);
