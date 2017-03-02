@@ -38,6 +38,7 @@ export default function () {
 
     const fullWidth = !props.focus;
 
+    // If we have no results or no range of years return early
     if (results === undefined || yearRange === null) {
       return;
     }
@@ -99,6 +100,7 @@ export default function () {
     const startLabelIndex = yearDiff * 5;
     let finishLabelIndex = startLabelIndex + numYearsToView * 5 - 1;
 
+    // Check for incomplete last event, e.g. only 2 days completed of the 4
     const maxDays = max(results.crews.map(c => c.values.filter(v => v.pos > -1 || v.day < finishLabelIndex - 5).length));
 
     if (finishLabelIndex > maxDays - 1) {
@@ -131,6 +133,10 @@ export default function () {
   chart.highlightCrew = function (name) {
     state.highlightedCrew = name;
     chart.render(state);
+  }
+
+  function createKey(set, gender, postfix = '') {
+    return set.replace(/ /g, '') + gender + postfix;
   }
 
   function createClipPath(svg) {
@@ -180,7 +186,7 @@ export default function () {
 
   function renderDivisions(results, divisionsGroup, dayShift, xScale, transitionLength) {
     const divisions = divisionsGroup.selectAll('.divisionYear')
-      .data(results.divisions, (d, i) => d.gender + d.set.replace(/ /g, '') + i);
+      .data(results.divisions, (d, i) => createKey(d.set, d.gender, i));
 
     const divisionsEnter = divisions.enter()
       .append('g')
@@ -259,7 +265,7 @@ export default function () {
 
   function renderCrew(crews, linesGroup, selectedCrews, xScale, yScale, dayShift, transitionLength) {
     const crew = linesGroup.selectAll('.line')
-      .data(crews, d => d.gender + d.set.replace(/ /g, '') + d.name);
+      .data(crews, d => createKey(d.set, d.gender, d.name));
 
     const crewEnter = crew.enter()
       .append('g')
@@ -292,7 +298,7 @@ export default function () {
 
   function renderCrewYear(crewEnter, lineFunc, transitionLength) {
     const crewYear = crewEnter.selectAll('path.active')
-      .data(d => d.valuesSplit, d => d.gender + d.set.replace(/ /g, '') + d.name + d.day);
+      .data(d => d.valuesSplit, d => createKey(d.set, d.gender, d.name + d.day));
 
     crewYear.enter()
       .append('path')
@@ -316,7 +322,7 @@ export default function () {
 
   function renderCrewBackground(crews, crewEnter, lineFunc, transitionLength, toggleSelectedCrew, highlightCrew) {
     const crewBackground = crewEnter.selectAll('path.background')
-      .data(d => [d], d => d.gender + d.set.replace(/ /g, '') + d.name);
+      .data(d => [d], d => createKey(d.set, d.gender, d.name));
 
     crewBackground.enter()
       .append('path')
@@ -346,13 +352,14 @@ export default function () {
   }
 
   function renderFinishLabel(crews, labelsGroup, finishLabelIndex, finishLabelPosition, numYearsToView, xScale, yScale, transitionLength, toggleSelectedCrew, highlightCrew) {
+    const calculateFinishLabelPosition = d => d.values[d.values[finishLabelIndex].pos === -1 ? finishLabelIndex - 1 : finishLabelIndex].pos;
+
     const finishLabel = labelsGroup.selectAll('.finish-label')
-      .data(crews.filter(d => d.values[d.values[finishLabelIndex].pos === -1 ? finishLabelIndex - 1 : finishLabelIndex].pos > -1),
-      d => d.set.replace(/ /g, '') + d.gender + d.name);
+      .data(crews.filter(d => calculateFinishLabelPosition(d) > -1),
+      d => createKey(d.set, d.gender, d.name));
 
     finishLabel.enter()
-      .filter(d =>
-        d.values[d.values[finishLabelIndex].pos === -1  ? finishLabelIndex - 1 : finishLabelIndex].pos > -1)
+      .filter(d => calculateFinishLabelPosition(d) > -1)
       .append('text')
       .on('click', d => {
         toggleSelectedCrew(d.name);
@@ -365,33 +372,34 @@ export default function () {
       })
       .classed('label finish-label', true)
       .classed('highlighted', d => d.highlighted)
-      .datum(d => ({ name: d.name, set: d.set, gender: d.gender, value: d.values[d.values[finishLabelIndex].pos === -1 ? finishLabelIndex - 1 : finishLabelIndex] }))
+      .datum(d => ({ name: d.name, set: d.set, gender: d.gender, pos: calculateFinishLabelPosition(d) }))
       .attr('x', 10)
       .attr('dy', '.35em')
       .text(d => renderName(d.name, d.set))
       .attr('transform', d =>
-        `translate(${xScale(finishLabelPosition + 5 * (numYearsToView - 1))},${yScale(d.value.pos)})`)
+        `translate(${xScale(finishLabelPosition + 5 * (numYearsToView - 1))},${yScale(d.pos)})`)
       .style('cursor', 'pointer');
 
     finishLabel.classed('highlighted', d => d.highlighted || d.hover)
-      .filter(d =>
-        d.values[d.values[finishLabelIndex].pos === -1  ? finishLabelIndex - 1 : finishLabelIndex].pos > -1)
+      .filter(d => calculateFinishLabelPosition(d) > -1)
       .transition()
       .duration(transitionLength)
       .attr('transform', d =>
-        `translate(${xScale(finishLabelPosition + 5 * (numYearsToView - 1))},${yScale(d.values[d.values[finishLabelIndex].pos === -1  ? finishLabelIndex - 1 : finishLabelIndex].pos)})`);
+        `translate(${xScale(finishLabelPosition + 5 * (numYearsToView - 1))},${yScale(calculateFinishLabelPosition(d))})`);
 
     finishLabel.exit()
       .remove();
   }
 
   function renderStartLabel(crews, labelsGroup, startLabelIndex, startLabelPosition, xScale, yScale, transitionLength, toggleSelectedCrew, highlightCrew) {
+    const calculateStartLabelPosition = d => d.values[startLabelIndex].pos;
+
     const startLabel = labelsGroup.selectAll('.start-label')
-      .data(crews.filter(d => d.values[startLabelIndex].pos > -1),
-      d => d.set.replace(/ /g, '') + d.gender + d.name);
+      .data(crews.filter(d => calculateStartLabelPosition(d) > -1),
+      d => createKey(d.set, d.gender, d.name));
 
     startLabel.enter()
-      .filter(d => d.values[startLabelIndex].pos > -1)
+      .filter(d => calculateStartLabelPosition(d) > -1)
       .append('text')
       .on('click', d => {
         toggleSelectedCrew(d.name);
@@ -404,29 +412,30 @@ export default function () {
       })
       .classed('label start-label', true)
       .classed('highlighted', d => d.highlighted)
-      .datum(d => ({ name: d.name, set: d.set, gender: d.gender, value: d.values[startLabelIndex] }))
+      .datum(d => ({ name: d.name, set: d.set, gender: d.gender, pos: calculateStartLabelPosition(d) }))
       .attr('x', -10)
       .attr('dy', '.35em')
       .attr('text-anchor', 'end')
       .text(d => renderName(d.name, d.set))
-      .attr('transform', d => `translate(${xScale(startLabelPosition)},${yScale(d.value.pos)})`)
+      .attr('transform', d => `translate(${xScale(startLabelPosition)},${yScale(d.pos)})`)
       .style('cursor', 'pointer');
 
 
     startLabel.classed('highlighted', d => d.highlighted || d.hover)
-      .filter(d => d.values[startLabelIndex].pos > -1)
+      .filter(d => calculateStartLabelPosition(d) > -1)
       .transition()
       .duration(transitionLength)
-      .attr('transform', d => `translate(${xScale(startLabelPosition)},${yScale(d.values[startLabelIndex].pos)})`);
+      .attr('transform', d => `translate(${xScale(startLabelPosition)},${yScale(calculateStartLabelPosition(d))})`);
 
     startLabel.exit()
       .remove();
   }
 
   function renderNumbersRight(crews, labelsGroup, finishLabelIndex, numYearsToView, numbersRightPosition, xScale, yScale, transitionLength) {
+    const calculateFinishLabelPosition = d => d.values[d.values[finishLabelIndex].pos === -1 ? finishLabelIndex - 1 : finishLabelIndex].pos;
+
     const numbersRight = labelsGroup.selectAll('.position-label-right')
-      .data(range(0, crews.filter(d =>
-        d.values[d.values[finishLabelIndex].pos === -1 ? finishLabelIndex - 1 : finishLabelIndex].pos > -1).length),
+      .data(range(0, crews.filter(d => calculateFinishLabelPosition(d) > -1).length),
       d => d);
 
     numbersRight.enter()
