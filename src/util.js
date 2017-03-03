@@ -504,6 +504,14 @@ export function transformData(event) {
   return { year: event.year, crews: crews, divisions: divisions };
 }
 
+// TODO: Make these constants DRY
+export function calculateNumYearsToview(width) {
+  const widthOfOneYear = 80;
+  const widthWithoutLines = 310;
+
+  return Math.max(0, Math.ceil((width - widthWithoutLines) / widthOfOneYear));
+}
+
 export function calculateYearRange(current, data, desiredWidth) {
   let start;
   let end;
