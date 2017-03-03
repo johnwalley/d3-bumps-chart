@@ -17,7 +17,7 @@ If you use NPM, `npm install d3-bumps-chart`. Otherwise, download the [latest re
 
 <script>
   var el = document.getElementById('bumps-chart');
-  var chart = bumpsChart.bumpsChart();
+  var chart = d3_bumps_chart.bumpsChart();
   chart.setup(el);
 
   d3.json("./example/results.json", function(error, events) {
@@ -54,10 +54,10 @@ If you use NPM, `npm install d3-bumps-chart`. Otherwise, download the [latest re
 
 Constructs a new bumps chart generator with the default settings.
 
-<a name="chart_setup" href="#chart_setup">#</a> <i>chart</i>.<b>setup</b>(<i>element</i>) [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/chart.js#L159 "Source")
+<a name="chart_setup" href="#chart_setup">#</a> <i>chart</i>.<b>setup</b>(<i>element</i>) [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/chart.js#L16 "Source")
 
 Sets up the svg elements which are independent of any data. Selects the *element* passed in.
 
-<a name="chart_update" href="#chart_update">#</a> <i>chart</i>.<b>update</b>(<i>props</i>) [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/chart.js#L198 "Source")
+<a name="chart_update" href="#chart_update">#</a> <i>chart</i>.<b>update</b>(<i>props</i>) [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/chart.js#L28 "Source")
 
 Renders the bumps chart based on *props*.
