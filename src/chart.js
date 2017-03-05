@@ -10,16 +10,21 @@ export default function () {
   let svg;
   let state;
 
+  let divisionsGroup;
+  let yearsGroup;
+  let labelsGroup;
+  let linesGroup;
+
   function chart() {
   }
 
   chart.setup = function setup(el) {
     svg = select(el).select('svg');
 
-    svg.append('g').attr('class', 'divisions');
-    svg.append('g').attr('class', 'years');
-    svg.append('g').attr('class', 'lines');
-    svg.append('g').attr('class', 'labels');
+    divisionsGroup = svg.append('g').attr('class', 'divisions');
+    yearsGroup = svg.append('g').attr('class', 'years');
+    linesGroup = svg.append('g').attr('class', 'lines');
+    labelsGroup = svg.append('g').attr('class', 'labels');
 
     createClipPath(svg);
     createDropShadowFilter(svg);
@@ -78,11 +83,6 @@ export default function () {
 
     svg.attr('height', viewBoxHeight / viewBoxWidth * width)
       .attr('viewBox', `${initialViewBoxX}, ${initialViewBoxY}, ${viewBoxWidth}, ${viewBoxHeight}`);
-
-    const divisionsGroup = svg.select('.divisions');
-    const yearsGroup = svg.select('.years');
-    const labelsGroup = svg.select('.labels');
-    const linesGroup = svg.select('.lines');
 
     const lineFunc = line()
       .defined(d => d !== null && d.pos > -1)
