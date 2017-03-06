@@ -245,6 +245,7 @@ export default function () {
       .attr('class', 'year')
       .attr('x', d => xScale((d - startYear) * 5 + 2))
       .attr('y', yScale(0))
+      .style('font-size', '22px')
       .attr('text-anchor', 'middle')
       .attr('transform', `translate(${xScale(-dayShift)},0)`)
       .text(d => d);
@@ -370,15 +371,19 @@ export default function () {
       })
       .classed('label finish-label', true)
       .classed('highlighted', d => d.highlighted)
+      .style('font-weight', d => d.highlighted ? 'bold' : 'normal')
       .datum(d => ({ name: d.name, set: d.set, gender: d.gender, pos: calculateFinishLabelPosition(d) }))
       .attr('x', 10)
       .attr('dy', '.35em')
       .text(d => renderName(d.name, d.set))
       .attr('transform', d =>
         `translate(${xScale(finishLabelPosition + 5 * (numYearsToView - 1))},${yScale(d.pos)})`)
+      .style('font-size', '16px')
       .style('cursor', 'pointer');
 
     finishLabel.classed('highlighted', d => d.highlighted || d.hover)
+      .style('font-weight', d => d.highlighted || d.hover ? 'bold' : 'normal')
+
       .filter(d => calculateFinishLabelPosition(d) > -1)
       .transition()
       .duration(transitionLength)
@@ -410,16 +415,18 @@ export default function () {
       })
       .classed('label start-label', true)
       .classed('highlighted', d => d.highlighted)
+      .style('font-weight', d => d.highlighted ? 'bold' : 'normal')
       .datum(d => ({ name: d.name, set: d.set, gender: d.gender, pos: calculateStartLabelPosition(d) }))
       .attr('x', -10)
       .attr('dy', '.35em')
       .attr('text-anchor', 'end')
       .text(d => renderName(d.name, d.set))
       .attr('transform', d => `translate(${xScale(startLabelPosition)},${yScale(d.pos)})`)
+      .style('font-size', '16px')
       .style('cursor', 'pointer');
 
-
     startLabel.classed('highlighted', d => d.highlighted || d.hover)
+      .style('font-weight', d => d.highlighted || d.hover ? 'bold' : 'normal')
       .filter(d => calculateStartLabelPosition(d) > -1)
       .transition()
       .duration(transitionLength)
@@ -446,6 +453,7 @@ export default function () {
       .attr('transform', (d, i) => `translate(${xScale(numbersRightPosition + 5 * numYearsToView)},${yScale(i + 1)})`)
       .transition()
       .duration(transitionLength)
+      .style('font-size', '16px')
       .style('opacity', 1);
 
     numbersRight.transition()
@@ -478,6 +486,7 @@ export default function () {
       .attr('transform', (d, i) => `translate(${xScale(numbersLeftPosition)},${yScale(i + 1)})`)
       .transition()
       .duration(transitionLength)
+      .style('font-size', '16px')
       .style('opacity', 1);
 
     numbersLeft.transition()
