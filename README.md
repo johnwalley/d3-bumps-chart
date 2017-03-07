@@ -1,6 +1,7 @@
 # d3-bumps-chart
 
 [![Build Status](https://travis-ci.org/johnwalley/d3-bumps-chart.svg?branch=master)](https://travis-ci.org/johnwalley/d3-bumps-chart)
+[![npm Version](https://img.shields.io/npm/v/d3-bumps-chart.svg)](https://www.npmjs.com/package/d3-bumps-chart)
 [![Dependency Status](https://gemnasium.com/badges/github.com/johnwalley/d3-bumps-chart.svg)](https://gemnasium.com/github.com/johnwalley/d3-bumps-chart)
 
 Draw Bumps charts using d3.
