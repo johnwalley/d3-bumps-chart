@@ -3,20 +3,20 @@ var jsdom = require("jsdom");
 var d3_bumps_chart = require("../");
 
 tape("Setup should append 4 svg groups.", function (test) {
-  var document = jsdom.jsdom('<div id="bumps-chart"><svg width="100%" preserveAspectRatio="xMidYMin"></svg></div>');
+  var dom = new jsdom.JSDOM('<div id="bumps-chart"><svg width="100%" preserveAspectRatio="xMidYMin"></svg></div>');
 
-  var el = document.getElementById('bumps-chart');
+  var el = dom.window.document.getElementById('bumps-chart');
   var chart = d3_bumps_chart.chart();
   chart.setup(el);
 
-  test.equal(document.querySelector('svg').querySelectorAll('g').length, 4);
+  test.equal(dom.window.document.querySelector('svg').querySelectorAll('g').length, 4);
   test.end();
 });
 
 tape("Render should create the expected elements.", function (test) {
-  var document = jsdom.jsdom('<div id="bumps-chart"><svg width="100%" preserveAspectRatio="xMidYMin"></svg></div>');
+  var dom = new jsdom.JSDOM('<div id="bumps-chart"><svg width="100%" preserveAspectRatio="xMidYMin"></svg></div>');
 
-  var el = document.getElementById('bumps-chart');
+  var el = dom.window.document.getElementById('bumps-chart');
   var chart = d3_bumps_chart.chart();
   chart.setup(el);
 
@@ -118,10 +118,10 @@ tape("Render should create the expected elements.", function (test) {
 
   chart.render(props);
 
-  test.equal(document.querySelector('svg').querySelector('.years').querySelectorAll('text').length, 2);
-  test.equal(document.querySelector('svg').querySelector('.divisions').querySelector('.divisionYear').querySelectorAll('rect').length, 1);
-  test.equal(document.querySelector('svg').querySelector('.lines').querySelectorAll('g').length, 2);
-  test.equal(document.querySelector('svg').querySelector('.labels').querySelectorAll('text').length, 8);
+  test.equal(dom.window.document.querySelector('svg').querySelector('.years').querySelectorAll('text').length, 2);
+  test.equal(dom.window.document.querySelector('svg').querySelector('.divisions').querySelector('.divisionYear').querySelectorAll('rect').length, 1);
+  test.equal(dom.window.document.querySelector('svg').querySelector('.lines').querySelectorAll('g').length, 2);
+  test.equal(dom.window.document.querySelector('svg').querySelector('.labels').querySelectorAll('text').length, 8);
 
   test.end();
 });
