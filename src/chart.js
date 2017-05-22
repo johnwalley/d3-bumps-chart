@@ -111,7 +111,7 @@ export default function () {
     renderYears(yearsGroup, startYear, endYear, xScale, yScale, dayShift, transitionLength);
     const crewEnter = renderCrew(crews, linesGroup, selectedCrews, xScale, yScale, dayShift, transitionLength);
     renderCrewYear(crewEnter, lineFunc, transitionLength);
-    renderCrewBackground(crews, crewEnter, lineFunc, transitionLength, toggleSelectedCrew, highlightCrew);
+    renderCrewBackground(crews, crewEnter, lineFunc, transitionLength);
     renderFinishLabel(crews, labelsGroup, finishLabelIndex, finishLabelPosition, numYearsToView, xScale, yScale, transitionLength, toggleSelectedCrew, highlightCrew)
     renderStartLabel(crews, labelsGroup, startLabelIndex, startLabelPosition, xScale, yScale, transitionLength, toggleSelectedCrew, highlightCrew);
     renderNumbersRight(crews, labelsGroup, finishLabelIndex, numYearsToView, numbersRightPosition, xScale, yScale, transitionLength)
@@ -319,25 +319,15 @@ export default function () {
       .remove();
   }
 
-  function renderCrewBackground(crews, crewEnter, lineFunc, transitionLength, toggleSelectedCrew, highlightCrew) {
+  function renderCrewBackground(crews, crewEnter, lineFunc, transitionLength) {
     const crewBackground = crewEnter.selectAll('path.background')
       .data(d => [d], d => createKey(d.set, d.gender, d.name));
 
     crewBackground.enter()
       .append('path')
-      .on('click', d => {
-        toggleSelectedCrew(d.name);
-      })
-      .on('mouseover', d => {
-        highlightCrew(d.name);
-      })
-      .on('mouseout', () => {
-        highlightCrew(null);
-      })
       .attr('d', d => lineFunc(d.values))
       .attr('class', 'background')
-      .style('stroke-opacity', '0.1')
-      .style('cursor', 'pointer');
+      .style('stroke-opacity', '0.1');
 
     crewBackground.transition()
       .duration(transitionLength)
