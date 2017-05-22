@@ -6,6 +6,8 @@ import 'd3-transition'; // We require the side-effects of importing
 
 import { crewColor, renderName } from './util.js';
 
+export const widthOfOneYear = 110;
+
 export default function () {
   let svg;
   let state;
@@ -48,15 +50,14 @@ export default function () {
 
     const crews = results.crews;
 
-    const widthOfOneYear = 80;
-    const heightOfOneCrew = 24;
+    const heightOfOneCrew = 34;
     const widthWithoutLines = 310;
     const initialViewBoxX = -165;
     const initialViewBoxY = 0;
     const startLabelPosition = 0;
     const finishLabelPosition = 4;
-    const numbersLeftPosition = -8;
-    const numbersRightPosition = 7;
+    const numbersLeftPosition = -5.6;
+    const numbersRightPosition = 5;
     const numYearsToView = yearRange.end - yearRange.start + 1;
     const yMarginTop = 10;
 

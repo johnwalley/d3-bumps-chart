@@ -5,6 +5,8 @@ import uniqBy from 'lodash-es/uniqBy';
 import { csvParse } from 'd3-dsv';
 import { min, max } from 'd3-array';
 
+import { widthOfOneYear } from './chart';
+
 export const abbrevCamCollege = {
   'A': 'Addenbrooke\'s',
   'AR': 'Anglia Ruskin',
@@ -506,7 +508,6 @@ export function transformData(event) {
 
 // TODO: Make these constants DRY
 export function calculateNumYearsToview(width) {
-  const widthOfOneYear = 80;
   const widthWithoutLines = 310;
 
   return Math.max(0, Math.ceil((width - widthWithoutLines) / widthOfOneYear));
