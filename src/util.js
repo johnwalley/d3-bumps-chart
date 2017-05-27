@@ -1138,6 +1138,60 @@ export function read_ad(input) {
   return event;
 }
 
+export function read_ad(input) {
+  input = input.split('\n');
+
+  var data = 'EIGHTS 2016\n\
+ 4  3  7   = NDay, NDiv, NCrew\n\
+ 3  Men\'s Div I (6.45)\n\
+Oriel                       0   0   0   0\n\
+Christ Church               0  -1   0   0\n\
+Pembroke                   -1   0   0  -1\n\
+ 3  Men\'s Div II (5.45)\n\
+Worcester                  -1  -1  -1   0\n\
+St Catherine\'s              2   1   0   0\n\
+Pembroke II                 0   1   0   1\n\
+ 1  Men\'s Div III (4.45)\n\
+Exeter                      0   0   1   0\n';
+
+  const event = {
+    set: 'Set',
+    small: 'Short',
+    gender: 'M',
+    result: '',
+    year: 1970,
+    days: 1,
+    divisions: [], results: [], move: [], finish: [], completed: []
+  };
+
+  const info = input[0].split(/\s+/);
+  event.set = info[0];
+  event.year = +info[1];
+
+  const info2 = input[1].trim().split(/\s+/);
+
+  event.days = +info2[0];
+
+  const numDivisions = +info2[1];
+  const numCrews = parseInt(info2[2], 10);
+
+  let currentDivision;
+
+  for (let line = 2; line < numDivisions + numCrews + 2; line++) {
+    console.log(input[line])
+    if (input[line][0] === ' ') {
+      currentDivision = [];
+      event.divisions.push(currentDivision)
+    } else {
+      const startPos = input[line].replace(/[0-9]|-/g, '').trim();
+      console.log(startPos);
+      currentDivision.push(startPos);
+    }
+  }
+
+  return event;
+}
+
 export function write_flat(events) {
   let ret = 'Year,Club,Sex,Day,Crew,Start position,Position,Division\n';
 
