@@ -280,6 +280,20 @@ export function renderName(name, set) {
   return name;
 }
 
+function normalizeOxfordName(name) {
+  const parts = name.split(/\s/);
+
+  let newName;
+
+  if (parts[parts.length - 1].includes('II')) {
+    newName = parts.slice(0, parts.length - 1).join(' ') + ' 2';
+  } else {
+    newName = name + ' 1';
+  }
+
+  return newName;
+}
+
 export function crewColor(name) {
   const camCollegeColor = {
     'A': '#0000ff',
@@ -1026,8 +1040,8 @@ Pembroke II                 0   1   0   1\n\
  1  Men\'s Div III (4.45)\n\
 Exeter                      0   0   1   0\n';
 
-  const event = {
-    set: 'Set',
+  let event = {
+    set: 'Summer Eights',
     small: 'Short',
     gender: 'M',
     result: '',
@@ -1037,7 +1051,7 @@ Exeter                      0   0   1   0\n';
   };
 
   const info = input[0].split(/\s+/);
-  event.set = info[0];
+  //event.set = info[0];
   event.year = +info[1];
 
   const info2 = input[1].trim().split(/\s+/);
@@ -1048,18 +1062,71 @@ Exeter                      0   0   1   0\n';
   const numCrews = parseInt(info2[2], 10);
 
   let currentDivision;
+  let currentMove = [];
+  let currentPos = [];
+
+  for (let day = 0; day < event.days + 1; day++) {
+    currentMove.push([]);
+    currentPos.push([]);
+    for (let crew = 0; crew < numCrews; crew++) {
+      currentPos[day].push(crew);
+    }
+  }
 
   for (let line = 2; line < numDivisions + numCrews + 2; line++) {
-    console.log(input[line])
     if (input[line][0] === ' ') {
       currentDivision = [];
       event.divisions.push(currentDivision)
     } else {
-      const startPos = input[line].replace(/[0-9]|-/g, '').trim();
-      console.log(startPos);
-      currentDivision.push(startPos);
+      const crewName = input[line].replace(/[0-9]|-/g, '').trim();
+      const moves = input[line].replace(/[^0-9- ]/g, '').trim().split(/\s+/g);
+
+      for (let day = 0; day < event.days; day++) {
+        currentMove[day].push(+moves[day]);
+      }
+
+      currentDivision.push(normalizeOxfordName(crewName));
+      currentMove.push()
     }
   }
+
+  for (let day = 1; day < event.days + 1; day++) {
+    for (let crew = 0; crew < numCrews; crew++) {
+      currentPos[day][crew] = currentPos[day - 1][crew] - currentMove[day - 1][crew];
+    }
+  }
+
+  for (let day = 0; day < event.days; day++) {
+    let count = 0;
+    event.move.push([]);
+    event.completed.push([]);
+    for (let div = 0; div < numDivisions; div++) {
+      event.move[day].push([]);
+      event.completed[day].push(true);
+      for (let crew = 0; crew < event.divisions[div].length; crew++) {
+        event.move[day][div].push(currentMove[day][currentPos[day].indexOf(count)]);
+        count++;
+      }
+    }
+  }
+
+  const initialPositions = [];
+  for (let div = 0; div < numDivisions; div++) {
+    for (let crew = 0; crew < event.divisions[div].length; crew++) {
+      initialPositions.push(event.divisions[div][crew]);
+    }
+  }
+
+  let count = 0;
+  for (let div = 0; div < numDivisions; div++) {
+    event.finish.push([]);
+    for (let crew = 0; crew < event.divisions[div].length; crew++) {
+      event.finish[div].push(initialPositions[currentPos[event.days].indexOf(count)]);
+      count++;
+    }
+  }
+
+  event = calculateResults(event);
 
   return event;
 }
