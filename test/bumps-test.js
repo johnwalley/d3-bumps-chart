@@ -137,15 +137,15 @@ Pembroke                   -1   0   0  -1\n\
  3  Men\'s Div II (5.45)\n\
 Worcester                  -1  -1  -1   0\n\
 St Catherine\'s              2   1   0   0\n\
-Pembroke II                 0   1   0   1\n\
+Pembroke III                0   1   0   1\n\
  1  Men\'s Div III (4.45)\n\
 Exeter                      0   0   1   0\n';
 
   var expected = {
     completed: [[true, true, true], [true, true, true], [true, true, true],[true, true, true]],
     days: 4,
-    divisions: [['Oriel 1', 'Christ Church 1', 'Pembroke 1'], ['Worcester 1', 'St Catherine\'s 1', 'Pembroke 2'], ['Exeter 1']],
-    finish: [['Oriel 1', 'St Catherine\'s 1', 'Christ Church 1'], ['Pembroke 2', 'Pembroke 1', 'Exeter 1'], ['Worcester 1']],
+    divisions: [['Oriel 1', 'Christ Church 1', 'Pembroke 1'], ['Worcester 1', 'St Catherine\'s 1', 'Pembroke 3'], ['Exeter 1']],
+    finish: [['Oriel 1', 'St Catherine\'s 1', 'Christ Church 1'], ['Pembroke 3', 'Pembroke 1', 'Exeter 1'], ['Worcester 1']],
     gender: 'M',
     move: [[[0, 0, -1], [-1, 2, 0], [0]], [[0, -1, 1], [0, -1, 1], [0]], [[0, 0, 0], [0, 0, -1], [1]], [[0, 0, 0], [-1, 1, 0], [0]]],
     result: '',

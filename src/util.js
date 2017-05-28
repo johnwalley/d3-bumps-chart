@@ -286,7 +286,7 @@ function normalizeOxfordName(name) {
   let newName = name + ' 1';
 
   roman.forEach((num, index) => {
-    if (parts[parts.length - 1] === num) {
+    if (parts[parts.length - 1].includes(num)) {
       newName = parts.slice(0, parts.length - 1).join(' ') + ' ' + (index + 1);
     }
   });
