@@ -283,13 +283,13 @@ export function renderName(name, set) {
 function normalizeOxfordName(name) {
   const parts = name.split(/\s/);
 
-  let newName;
+  let newName = name + ' 1';
 
-  if (parts[parts.length - 1].includes('II')) {
-    newName = parts.slice(0, parts.length - 1).join(' ') + ' 2';
-  } else {
-    newName = name + ' 1';
-  }
+  roman.forEach((num, index) => {
+    if (parts[parts.length - 1].includes(num)) {
+      newName = parts.slice(0, parts.length - 1).join(' ') + ' ' + (index + 1);
+    }
+  });
 
   return newName;
 }
