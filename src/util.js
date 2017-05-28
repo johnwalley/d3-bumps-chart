@@ -1141,19 +1141,6 @@ export function read_ad(input) {
 export function read_ad(input) {
   input = input.split('\n');
 
-  var data = 'EIGHTS 2016\n\
- 4  3  7   = NDay, NDiv, NCrew\n\
- 3  Men\'s Div I (6.45)\n\
-Oriel                       0   0   0   0\n\
-Christ Church               0  -1   0   0\n\
-Pembroke                   -1   0   0  -1\n\
- 3  Men\'s Div II (5.45)\n\
-Worcester                  -1  -1  -1   0\n\
-St Catherine\'s              2   1   0   0\n\
-Pembroke II                 0   1   0   1\n\
- 1  Men\'s Div III (4.45)\n\
-Exeter                      0   0   1   0\n';
-
   let event = {
     set: 'Summer Eights',
     small: 'Short',
