@@ -144,7 +144,7 @@ Exeter                      0   0   1   0\n';
   var expected = {
     completed: [[true, true, true], [true, true, true], [true, true, true],[true, true, true]],
     days: 4,
-    divisions: [['Oriel 1', 'Christ Church 1', 'Pembroke 1'], ['Worcester 1', 'Pembroke 2'], ['Exeter 1']],
+    divisions: [['Oriel 1', 'Christ Church 1', 'Pembroke 1'], ['Worcester 1', 'St Catherine\'s 1', 'Pembroke 2'], ['Exeter 1']],
     finish: [['Oriel 1', 'St Catherine\'s 1', 'Christ Church 1'], ['Pembroke 2', 'Pembroke 1', 'Exeter 1'], ['Worcester 1']],
     gender: 'M',
     move: [[[0, 0, -1], [-1, 2, 0], [0]], [[0, -1, 1], [0, -1, 1], [0]], [[0, 0, 0], [0, 0, -1], [1]], [[0, 0, 0], [-1, 1, 0], [0]]],
@@ -154,7 +154,7 @@ r rur rur\n\
 r urr rrrr\n\
 r rru rrrr\n',
     set: 'Summer Eights',
-    small: 'Eights',
+    small: 'Short',
     year: 2016,
   };
 
