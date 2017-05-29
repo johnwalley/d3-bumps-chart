@@ -1142,9 +1142,9 @@ export function read_ad(input) {
   input = input.split('\n');
 
   let event = {
-    set: 'Summer Eights',
+    set: 'Set',
     small: 'Short',
-    gender: 'Men',
+    gender: 'Gender',
     result: '',
     year: 1970,
     days: 1,
@@ -1152,7 +1152,16 @@ export function read_ad(input) {
   };
 
   const info = input[0].split(/\s+/);
-  //event.set = info[0];
+
+  switch (info[0]) {
+    case 'EIGHTS':
+      event.set = 'Summer Eights';
+      break;
+    case 'TORPIDS':
+      event.set = 'Torpids';
+      break;
+  }
+
   event.year = +info[1];
 
   const info2 = input[1].trim().split(/\s+/);
@@ -1172,6 +1181,17 @@ export function read_ad(input) {
     for (let crew = 0; crew < numCrews; crew++) {
       currentPos[day].push(crew);
     }
+  }
+
+  switch (input[2].split(' ')[3]) {
+    case 'Mens':
+    case 'Men\'s':
+      event.gender = 'Men';
+      break;
+    case 'Womens':
+    case 'Women\'s':
+      event.gender = 'Women';
+      break;
   }
 
   for (let line = 2; line < numDivisions + numCrews + 2; line++) {
