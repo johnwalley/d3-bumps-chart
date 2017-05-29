@@ -286,7 +286,7 @@ function normalizeOxfordName(name) {
   let newName = name + ' 1';
 
   roman.forEach((num, index) => {
-    if (parts[parts.length - 1].includes(num)) {
+    if (parts[parts.length - 1] === num) {
       newName = parts.slice(0, parts.length - 1).join(' ') + ' ' + (index + 1);
     }
   });
@@ -1144,7 +1144,7 @@ export function read_ad(input) {
   let event = {
     set: 'Summer Eights',
     small: 'Short',
-    gender: 'M',
+    gender: 'Men',
     result: '',
     year: 1970,
     days: 1,
@@ -1179,8 +1179,8 @@ export function read_ad(input) {
       currentDivision = [];
       event.divisions.push(currentDivision)
     } else {
-      const crewName = input[line].replace(/[0-9]|-/g, '').trim();
-      const moves = input[line].replace(/[^0-9- ]/g, '').trim().split(/\s+/g);
+      const crewName = input[line].replace(/-?[0-9]+/g, '').trim();
+      const moves = input[line].replace(/([^\d- ]|-\D)/g, '').trim().split(/\s+/g);
 
       for (let day = 0; day < event.days; day++) {
         currentMove[day].push(+moves[day]);
