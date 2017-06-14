@@ -1219,3 +1219,67 @@ ${event.results}`;
 
   return ret;
 }
+
+var expected = 'EIGHTS 2013\n\
+ 2  3  5   = NDay, NDiv, NCrew\n\
+ 2  Men\'s Div I\n\
+Cantabs                     0   0\n\
+City                        0   0\n\
+ 2  Men\'s Div II\n\
+Cantabs II                  0   0\n\
+City II                     0  -1\n\
+ 1  Men\'s Div III\n\
+Champs                      0   1\n';
+
+export function write_ad(event) {
+  let setStr;
+
+  switch (event.set) {
+    case 'Summer Eights':
+      setStr = 'EIGHTS';
+      break;
+    case 'Torpids':
+      setStr = 'TORPIDS';
+      break;
+  }
+
+  const numCrews = event.divisions.reduce((sum, div) => sum += div.length, 0);
+
+  let ret = `${setStr} ${event.year}
+ ${event.days}  ${event.divisions.length}  ${}   = NDay, NDiv, NCrew
+`;
+
+  event.divisions.forEach((div, index) => {
+    let genderStr;
+    switch (event.gender) {
+      case 'Men':
+        genderStr = 'Men\'s';
+        break;
+      case 'Women':
+        genderStr = 'Women\'s';
+        break;
+    }
+
+    let currentMove = [];
+    let currentPos = [];
+
+    for (let day = 0; day < event.days + 1; day++) {
+      currentMove.push([]);
+      currentPos.push([]);
+      for (let crew = 0; crew < numCrews; crew++) {
+        currentPos[day].push(crew);
+      }
+    }
+
+    let divStr = ` ${div.length}  ${genderStr} Div ${roman[index]}\n`;
+
+    div.forEach(crew => {
+      divStr += `${crew}\n`;
+    });
+
+    ret += divStr;
+
+  });
+
+  return ret;
+}
