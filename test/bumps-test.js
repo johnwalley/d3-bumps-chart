@@ -230,6 +230,38 @@ rr rrr\n';
   test.end();
 });
 
+tape('write_ad() returns the correct Anu Dudhia output.', function (test) {
+  var event = {
+    completed: [],
+    days: 2,
+    divisions: [['Cantabs 1', 'City 1'], ['Cantabs 2', 'City 2'], ['Champs 1']],
+    finish: [],
+    gender: 'Men',
+    move: [[[0, 0], [0, -1], [1]], [[0, 0], [0, 0], [0]]],
+    result: '',
+    results: 'rr rrr\nrr rrr\n',
+    set: 'Summer Eights',
+    small: 'Short',
+    year: '2013',
+  };
+
+  var expected = 'EIGHTS 2013\n\
+ 2  3  5   = NDay, NDiv, NCrew\n\
+ 2  Men\'s Div I\n\
+Cantabs                     0   0\n\
+City                        0   0\n\
+ 2  Men\'s Div II\n\
+Cantabs II                  0   0\n\
+City II                     0  -1\n\
+ 1  Men\'s Div III\n\
+Champs                      0   1\n';
+
+  var actual = bumps.write_ad(event);
+
+  test.equal(actual, expected);
+  test.end();
+});
+
 tape('round-trip flat format.', function (test) {
   var data = 'Year,Club,Sex,Day,Crew,Start position,Position,Division\n\
 2013,Cantabs,M,1,1,1,1,1\n\
