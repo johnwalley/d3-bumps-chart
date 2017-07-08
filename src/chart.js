@@ -12,6 +12,7 @@ export default function () {
   let svg;
   let state;
 
+  let g;
   let divisionsGroup;
   let yearsGroup;
   let labelsGroup;
@@ -22,10 +23,12 @@ export default function () {
 
   chart.setup = function setup(el) {
     svg = select(el).select('svg');
+    g = svg.append('g').attr('class', 'results-container')
+      .append('g').attr('class', 'results');
 
-    divisionsGroup = svg.append('g').attr('class', 'divisions');
-    yearsGroup = svg.append('g').attr('class', 'years');
-    linesGroup = svg.append('g').attr('class', 'lines');
+    divisionsGroup = g.append('g').attr('class', 'divisions');
+    yearsGroup = g.append('g').attr('class', 'years');
+    linesGroup = g.append('g').attr('class', 'lines');
     labelsGroup = svg.append('g').attr('class', 'labels');
 
     createClipPath(svg);
@@ -106,6 +109,10 @@ export default function () {
       finishLabelIndex = maxDays - 1;
     }
 
+    g.transition()
+      .duration(transitionLength)
+      .attr('transform', `translate(${xScale(-dayShift)},0)`)
+
     renderClipPath(svg, numYearsToView, viewBoxHeight, xScale);
     const divisionsEnter = renderDivisions(results, divisionsGroup, dayShift, xScale, transitionLength);
     renderDivisionsYear(divisionsEnter, startYear, xScale, yScale, transitionLength);
@@ -147,9 +154,7 @@ export default function () {
 
     const clipPathUrl = 'url(#' + clipPathId + ')';
 
-    svg.select('.divisions').attr('clip-path', clipPathUrl);
-    svg.select('.years').attr('clip-path', clipPathUrl);
-    svg.select('.lines').attr('clip-path', clipPathUrl);
+    svg.select('.results-container').attr('clip-path', clipPathUrl);
   }
 
   function createDropShadowFilter(svg) {
@@ -179,23 +184,21 @@ export default function () {
   function renderClipPath(svg, numYearsToView, viewBoxHeight, xScale) {
     svg.select('clipPath').select('rect')
       .datum(numYearsToView)
-      .attr('width', w => xScale(5 * w - 1))
+      .attr('width', w => xScale(5 * w - 1) - xScale(0))
       .attr('height', viewBoxHeight + 2); // TODO: Work out why we need to extend the height
   }
 
   function renderDivisions(results, divisionsGroup, dayShift, xScale, transitionLength) {
-    const divisions = divisionsGroup.selectAll('.divisionYear')
+    const divisions = divisionsGroup.selectAll('.division-year')
       .data(results.divisions, (d, i) => createKey(d.set, d.gender, i));
 
     const divisionsEnter = divisions.enter()
       .append('g')
-      .attr('class', 'divisionYear')
-      .attr('id', d => d.year)
-      .attr('transform', `translate(${xScale(-dayShift)},0)`);
+      .attr('class', 'division-year')
+      .attr('id', d => d.year);
 
     divisions.transition()
-      .duration(transitionLength)
-      .attr('transform', `translate(${xScale(-dayShift)},0)`);
+      .duration(transitionLength);
 
     divisions.exit()
       .remove();
@@ -248,13 +251,11 @@ export default function () {
       .attr('y', yScale(0))
       .style('font-size', '22px')
       .attr('text-anchor', 'middle')
-      .attr('transform', `translate(${xScale(-dayShift)},0)`)
       .text(d => d);
 
     years.transition()
       .duration(transitionLength)
-      .attr('x', d => xScale((d - startYear) * 5 + 2))
-      .attr('transform', `translate(${xScale(-dayShift)},0)`);
+      .attr('x', d => xScale((d - startYear) * 5 + 2));
 
     years.exit()
       .transition()
@@ -270,7 +271,6 @@ export default function () {
     const crewEnter = crew.enter()
       .append('g')
       .attr('class', d => `line ${d.name.replace(/ /g, '-')}`)
-      .attr('transform', `translate(${xScale(-dayShift)},0)`)
       .classed('highlighted', d => d.highlighted)
       .style('filter', d => (d.highlighted || d.hover ? 'url(#dropShadow)' : ''))
       .style('fill', 'none')
@@ -282,10 +282,7 @@ export default function () {
       .style('filter', d => (d.highlighted || d.hover ? 'url(#dropShadow)' : ''))
       .style('stroke', d => (d.highlighted || d.hover ? crewColor(d.name) : '#000000'))
       .style('stroke-width', d => (d.highlighted || d.hover ? '3px' : '2px'))
-      .style('stroke-opacity', d => selectedCrews.size > 0 ? (d.highlighted || d.hover ? '1' : '0.5') : '1')
-      .transition()
-      .duration(transitionLength)
-      .attr('transform', `translate(${xScale(-dayShift)},0)`);
+      .style('stroke-opacity', d => selectedCrews.size > 0 ? (d.highlighted || d.hover ? '1' : '0.5') : '1');
 
     crew.exit()
       .transition()

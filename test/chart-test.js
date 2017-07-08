@@ -9,7 +9,7 @@ tape("Setup should append 4 svg groups.", function (test) {
   var chart = d3_bumps_chart.chart();
   chart.setup(el);
 
-  test.equal(dom.window.document.querySelector('svg').querySelectorAll('g').length, 4);
+  test.equal(dom.window.document.querySelector('svg').querySelectorAll('g').length, 6);
   test.end();
 });
 
@@ -119,7 +119,7 @@ tape("Render should create the expected elements.", function (test) {
   chart.render(props);
 
   test.equal(dom.window.document.querySelector('svg').querySelector('.years').querySelectorAll('text').length, 2);
-  test.equal(dom.window.document.querySelector('svg').querySelector('.divisions').querySelector('.divisionYear').querySelectorAll('rect').length, 1);
+  test.equal(dom.window.document.querySelector('svg').querySelector('.divisions').querySelector('.division-year').querySelectorAll('rect').length, 1);
   test.equal(dom.window.document.querySelector('svg').querySelector('.lines').querySelectorAll('g').length, 2);
   test.equal(dom.window.document.querySelector('svg').querySelector('.labels').querySelectorAll('text').length, 8);
 
