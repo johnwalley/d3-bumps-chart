@@ -123,7 +123,7 @@ export default function () {
     renderFinishLabel(crews, labelsGroup, finishLabelIndex, finishLabelPosition, numYearsToView, xScale, yScale, transitionLength, toggleSelectedCrew, highlightCrew)
     renderStartLabel(crews, labelsGroup, startLabelIndex, startLabelPosition, xScale, yScale, transitionLength, toggleSelectedCrew, highlightCrew);
     renderNumbersRight(crews, labelsGroup, finishLabelIndex, numYearsToView, numbersRightPosition, xScale, yScale, transitionLength)
-    renderNumbersLeft(results.divisions, labelsGroup, yearDiff, numbersLeftPosition, xScale, yScale, transitionLength);
+    renderNumbersLeft(results.divisions, labelsGroup, yearRange.start, numbersLeftPosition, xScale, yScale, transitionLength);
   }
 
   chart.toggleSelectedCrew = function (name) {
@@ -342,8 +342,7 @@ export default function () {
     const calculateFinishLabelPosition = d => d.values[(d.values[finishLabelIndex].pos === -1) && (finishLabelIndex % 5 !== 0) ? finishLabelIndex - 1 : finishLabelIndex].pos;
 
     const finishLabel = labelsGroup.selectAll('.finish-label')
-      .data(crews.filter(d => calculateFinishLabelPosition(d) > -1),
-      d => createKey(d.set, d.gender, d.name));
+      .data(crews, d => createKey(d.set, d.gender, d.name));
 
     finishLabel.enter()
       .filter(d => calculateFinishLabelPosition(d) > -1)
@@ -382,11 +381,18 @@ export default function () {
   }
 
   function renderStartLabel(crews, labelsGroup, startLabelIndex, startLabelPosition, xScale, yScale, transitionLength, toggleSelectedCrew, highlightCrew) {
-    const calculateStartLabelPosition = d => d.values[startLabelIndex].pos;
+    const calculateStartLabelPosition = d => {
+      let startValue = d.values.find(x => x.day === startLabelIndex);
+
+      if (startValue === undefined) {
+        startValue = d.values.find(x => x.day === startLabelIndex - 1)
+      }
+
+      return startValue.pos;
+    }
 
     const startLabel = labelsGroup.selectAll('.start-label')
-      .data(crews.filter(d => calculateStartLabelPosition(d) > -1),
-      d => createKey(d.set, d.gender, d.name));
+      .data(crews, d => createKey(d.set, d.gender, d.name));
 
     startLabel.enter()
       .filter(d => calculateStartLabelPosition(d) > -1)
@@ -451,10 +457,16 @@ export default function () {
       .remove();
   }
 
-  function renderNumbersLeft(divisions, labelsGroup, yearDiff, numbersLeftPosition, xScale, yScale, transitionLength) {
+  function renderNumbersLeft(divisions, labelsGroup, startYear, numbersLeftPosition, xScale, yScale, transitionLength) {
     const numbers = [];
 
-    divisions[yearDiff].divisions.forEach(d => {
+    let startYearDivisions = divisions.find(x => x.year === startYear);
+
+    if (startYearDivisions === undefined) {
+      startYearDivisions = divisions.find(x => x.year === startYear - 1);
+    }
+
+    startYearDivisions.divisions.forEach(d => {
       for (let i = 0; i < d.length; i++) {
         numbers.push(i + 1);
       }
