@@ -411,6 +411,7 @@ export function joinEvents(events, set, gender) {
     divisions.push({
       set: set,
       gender: gender,
+      year: event.year,
       divisions: event.divisions.map(d => ({ year: event.year, start: d.start, length: d.length }))
     });
   });
