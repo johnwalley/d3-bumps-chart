@@ -1,6 +1,8 @@
 import findKey from 'lodash-es/findKey';
 import uniq from 'lodash-es/uniq';
 import uniqBy from 'lodash-es/uniqBy';
+import padEnd from 'lodash-es/padEnd';
+import padStart from 'lodash-es/padStart';
 
 import { csvParse } from 'd3-dsv';
 import { min, max } from 'd3-array';
@@ -1247,7 +1249,7 @@ export function write_ad(event) {
   const numCrews = event.divisions.reduce((sum, div) => sum += div.length, 0);
 
   let ret = `${setStr} ${event.year}
- ${event.days}  ${event.divisions.length}  ${}   = NDay, NDiv, NCrew
+ ${event.days}  ${event.divisions.length}  ${numCrews}   = NDay, NDiv, NCrew
 `;
 
   event.divisions.forEach((div, index) => {
@@ -1274,8 +1276,12 @@ export function write_ad(event) {
 
     let divStr = ` ${div.length}  ${genderStr} Div ${roman[index]}\n`;
 
-    div.forEach(crew => {
-      divStr += `${crew}\n`;
+    div.forEach((crew, crewIndex) => {
+      divStr += `${padEnd(renderName(crew, event.set), 25)}`;
+      for (let day = 0; day < event.days; day++) {
+        divStr += padStart(event.move[day][index][crewIndex], 4);
+      }
+      divStr += '\n';
     });
 
     ret += divStr;

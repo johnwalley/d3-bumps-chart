@@ -105,7 +105,7 @@ Pembroke IV                 0   1   0   1\n\
 Exeter                      0   0   1   0\n';
 
   var expected = {
-    completed: [[true, true, true], [true, true, true], [true, true, true],[true, true, true]],
+    completed: [[true, true, true], [true, true, true], [true, true, true], [true, true, true]],
     days: 4,
     divisions: [['Oriel 1', 'Christ Church 1', 'Pembroke 1'], ['Osler-Green 1', 'St Catherine\'s 1', 'Pembroke 4'], ['Exeter 1']],
     finish: [['Oriel 1', 'St Catherine\'s 1', 'Christ Church 1'], ['Pembroke 4', 'Pembroke 1', 'Exeter 1'], ['Osler-Green 1']],
@@ -129,18 +129,18 @@ r rru rrrr\n',
 
 tape('write_flat() returns the correct flat format output.', function (test) {
   var events = [{
-      completed: [],
-      days: 2,
-      divisions: [['Cantabs 1', 'City 1'], ['Cantabs 2', 'City 2'], ['Champs 1']],
-      finish: [],
-      gender: 'M',
-      move: [[[0, 0], [0, -1], [1]], [[0, 0], [0, 0], [0]]],
-      result: '',
-      results: 'r rrr rrr\nr rrr rrr\n',
-      set: 'Town Bumps',
-      small: 'Short',
-      year: '2013',
-    }];
+    completed: [],
+    days: 2,
+    divisions: [['Cantabs 1', 'City 1'], ['Cantabs 2', 'City 2'], ['Champs 1']],
+    finish: [],
+    gender: 'M',
+    move: [[[0, 0], [0, -1], [1]], [[0, 0], [0, 0], [0]]],
+    result: '',
+    results: 'r rrr rrr\nr rrr rrr\n',
+    set: 'Town Bumps',
+    small: 'Short',
+    year: '2013',
+  }];
 
   var expected = 'Year,Club,Sex,Day,Crew,Start position,Position,Division\n\
 2013,Cantabs,M,1,1,1,1,1\n\
@@ -200,7 +200,7 @@ tape('write_ad() returns the correct Anu Dudhia output.', function (test) {
     divisions: [['Cantabs 1', 'City 1'], ['Cantabs 2', 'City 2'], ['Champs 1']],
     finish: [],
     gender: 'Men',
-    move: [[[0, 0], [0, -1], [1]], [[0, 0], [0, 0], [0]]],
+    move: [[[0, 0], [0, 0], [0]], [[0, 0], [0, -1], [1]]],
     result: '',
     results: 'rr rrr\nrr rrr\n',
     set: 'Summer Eights',
