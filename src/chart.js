@@ -339,7 +339,7 @@ export default function () {
   }
 
   function renderFinishLabel(crews, labelsGroup, finishLabelIndex, finishLabelPosition, numYearsToView, xScale, yScale, transitionLength, toggleSelectedCrew, highlightCrew) {
-    const calculateFinishLabelPosition = d => d.values[d.values[finishLabelIndex].pos === -1 ? finishLabelIndex - 1 : finishLabelIndex].pos;
+    const calculateFinishLabelPosition = d => d.values[(d.values[finishLabelIndex].pos === -1) && (finishLabelIndex % 5 !== 0) ? finishLabelIndex - 1 : finishLabelIndex].pos;
 
     const finishLabel = labelsGroup.selectAll('.finish-label')
       .data(crews.filter(d => calculateFinishLabelPosition(d) > -1),
@@ -371,7 +371,6 @@ export default function () {
 
     finishLabel.classed('highlighted', d => d.highlighted || d.hover)
       .style('font-weight', d => d.highlighted || d.hover ? 'bold' : 'normal')
-
       .filter(d => calculateFinishLabelPosition(d) > -1)
       .transition()
       .duration(transitionLength)
