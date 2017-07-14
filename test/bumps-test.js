@@ -90,20 +90,94 @@ r ru urrr',
   test.end();
 });
 
+tape('read_ad() returns a correct intermediate object.', function (test) {
+  var data = 'EIGHTS 2016\n\
+ 4  3  7   = NDay, NDiv, NCrew\n\
+ 3  Men\'s Div I (6.45)\n\
+Oriel                       0   0   0   0\n\
+Christ Church               0  -1   0   0\n\
+Pembroke                   -1   0   0  -1\n\
+ 3  Men\'s Div II (5.45)\n\
+Osler-Green                -1  -1  -1   0\n\
+St Catherine\'s              2   1   0   0\n\
+Pembroke IV                 0   1   0   1\n\
+ 1  Men\'s Div III (4.45)\n\
+Exeter                      0   0   1   0\n';
+
+  var expected = {
+    completed: [[true, true, true], [true, true, true], [true, true, true], [true, true, true]],
+    days: 4,
+    divisions: [['Oriel 1', 'Christ Church 1', 'Pembroke 1'], ['Osler-Green 1', 'St Catherine\'s 1', 'Pembroke 4'], ['Exeter 1']],
+    finish: [['Oriel 1', 'St Catherine\'s 1', 'Christ Church 1'], ['Pembroke 4', 'Pembroke 1', 'Exeter 1'], ['Osler-Green 1']],
+    gender: 'Men',
+    move: [[[0, 0, -1], [-1, 2, 0], [0]], [[0, -1, 1], [0, -1, 1], [0]], [[0, 0, 0], [0, 0, -1], [1]], [[0, 0, 0], [-1, 1, 0], [0]]],
+    result: '',
+    results: 'r rru urr\n\
+r rur rur\n\
+r urr rrrr\n\
+r rru rrrr\n',
+    set: 'Summer Eights',
+    small: 'Short',
+    year: 2016,
+  };
+
+  var actual = bumps.read_ad(data);
+
+  test.deepEqual(actual, expected);
+  test.end();
+});
+
+tape('read_ad() returns a correct intermediate object.', function (test) {
+  var data = 'EIGHTS 2016\n\
+ 4  3  7   = NDay, NDiv, NCrew\n\
+ 3  Men\'s Div I (6.45)\n\
+Oriel                       0   0   0   0\n\
+Christ Church               0  -1   0   0\n\
+Pembroke                   -1   0   0  -1\n\
+ 3  Men\'s Div II (5.45)\n\
+Osler-Green                -1  -1  -1   0\n\
+St Catherine\'s              2   1   0   0\n\
+Pembroke IV                 0   1   0   1\n\
+ 1  Men\'s Div III (4.45)\n\
+Exeter                      0   0   1   0\n';
+
+  var expected = {
+    completed: [[true, true, true], [true, true, true], [true, true, true],[true, true, true]],
+    days: 4,
+    divisions: [['Oriel 1', 'Christ Church 1', 'Pembroke 1'], ['Osler-Green 1', 'St Catherine\'s 1', 'Pembroke 4'], ['Exeter 1']],
+    finish: [['Oriel 1', 'St Catherine\'s 1', 'Christ Church 1'], ['Pembroke 4', 'Pembroke 1', 'Exeter 1'], ['Osler-Green 1']],
+    gender: 'Men',
+    move: [[[0, 0, -1], [-1, 2, 0], [0]], [[0, -1, 1], [0, -1, 1], [0]], [[0, 0, 0], [0, 0, -1], [1]], [[0, 0, 0], [-1, 1, 0], [0]]],
+    result: '',
+    results: 'r rru urr\n\
+r rur rur\n\
+r urr rrrr\n\
+r rru rrrr\n',
+    set: 'Summer Eights',
+    small: 'Short',
+    year: 2016,
+  };
+
+  var actual = bumps.read_ad(data);
+
+  test.deepEqual(actual, expected);
+  test.end();
+});
+
 tape('write_flat() returns the correct flat format output.', function (test) {
   var events = [{
-      completed: [],
-      days: 2,
-      divisions: [['Cantabs 1', 'City 1'], ['Cantabs 2', 'City 2'], ['Champs 1']],
-      finish: [],
-      gender: 'M',
-      move: [[[0, 0], [0, -1], [1]], [[0, 0], [0, 0], [0]]],
-      result: '',
-      results: 'r rrr rrr\nr rrr rrr\n',
-      set: 'Town Bumps',
-      small: 'Short',
-      year: '2013',
-    }];
+    completed: [],
+    days: 2,
+    divisions: [['Cantabs 1', 'City 1'], ['Cantabs 2', 'City 2'], ['Champs 1']],
+    finish: [],
+    gender: 'M',
+    move: [[[0, 0], [0, -1], [1]], [[0, 0], [0, 0], [0]]],
+    result: '',
+    results: 'r rrr rrr\nr rrr rrr\n',
+    set: 'Town Bumps',
+    small: 'Short',
+    year: '2013',
+  }];
 
   var expected = 'Year,Club,Sex,Day,Crew,Start position,Position,Division\n\
 2013,Cantabs,M,1,1,1,1,1\n\
@@ -132,7 +206,7 @@ tape('write_tg() returns the correct Tim Grainger output.', function (test) {
     gender: 'M',
     move: [[[0, 0], [0, -1], [1]], [[0, 0], [0, 0], [0]]],
     result: '',
-    results: 'rr rrr\nrr rrr\n',
+    results: 'r ur rrr\nr rrr rrr\n',
     set: 'Town Bumps',
     small: 'Short',
     year: '2013',
@@ -148,9 +222,41 @@ Division,Cantabs 1,City 1\n\
 Division,Cantabs 2,City 2\n\
 Division,Champs 1\n\
 \n\
-Results\nrr rrr\n\
-rr rrr\n';
+Results\nr ur rrr\n\
+r rrr rrr\n';
   var actual = bumps.write_tg(event);
+
+  test.equal(actual, expected);
+  test.end();
+});
+
+tape('write_ad() returns the correct Anu Dudhia output.', function (test) {
+  var event = {
+    completed: [],
+    days: 2,
+    divisions: [['Cantabs 1', 'City 1'], ['Cantabs 2', 'City 2'], ['Champs 1']],
+    finish: [],
+    gender: 'Men',
+    move: [[[0, 0], [0, 0], [0]], [[0, 0], [0, -1], [1]]],
+    result: '',
+    results: 'rr rrr\nrr rrr\n',
+    set: 'Summer Eights',
+    small: 'Short',
+    year: '2013',
+  };
+
+  var expected = 'EIGHTS 2013\n\
+ 2  3  5   = NDay, NDiv, NCrew\n\
+ 2  Men\'s Div I\n\
+Cantabs                     0   0\n\
+City                        0   0\n\
+ 2  Men\'s Div II\n\
+Cantabs II                  0   0\n\
+City II                     0  -1\n\
+ 1  Men\'s Div III\n\
+Champs                      0   1\n';
+
+  var actual = bumps.write_ad(event);
 
   test.equal(actual, expected);
   test.end();

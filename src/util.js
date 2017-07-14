@@ -1,6 +1,8 @@
 import findKey from 'lodash-es/findKey';
 import uniq from 'lodash-es/uniq';
 import uniqBy from 'lodash-es/uniqBy';
+import padEnd from 'lodash-es/padEnd';
+import padStart from 'lodash-es/padStart';
 
 import { csvParse } from 'd3-dsv';
 import { min, max } from 'd3-array';
@@ -280,6 +282,20 @@ export function renderName(name, set) {
   return name;
 }
 
+function normalizeOxfordName(name) {
+  const parts = name.split(/\s/);
+
+  let newName = name + ' 1';
+
+  roman.forEach((num, index) => {
+    if (parts[parts.length - 1] === num) {
+      newName = parts.slice(0, parts.length - 1).join(' ') + ' ' + (index + 1);
+    }
+  });
+
+  return newName;
+}
+
 export function crewColor(name) {
   const camCollegeColor = {
     'A': '#0000ff',
@@ -397,6 +413,7 @@ export function joinEvents(events, set, gender) {
     divisions.push({
       set: set,
       gender: gender,
+      year: event.year,
       divisions: event.divisions.map(d => ({ year: event.year, start: d.start, length: d.length }))
     });
   });
@@ -1010,6 +1027,236 @@ export function read_tg(input) {
   return event;
 }
 
+export function read_ad(input) {
+  input = input.split('\n');
+
+  let event = {
+    set: 'Set',
+    small: 'Short',
+    gender: 'Gender',
+    result: '',
+    year: 1970,
+    days: 1,
+    divisions: [], results: [], move: [], finish: [], completed: []
+  };
+
+  const info = input[0].split(/\s+/);
+
+  switch (info[0]) {
+    case 'EIGHTS':
+      event.set = 'Summer Eights';
+      event.small = 'Eights';
+      break;
+    case 'TORPIDS':
+      event.set = 'Torpids';
+      event.small = 'Torpids';
+      break;
+  }
+
+  event.year = +info[1];
+
+  const info2 = input[1].trim().split(/\s+/);
+
+  event.days = +info2[0];
+
+  const numDivisions = +info2[1];
+  const numCrews = parseInt(info2[2], 10);
+
+  let currentDivision;
+  let currentMove = [];
+  let currentPos = [];
+
+  for (let day = 0; day < event.days + 1; day++) {
+    currentMove.push([]);
+    currentPos.push([]);
+    for (let crew = 0; crew < numCrews; crew++) {
+      currentPos[day].push(crew);
+    }
+  }
+
+  switch (input[2].split(' ')[3]) {
+    case 'Mens':
+    case 'Men\'s':
+      event.gender = 'Men';
+      break;
+    case 'Womens':
+    case 'Women\'s':
+      event.gender = 'Women';
+      break;
+  }
+
+  for (let line = 2; line < numDivisions + numCrews + 2; line++) {
+    if (input[line][0] === ' ') {
+      currentDivision = [];
+      event.divisions.push(currentDivision)
+    } else {
+      const crewName = input[line].replace(/-?[0-9]+/g, '').trim();
+      const moves = input[line].replace(/([^\d- ]|-\D)/g, '').trim().split(/\s+/g);
+
+      for (let day = 0; day < event.days; day++) {
+        currentMove[day].push(+moves[day]);
+      }
+
+      currentDivision.push(normalizeOxfordName(crewName));
+      currentMove.push()
+    }
+  }
+
+  for (let day = 1; day < event.days + 1; day++) {
+    for (let crew = 0; crew < numCrews; crew++) {
+      currentPos[day][crew] = currentPos[day - 1][crew] - currentMove[day - 1][crew];
+    }
+  }
+
+  for (let day = 0; day < event.days; day++) {
+    let count = 0;
+    event.move.push([]);
+    event.completed.push([]);
+    for (let div = 0; div < numDivisions; div++) {
+      event.move[day].push([]);
+      event.completed[day].push(true);
+      for (let crew = 0; crew < event.divisions[div].length; crew++) {
+        event.move[day][div].push(currentMove[day][currentPos[day].indexOf(count)]);
+        count++;
+      }
+    }
+  }
+
+  const initialPositions = [];
+  for (let div = 0; div < numDivisions; div++) {
+    for (let crew = 0; crew < event.divisions[div].length; crew++) {
+      initialPositions.push(event.divisions[div][crew]);
+    }
+  }
+
+  let count = 0;
+  for (let div = 0; div < numDivisions; div++) {
+    event.finish.push([]);
+    for (let crew = 0; crew < event.divisions[div].length; crew++) {
+      event.finish[div].push(initialPositions[currentPos[event.days].indexOf(count)]);
+      count++;
+    }
+  }
+
+  event = calculateResults(event);
+
+  return event;
+}
+
+export function read_ad(input) {
+  input = input.split('\n');
+
+  let event = {
+    set: 'Set',
+    small: 'Short',
+    gender: 'Gender',
+    result: '',
+    year: 1970,
+    days: 1,
+    divisions: [], results: [], move: [], finish: [], completed: []
+  };
+
+  const info = input[0].split(/\s+/);
+
+  switch (info[0]) {
+    case 'EIGHTS':
+      event.set = 'Summer Eights';
+      break;
+    case 'TORPIDS':
+      event.set = 'Torpids';
+      break;
+  }
+
+  event.year = +info[1];
+
+  const info2 = input[1].trim().split(/\s+/);
+
+  event.days = +info2[0];
+
+  const numDivisions = +info2[1];
+  const numCrews = parseInt(info2[2], 10);
+
+  let currentDivision;
+  let currentMove = [];
+  let currentPos = [];
+
+  for (let day = 0; day < event.days + 1; day++) {
+    currentMove.push([]);
+    currentPos.push([]);
+    for (let crew = 0; crew < numCrews; crew++) {
+      currentPos[day].push(crew);
+    }
+  }
+
+  switch (input[2].split(' ')[3]) {
+    case 'Mens':
+    case 'Men\'s':
+      event.gender = 'Men';
+      break;
+    case 'Womens':
+    case 'Women\'s':
+      event.gender = 'Women';
+      break;
+  }
+
+  for (let line = 2; line < numDivisions + numCrews + 2; line++) {
+    if (input[line][0] === ' ') {
+      currentDivision = [];
+      event.divisions.push(currentDivision)
+    } else {
+      const crewName = input[line].replace(/-?[0-9]+/g, '').trim();
+      const moves = input[line].replace(/([^\d- ]|-\D)/g, '').trim().split(/\s+/g);
+
+      for (let day = 0; day < event.days; day++) {
+        currentMove[day].push(+moves[day]);
+      }
+
+      currentDivision.push(normalizeOxfordName(crewName));
+      currentMove.push()
+    }
+  }
+
+  for (let day = 1; day < event.days + 1; day++) {
+    for (let crew = 0; crew < numCrews; crew++) {
+      currentPos[day][crew] = currentPos[day - 1][crew] - currentMove[day - 1][crew];
+    }
+  }
+
+  for (let day = 0; day < event.days; day++) {
+    let count = 0;
+    event.move.push([]);
+    event.completed.push([]);
+    for (let div = 0; div < numDivisions; div++) {
+      event.move[day].push([]);
+      event.completed[day].push(true);
+      for (let crew = 0; crew < event.divisions[div].length; crew++) {
+        event.move[day][div].push(currentMove[day][currentPos[day].indexOf(count)]);
+        count++;
+      }
+    }
+  }
+
+  const initialPositions = [];
+  for (let div = 0; div < numDivisions; div++) {
+    for (let crew = 0; crew < event.divisions[div].length; crew++) {
+      initialPositions.push(event.divisions[div][crew]);
+    }
+  }
+
+  let count = 0;
+  for (let div = 0; div < numDivisions; div++) {
+    event.finish.push([]);
+    for (let crew = 0; crew < event.divisions[div].length; crew++) {
+      event.finish[div].push(initialPositions[currentPos[event.days].indexOf(count)]);
+      count++;
+    }
+  }
+
+  event = calculateResults(event);
+
+  return event;
+}
+
 export function write_flat(events) {
   let ret = 'Year,Club,Sex,Day,Crew,Start position,Position,Division\n';
 
@@ -1088,6 +1335,74 @@ Year,${event.year}
   ret += `
 Results
 ${event.results}`;
+
+  return ret;
+}
+
+var expected = 'EIGHTS 2013\n\
+ 2  3  5   = NDay, NDiv, NCrew\n\
+ 2  Men\'s Div I\n\
+Cantabs                     0   0\n\
+City                        0   0\n\
+ 2  Men\'s Div II\n\
+Cantabs II                  0   0\n\
+City II                     0  -1\n\
+ 1  Men\'s Div III\n\
+Champs                      0   1\n';
+
+export function write_ad(event) {
+  let setStr;
+
+  switch (event.set) {
+    case 'Summer Eights':
+      setStr = 'EIGHTS';
+      break;
+    case 'Torpids':
+      setStr = 'TORPIDS';
+      break;
+  }
+
+  const numCrews = event.divisions.reduce((sum, div) => sum += div.length, 0);
+
+  let ret = `${setStr} ${event.year}
+ ${event.days}  ${event.divisions.length}  ${numCrews}   = NDay, NDiv, NCrew
+`;
+
+  event.divisions.forEach((div, index) => {
+    let genderStr;
+    switch (event.gender) {
+      case 'Men':
+        genderStr = 'Men\'s';
+        break;
+      case 'Women':
+        genderStr = 'Women\'s';
+        break;
+    }
+
+    let currentMove = [];
+    let currentPos = [];
+
+    for (let day = 0; day < event.days + 1; day++) {
+      currentMove.push([]);
+      currentPos.push([]);
+      for (let crew = 0; crew < numCrews; crew++) {
+        currentPos[day].push(crew);
+      }
+    }
+
+    let divStr = ` ${div.length}  ${genderStr} Div ${roman[index]}\n`;
+
+    div.forEach((crew, crewIndex) => {
+      divStr += `${padEnd(renderName(crew, event.set), 25)}`;
+      for (let day = 0; day < event.days; day++) {
+        divStr += padStart(event.move[day][index][crewIndex], 4);
+      }
+      divStr += '\n';
+    });
+
+    ret += divStr;
+
+  });
 
   return ret;
 }
