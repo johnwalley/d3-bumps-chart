@@ -30,6 +30,9 @@ export default function () {
     container = svg.append('g').attr('class', 'results-container');
     g = container.append('g').attr('class', 'results');
 
+    container.append('rect')
+      .attr('class', 'touch-target');
+
     divisionsGroup = g.append('g').attr('class', 'divisions');
     yearsGroup = g.append('g').attr('class', 'years');
     linesGroup = g.append('g').attr('class', 'lines');
@@ -114,7 +117,7 @@ export default function () {
       finishLabelIndex = maxDays - 1;
     }
 
-    container.append('rect')
+    container.select('.touch-target')
       .attr('x', 0)
       .attr('y', 0)
       .attr('width', width)
