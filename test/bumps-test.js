@@ -117,44 +117,7 @@ r rur rur\n\
 r urr rrrr\n\
 r rru rrrr\n',
     set: 'Summer Eights',
-    small: 'Short',
-    year: 2016,
-  };
-
-  var actual = bumps.read_ad(data);
-
-  test.deepEqual(actual, expected);
-  test.end();
-});
-
-tape('read_ad() returns a correct intermediate object.', function (test) {
-  var data = 'EIGHTS 2016\n\
- 4  3  7   = NDay, NDiv, NCrew\n\
- 3  Men\'s Div I (6.45)\n\
-Oriel                       0   0   0   0\n\
-Christ Church               0  -1   0   0\n\
-Pembroke                   -1   0   0  -1\n\
- 3  Men\'s Div II (5.45)\n\
-Osler-Green                -1  -1  -1   0\n\
-St Catherine\'s              2   1   0   0\n\
-Pembroke IV                 0   1   0   1\n\
- 1  Men\'s Div III (4.45)\n\
-Exeter                      0   0   1   0\n';
-
-  var expected = {
-    completed: [[true, true, true], [true, true, true], [true, true, true],[true, true, true]],
-    days: 4,
-    divisions: [['Oriel 1', 'Christ Church 1', 'Pembroke 1'], ['Osler-Green 1', 'St Catherine\'s 1', 'Pembroke 4'], ['Exeter 1']],
-    finish: [['Oriel 1', 'St Catherine\'s 1', 'Christ Church 1'], ['Pembroke 4', 'Pembroke 1', 'Exeter 1'], ['Osler-Green 1']],
-    gender: 'Men',
-    move: [[[0, 0, -1], [-1, 2, 0], [0]], [[0, -1, 1], [0, -1, 1], [0]], [[0, 0, 0], [0, 0, -1], [1]], [[0, 0, 0], [-1, 1, 0], [0]]],
-    result: '',
-    results: 'r rru urr\n\
-r rur rur\n\
-r urr rrrr\n\
-r rru rrrr\n',
-    set: 'Summer Eights',
-    small: 'Short',
+    small: 'Eights',
     year: 2016,
   };
 

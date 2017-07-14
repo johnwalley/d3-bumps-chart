@@ -1225,17 +1225,6 @@ ${event.results}`;
   return ret;
 }
 
-var expected = 'EIGHTS 2013\n\
- 2  3  5   = NDay, NDiv, NCrew\n\
- 2  Men\'s Div I\n\
-Cantabs                     0   0\n\
-City                        0   0\n\
- 2  Men\'s Div II\n\
-Cantabs II                  0   0\n\
-City II                     0  -1\n\
- 1  Men\'s Div III\n\
-Champs                      0   1\n';
-
 export function write_ad(event) {
   let setStr;
 
