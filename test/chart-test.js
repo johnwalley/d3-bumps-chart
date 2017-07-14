@@ -98,8 +98,8 @@ tape("Render should create the expected elements.", function (test) {
       },
     ],
     divisions: [
-      { divisions: [{ length: 2, start: 0, year: 2013 }], gender: 'Women', set: 'Lent Bumps' },
-      { divisions: [{ length: 2, start: 0, year: 2014 }], gender: 'Women', set: 'Lent Bumps' },
+      { divisions: [{ length: 2, start: 0, year: 2013 }], gender: 'Women', set: 'Lent Bumps', year: 2013 },
+      { divisions: [{ length: 2, start: 0, year: 2014 }], gender: 'Women', set: 'Lent Bumps', year: 2014 },
     ],
     endYear: 2014,
     maxCrews: 2,

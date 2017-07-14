@@ -169,7 +169,7 @@ tape('write_tg() returns the correct Tim Grainger output.', function (test) {
     gender: 'M',
     move: [[[0, 0], [0, -1], [1]], [[0, 0], [0, 0], [0]]],
     result: '',
-    results: 'rr rrr\nrr rrr\n',
+    results: 'r ur rrr\nr rrr rrr\n',
     set: 'Town Bumps',
     small: 'Short',
     year: '2013',
@@ -185,8 +185,8 @@ Division,Cantabs 1,City 1\n\
 Division,Cantabs 2,City 2\n\
 Division,Champs 1\n\
 \n\
-Results\nrr rrr\n\
-rr rrr\n';
+Results\nr ur rrr\n\
+r rrr rrr\n';
   var actual = bumps.write_tg(event);
 
   test.equal(actual, expected);
