@@ -44,6 +44,6 @@
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-node-resolve": "^3.0.0",
     "tape": "^4.7.0",
-    "uglify-js": "^3.0.24"
+    "uglify-js": "2"
   }
 }
