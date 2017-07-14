@@ -1045,9 +1045,11 @@ export function read_ad(input) {
   switch (info[0]) {
     case 'EIGHTS':
       event.set = 'Summer Eights';
+      event.small = 'Eights';
       break;
     case 'TORPIDS':
       event.set = 'Torpids';
+      event.small = 'Torpids';
       break;
   }
 

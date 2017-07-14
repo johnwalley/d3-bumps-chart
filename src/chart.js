@@ -466,6 +466,8 @@ export default function () {
       startYearDivisions = divisions.find(x => x.year === startYear - 1);
     }
 
+    console.log(JSON.stringify(divisions))
+
     startYearDivisions.divisions.forEach(d => {
       for (let i = 0; i < d.length; i++) {
         numbers.push(i + 1);
