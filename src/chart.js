@@ -1,7 +1,8 @@
-import { select } from 'd3-selection';
+import { select, event } from 'd3-selection';
 import { scaleLinear } from 'd3-scale';
 import { line } from 'd3-shape';
-import { max, range } from 'd3-array';
+import { max, min, range } from 'd3-array';
+import { drag } from 'd3-drag';
 import 'd3-transition'; // We require the side-effects of importing
 
 import { crewColor, renderName } from './util.js';
@@ -12,19 +13,22 @@ export default function () {
   let svg;
   let state;
 
+  let container;
   let g;
   let divisionsGroup;
   let yearsGroup;
   let labelsGroup;
   let linesGroup;
 
+  let startDrag;
+
   function chart() {
   }
 
   chart.setup = function setup(el) {
     svg = select(el).select('svg');
-    g = svg.append('g').attr('class', 'results-container')
-      .append('g').attr('class', 'results');
+    container = svg.append('g').attr('class', 'results-container');
+    g = container.append('g').attr('class', 'results');
 
     divisionsGroup = g.append('g').attr('class', 'divisions');
     yearsGroup = g.append('g').attr('class', 'years');
@@ -42,6 +46,7 @@ export default function () {
     const yearRange = props.year;
     const selectedCrews = props.selectedCrews;
     const highlightedCrew = props.highlightedCrew;
+    const selectYear = props.selectYear;
     const toggleSelectedCrew = props.toggleSelectedCrew;
     const highlightCrew = props.highlightCrew;
     const windowWidth = props.windowWidth;
@@ -109,9 +114,29 @@ export default function () {
       finishLabelIndex = maxDays - 1;
     }
 
+    container.append('rect')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', width)
+      .attr('height', viewBoxHeight + 2)
+      .attr('fill', 'transparent');
+
     g.transition()
       .duration(transitionLength)
-      .attr('transform', `translate(${xScale(-dayShift)},0)`)
+      .attr('transform', `translate(${xScale(-dayShift)},0)`);
+
+    container.call(drag()
+      .on('start', () => {
+        startDrag = event.x;
+      })
+      .on('drag', () => {
+        g.attr('transform', `translate(${event.x - startDrag - xScale(dayShift)},0)`);
+      })
+      .on('end', () => {
+        const shift = max([startYear, min([endYear - numYearsToView + 1, Math.round(xScale.invert(-event.x + startDrag - xScale(-dayShift)) / 5) + startYear])]);
+        selectYear(shift, shift + numYearsToView - 1);
+      })
+    );
 
     renderClipPath(svg, numYearsToView, viewBoxHeight, xScale);
     const divisionsEnter = renderDivisions(results, divisionsGroup, dayShift, xScale, transitionLength);
@@ -124,6 +149,11 @@ export default function () {
     renderStartLabel(crews, labelsGroup, startLabelIndex, startLabelPosition, xScale, yScale, transitionLength, toggleSelectedCrew, highlightCrew);
     renderNumbersRight(crews, labelsGroup, finishLabelIndex, numYearsToView, numbersRightPosition, xScale, yScale, transitionLength)
     renderNumbersLeft(results.divisions, labelsGroup, yearRange.start, numbersLeftPosition, xScale, yScale, transitionLength);
+  }
+
+  chart.selectYear = function (start, end) {
+    state.year = { start: start, end: end };
+    chart.render(state);
   }
 
   chart.toggleSelectedCrew = function (name) {
@@ -342,10 +372,9 @@ export default function () {
     const calculateFinishLabelPosition = d => d.values[d.values[finishLabelIndex].pos === -1 ? finishLabelIndex - 1 : finishLabelIndex].pos;
 
     const finishLabel = labelsGroup.selectAll('.finish-label')
-      .data(crews, d => createKey(d.set, d.gender, d.name));
+      .data(crews.filter(d => calculateFinishLabelPosition(d) > -1), d => createKey(d.set, d.gender, d.name));
 
     finishLabel.enter()
-      .filter(d => calculateFinishLabelPosition(d) > -1)
       .append('text')
       .on('click', d => {
         toggleSelectedCrew(d.name);
@@ -370,8 +399,6 @@ export default function () {
 
     finishLabel.classed('highlighted', d => d.highlighted || d.hover)
       .style('font-weight', d => d.highlighted || d.hover ? 'bold' : 'normal')
-
-      .filter(d => calculateFinishLabelPosition(d) > -1)
       .transition()
       .duration(transitionLength)
       .attr('transform', d =>
@@ -393,10 +420,9 @@ export default function () {
     }
 
     const startLabel = labelsGroup.selectAll('.start-label')
-      .data(crews, d => createKey(d.set, d.gender, d.name));
+      .data(crews.filter(d => calculateStartLabelPosition(d) > -1), d => createKey(d.set, d.gender, d.name));
 
     startLabel.enter()
-      .filter(d => calculateStartLabelPosition(d) > -1)
       .append('text')
       .on('click', d => {
         toggleSelectedCrew(d.name);
@@ -421,7 +447,6 @@ export default function () {
 
     startLabel.classed('highlighted', d => d.highlighted || d.hover)
       .style('font-weight', d => d.highlighted || d.hover ? 'bold' : 'normal')
-      .filter(d => calculateStartLabelPosition(d) > -1)
       .transition()
       .duration(transitionLength)
       .attr('transform', d => `translate(${xScale(startLabelPosition)},${yScale(calculateStartLabelPosition(d))})`);
@@ -455,6 +480,9 @@ export default function () {
       .attr('transform', (d, i) => `translate(${xScale(numbersRightPosition + 5 * numYearsToView)},${yScale(i + 1)})`);
 
     numbersRight.exit()
+      .transition()
+      .duration(transitionLength)
+      .style('opacity', 0)
       .remove();
   }
 
@@ -466,8 +494,6 @@ export default function () {
     if (startYearDivisions === undefined) {
       startYearDivisions = divisions.find(x => x.year === startYear - 1);
     }
-
-    console.log(JSON.stringify(divisions))
 
     startYearDivisions.divisions.forEach(d => {
       for (let i = 0; i < d.length; i++) {
@@ -497,6 +523,9 @@ export default function () {
       .attr('transform', (d, i) => `translate(${xScale(numbersLeftPosition)},${yScale(i + 1)})`);
 
     numbersLeft.exit()
+      .transition()
+      .duration(transitionLength)
+      .style('opacity', 0)
       .remove();
   }
 
