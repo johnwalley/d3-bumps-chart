@@ -1,8 +1,9 @@
 <html>
 
 <head>
-  <link rel="stylesheet" href="./bumps.css" >
+  <link rel="stylesheet" href="./bumps.css">
   <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
   <script src="../build/d3-bumps-chart.js"></script>
 </head>
 
@@ -17,7 +18,7 @@
 
     chart.setup(el);
 
-    d3.json("./results.json", function(error, events) {
+    d3.json("./results.json", function (error, events) {
       var gender = "Women";
       var set = "Town Bumps";
 

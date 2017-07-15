@@ -13,6 +13,8 @@ export default function () {
   let svg;
   let state;
 
+  let hammertime;
+
   let container;
   let g;
   let divisionsGroup;
@@ -20,7 +22,12 @@ export default function () {
   let labelsGroup;
   let linesGroup;
 
-  let startDrag;
+  let xScale;
+  let dayShift;
+  let startYear;
+  let endYear;
+  let numYearsToView;
+  let selectYear;
 
   function chart() {
   }
@@ -32,6 +39,17 @@ export default function () {
 
     container.append('rect')
       .attr('class', 'touch-target');
+
+    hammertime = new Hammer(svg.node());
+
+    hammertime.on('panmove', function (ev) {
+      g.attr('transform', `translate(${ev.deltaX - xScale(dayShift)},0)`);
+    });
+
+    hammertime.on('panend', function (ev) {
+      const shift = max([startYear, min([endYear - numYearsToView + 1, Math.round(xScale.invert(-ev.deltaX - xScale(-dayShift)) / 5) + startYear])]);
+      selectYear(shift, shift + numYearsToView - 1);
+    });
 
     divisionsGroup = g.append('g').attr('class', 'divisions');
     yearsGroup = g.append('g').attr('class', 'years');
@@ -49,7 +67,7 @@ export default function () {
     const yearRange = props.year;
     const selectedCrews = props.selectedCrews;
     const highlightedCrew = props.highlightedCrew;
-    const selectYear = props.selectYear;
+    selectYear = props.selectYear;
     const toggleSelectedCrew = props.toggleSelectedCrew;
     const highlightCrew = props.highlightCrew;
     const windowWidth = props.windowWidth;
@@ -69,7 +87,7 @@ export default function () {
     const finishLabelPosition = 4;
     const numbersLeftPosition = -5.6;
     const numbersRightPosition = 5;
-    const numYearsToView = yearRange.end - yearRange.start + 1;
+    numYearsToView = yearRange.end - yearRange.start + 1;
     const yMarginTop = 10;
 
     const transitionLength = 400;
@@ -80,7 +98,7 @@ export default function () {
     const xRangeMax = widthOfOneYear;
     const yDomainMax = crews.length > 0 ? max(crews, c => max(c.values.filter(d => d !== null), v => v.pos)) : 0;
 
-    const xScale = scaleLinear()
+    xScale = scaleLinear()
       .domain([0, 4])
       .range([0, xRangeMax]);
 
@@ -101,12 +119,12 @@ export default function () {
       .x((d) => xScale(d.day))
       .y((d) => yScale(d.pos));
 
-    const startYear = results.startYear;
-    const endYear = results.endYear;
+    startYear = results.startYear;
+    endYear = results.endYear;
 
     const yearDiff = yearRange.start - startYear;
 
-    const dayShift = yearDiff * 5;
+    dayShift = yearDiff * 5;
     const startLabelIndex = yearDiff * 5;
     let finishLabelIndex = startLabelIndex + numYearsToView * 5 - 1;
 
@@ -127,19 +145,6 @@ export default function () {
     g.transition()
       .duration(transitionLength)
       .attr('transform', `translate(${xScale(-dayShift)},0)`);
-
-    container.call(drag()
-      .on('start', () => {
-        startDrag = event.x;
-      })
-      .on('drag', () => {
-        g.attr('transform', `translate(${event.x - startDrag - xScale(dayShift)},0)`);
-      })
-      .on('end', () => {
-        const shift = max([startYear, min([endYear - numYearsToView + 1, Math.round(xScale.invert(-event.x + startDrag - xScale(-dayShift)) / 5) + startYear])]);
-        selectYear(shift, shift + numYearsToView - 1);
-      })
-    );
 
     renderClipPath(svg, numYearsToView, viewBoxHeight, xScale);
     const divisionsEnter = renderDivisions(results, divisionsGroup, dayShift, xScale, transitionLength);
@@ -383,7 +388,10 @@ export default function () {
         toggleSelectedCrew(d.name);
       })
       .on('mouseover', d => {
-        highlightCrew(d.name);
+        // Only act on mouseover if touch is unavailable
+        if (!('ontouchstart' in window || navigator.maxTouchPoints)) {
+          highlightCrew(d.name);
+        }
       })
       .on('mouseout', () => {
         highlightCrew(null);
