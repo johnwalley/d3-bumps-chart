@@ -1,8 +1,7 @@
-import { select, event } from 'd3-selection';
+import { select } from 'd3-selection';
 import { scaleLinear } from 'd3-scale';
 import { line } from 'd3-shape';
 import { max, min, range } from 'd3-array';
-import { drag } from 'd3-drag';
 import 'd3-transition'; // We require the side-effects of importing
 
 import { crewColor, renderName } from './util.js';
@@ -40,7 +39,7 @@ export default function () {
     container.append('rect')
       .attr('class', 'touch-target');
 
-    hammertime = new Hammer(svg.node());
+    hammertime = new Hammer(svg.node()); // eslint-disable-line no-undef
 
     hammertime.on('panmove', function (ev) {
       g.attr('transform', `translate(${ev.deltaX - xScale(dayShift)},0)`);

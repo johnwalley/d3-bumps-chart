@@ -1,6 +1,6 @@
 {
   "name": "d3-bumps-chart",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Draw bumps charts.",
   "keywords": [
     "d3",
@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "d3-array": "^1.2.0",
-    "d3-drag": "^1.1.1",
     "d3-dsv": "^1.0.5",
     "d3-scale": "^1.0.6",
     "d3-selection": "^1.1.0",

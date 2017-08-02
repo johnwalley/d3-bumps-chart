@@ -672,6 +672,61 @@ function calculateResults(event) {
   return event;
 }
 
+function calculateTorpidsResults(event) {
+  let results = '';
+
+  const move = event.move;
+  const completed = event.completed;
+
+  const numDivisions = event.divisions.length;
+
+  for (let dayNum = 0; dayNum < event.days; dayNum++) {
+    let sandwichSuccess = 0;
+    for (let divNum = numDivisions - 1; divNum >= 0; divNum--) {
+      completed[dayNum][divNum] = true;
+
+      const m = move[dayNum][divNum];
+
+      if (sandwichSuccess) {
+        results += 'e' + sandwichSuccess;
+        sandwichSuccess = 0;
+      } else if (divNum < numDivisions - 1) {
+        results += 'r';
+      }
+
+      let crew = m.length - 1;
+
+      while (crew >= 0) {
+        if (m[crew] === 0) {
+          results += 'r';
+          crew -= 1;
+        } else if (m[crew] > 0 && crew === 0) {
+          results += 'r';
+          crew -= 1;
+        } else {
+          results += 'e' + m[crew];
+          crew -= 1;
+        }
+      }
+
+      if (m[0] > 0) {
+        sandwichSuccess = m[0];
+      }
+
+      if (divNum > 0) {
+        results += ' ';
+      }
+    }
+
+    if (dayNum < event.days - 1) {
+      results += '\n';
+    }
+  }
+
+  event.results = results;
+
+  return event;
+}
 
 function addcrew(div, crew) {
   if (crew.length === 0) {
@@ -1138,7 +1193,7 @@ export function read_ad(input) {
     }
   }
 
-  event = calculateResults(event);
+  event = (event.set === 'Torpids') ? calculateTorpidsResults(event) : calculateResults(event);
 
   return event;
 }
