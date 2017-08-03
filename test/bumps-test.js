@@ -577,7 +577,7 @@ St John's III              -4  -4  -1  -1
 St Hilda's                  1   1   1   1
 Mansfield II               -1  -1  -1   1
 Wolfson III                 2   1   1   1
- 13  *Men's Div VI
+ 13  Men's Div VI
 Exeter II                  -1   2   1   1
 Merton II                   3   1   1   1
 L.M.H. II                   0   1   2   1
@@ -590,7 +590,8 @@ Oriel III                  -2  -2   1   1
 Christ Church III           0   0   0   0
 S.E.H. III                  2   1   1   1
 Corpus Christi II           0   1   0  -2
-Balliol IV                  0   1  -1   1`;
+Balliol IV                  0   1  -1   1
+`;
 
   var expected = data;
   var actual = bumps.write_ad(bumps.read_ad(data));

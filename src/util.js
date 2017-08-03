@@ -1323,10 +1323,25 @@ export function write_ad(event) {
     let divStr = ` ${div.length}  ${genderStr} Div ${roman[index]}\n`;
 
     div.forEach((crew, crewIndex) => {
+      let position = crewIndex;
+      let currentDivision = index;
       divStr += `${padEnd(renderName(crew, event.set), 25)}`;
+
       for (let day = 0; day < event.days; day++) {
-        divStr += padStart(event.move[day][index][crewIndex], 4);
+        divStr += padStart(event.move[day][currentDivision][position], 4);
+        position -= event.move[day][currentDivision][position];
+
+        if (position < 0) {
+          currentDivision -= 1;
+          position += event.divisions[currentDivision].length;
+        }
+
+        if (position >= event.divisions[currentDivision].length) {
+          position -= event.divisions[currentDivision].length;
+          currentDivision += 1;
+        }
       }
+
       divStr += '\n';
     });
 
@@ -1336,3 +1351,4 @@ export function write_ad(event) {
 
   return ret;
 }
+
