@@ -10,7 +10,7 @@ See a demo [here](https://bl.ocks.org/johnwalley/a0734cf335b44365026adae40cce594
 
 ## Installing
 
-If you use NPM, `npm install d3-bumps-chart`. Otherwise, download the [latest release](https://github.com/johnwalley/d3-bumps-chart/releases/latest). AMD, CommonJS, and vanilla environments are supported. In vanilla, a `d3_bumps_chart` global is exported:
+If you use NPM, `npm install d3-bumps-chart`. Otherwise, download the [latest release](https://github.com/johnwalley/d3-bumps-chart/releases/latest). AMD, CommonJS, and vanilla environments are supported. In vanilla, a `d3` global is exported:
 
 ```html
 <script src="https://d3js.org/d3.v4.min.js"></script>
@@ -51,7 +51,7 @@ If you use NPM, `npm install d3-bumps-chart`. Otherwise, download the [latest re
 
 ## API Reference
 
-<a name="chart" href="#chart">#</a> d3_bumps_chart.<b>chart</b>() [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/chart.js "Source")
+<a name="chart" href="#chart">#</a> d3.<b>chart</b>() [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/chart.js "Source")
 
 Constructs a new bumps chart generator with the default settings.
 
