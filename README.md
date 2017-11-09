@@ -1,8 +1,6 @@
 # d3-bumps-chart
 
 [![Build Status](https://travis-ci.org/johnwalley/d3-bumps-chart.svg?branch=master)](https://travis-ci.org/johnwalley/d3-bumps-chart)
-[![npm Version](https://img.shields.io/npm/v/d3-bumps-chart.svg)](https://www.npmjs.com/package/d3-bumps-chart)
-[![Dependency Status](https://gemnasium.com/badges/github.com/johnwalley/d3-bumps-chart.svg)](https://gemnasium.com/github.com/johnwalley/d3-bumps-chart)
 
 Draw Bumps charts using d3.
 
@@ -18,7 +16,7 @@ If you use NPM, `npm install d3-bumps-chart`. Otherwise, download the [latest re
 
 <script>
   var el = document.getElementById('bumps-chart');
-  var chart = d3_bumps_chart.bumpsChart();
+  var chart = d3.chart();
   chart.setup(el);
 
   d3.json("./example/results.json", function(error, events) {
@@ -30,9 +28,9 @@ If you use NPM, `npm install d3-bumps-chart`. Otherwise, download the [latest re
       .filter(e => e.gender.toLowerCase() === gender.toLowerCase())
       .filter(e => e.set === set)
       .sort((a, b) => a.year - b.year)
-      .map(event => bumpsChart.transformData(event));
+      .map(event => d3.transformData(event));
 
-    var data = bumpsChart.joinEvents(transformedEvents, set, gender);
+    var data = d3.joinEvents(transformedEvents, set, gender);
 
     var props = {
       data: data,
