@@ -72,7 +72,7 @@ export default function () {
     const windowWidth = props.windowWidth;
 
     // If we have no results or no range of years return early
-    if (results === undefined || yearRange === null) {
+    if (results === undefined || results.crews.length === 0 || yearRange === null) {
       return;
     }
 
