@@ -13,14 +13,12 @@
     </svg>
   </div>
   <script>
-    var el = document.getElementById('bumps-chart');
-    var chart = d3.chart();
-
-    chart.setup(el);
-
     d3.json("./results.json", function (error, events) {
       var gender = "Women";
       var set = "Town Bumps";
+      var el = document.getElementById('bumps-chart');
+
+      var chart = d3.bumpsChart();
 
       var transformedEvents = events
         .filter(e => e.gender.toLowerCase() === gender.toLowerCase())
@@ -41,7 +39,7 @@
         windowWidth: window.document.body.clientWidth
       };
 
-      chart.render(props);
+      d3.select(el).datum(props).call(chart);
     });
   </script>
 </body>

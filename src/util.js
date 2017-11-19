@@ -3,166 +3,191 @@ import uniq from 'lodash-es/uniq';
 import uniqBy from 'lodash-es/uniqBy';
 import padEnd from 'lodash-es/padEnd';
 import padStart from 'lodash-es/padStart';
-
 import { csvParse } from 'd3-dsv';
 import { min, max } from 'd3-array';
 
 import { widthOfOneYear } from './chart';
 
 export const abbrevCamCollege = {
-  'A': 'Addenbrooke\'s',
-  'AR': 'Anglia Ruskin',
-  'Ca': 'Caius',
-  'CC': 'Corpus Christi',
-  'CH': 'Clare Hall',
-  'Cl': 'Clare',
-  'Cr': 'Christ\'s',
-  'CT': 'CCAT',
-  'Cu': 'Churchill',
-  'D': 'Downing',
-  'Dw': 'Darwin',
-  'E': 'Emmanuel',
-  'F': 'Fitzwilliam',
-  'G': 'Girton',
-  'H': 'Homerton',
-  'HH': 'Hughes Hall',
-  'HHL': 'Hughes/Lucy',
-  'J': 'Jesus',
-  'K': 'King\'s',
-  'L': 'LMBC',
-  'LC': 'Lucy Cavendish',
-  'M': 'Magdalene',
-  'ME': 'Murray Edwards',
-  'N': 'Newnham',
-  'NH': 'New Hall',
-  'Pb': 'Pembroke',
-  'Ph': 'Peterhouse',
-  'Q': 'Queens\'',
-  'QM': 'QMABC',
-  'R': 'Robinson',
-  'S': 'Selwyn',
-  'SC': 'St Catharine\'s',
-  'SE': 'St Edmund\'s',
-  'SS': 'Sidney Sussex',
-  'T': '1st and 3rd',
-  'TC': 'Theological Colleges',
-  'TH': 'Trinity Hall',
-  'VS': 'Vet School',
-  'W': 'Wolfson'
+  A: "Addenbrooke's",
+  AR: 'Anglia Ruskin',
+  Ca: 'Caius',
+  CC: 'Corpus Christi',
+  CH: 'Clare Hall',
+  Cl: 'Clare',
+  Cr: "Christ's",
+  CT: 'CCAT',
+  Cu: 'Churchill',
+  D: 'Downing',
+  Dw: 'Darwin',
+  E: 'Emmanuel',
+  F: 'Fitzwilliam',
+  G: 'Girton',
+  H: 'Homerton',
+  HH: 'Hughes Hall',
+  HHL: 'Hughes/Lucy',
+  J: 'Jesus',
+  K: "King's",
+  L: 'LMBC',
+  LC: 'Lucy Cavendish',
+  M: 'Magdalene',
+  ME: 'Murray Edwards',
+  N: 'Newnham',
+  NH: 'New Hall',
+  Pb: 'Pembroke',
+  Ph: 'Peterhouse',
+  Q: "Queens'",
+  QM: 'QMABC',
+  R: 'Robinson',
+  S: 'Selwyn',
+  SC: "St Catharine's",
+  SE: "St Edmund's",
+  SS: 'Sidney Sussex',
+  T: '1st and 3rd',
+  TC: 'Theological Colleges',
+  TH: 'Trinity Hall',
+  VS: 'Vet School',
+  W: 'Wolfson',
 };
 
 export const abbrevOxCollege = {
-  'B': 'Balliol',
-  'Br': 'Brasenose',
-  'Ch': 'Christ Church',
-  'Co': 'Corpus Christi',
-  'E': 'Exeter',
-  'H': 'Hertford',
-  'J': 'Jesus',
-  'K': 'Keble',
-  'L': 'Linacre',
-  'Lc': 'Lincoln',
-  'LM': 'L.M.H.',
-  'Mg': 'Magdalen',
-  'Mf': 'Mansfield',
-  'Mt': 'Merton',
-  'N': 'New College',
-  'O': 'Oriel',
-  'OG': 'Osler-Green',
-  'P': 'Pembroke',
-  'Q': 'Queen\'s',
-  'R': 'Regent\'s Park',
-  'SE': 'S.E.H.',
-  'S': 'Somerville',
-  'SAn': 'St Anne\'s',
-  'SAt': 'St Antony\'s',
-  'SB': 'St Benet\'s Hall',
-  'SC': 'St Catherine\'s',
-  'SHi': 'St Hilda\'s',
-  'SHu': 'St Hugh\'s',
-  'SJ': 'St John\'s',
-  'SP': 'St Peter\'s',
-  'T': 'Trinity',
-  'U': 'University',
-  'Wh': 'Wadham',
-  'Wf': 'Wolfson',
-  'Wt': 'Worcester'
+  B: 'Balliol',
+  Br: 'Brasenose',
+  Ch: 'Christ Church',
+  Co: 'Corpus Christi',
+  E: 'Exeter',
+  H: 'Hertford',
+  J: 'Jesus',
+  K: 'Keble',
+  L: 'Linacre',
+  Lc: 'Lincoln',
+  LM: 'L.M.H.',
+  Mg: 'Magdalen',
+  Mf: 'Mansfield',
+  Mt: 'Merton',
+  N: 'New College',
+  O: 'Oriel',
+  OG: 'Osler-Green',
+  P: 'Pembroke',
+  Q: "Queen's",
+  R: "Regent's Park",
+  SE: 'S.E.H.',
+  S: 'Somerville',
+  SAn: "St Anne's",
+  SAt: "St Antony's",
+  SB: "St Benet's Hall",
+  SC: "St Catherine's",
+  SHi: "St Hilda's",
+  SHu: "St Hugh's",
+  SJ: "St John's",
+  SP: "St Peter's",
+  T: 'Trinity',
+  U: 'University',
+  Wh: 'Wadham',
+  Wf: 'Wolfson',
+  Wt: 'Worcester',
 };
 
 export const abbrevCamTown = {
-  'A': 'Addenbrooke\'s',
-  'CB': 'Camb Blue',
-  'CV': 'Camb Veterans',
-  'Ct': 'Cantabs',
-  'Cy': 'City',
-  'Ca': 'Caius',
-  'CT': 'CCAT',
-  'Cr': 'Christ\'s',
-  'Cu': 'Churchill',
-  'CH': 'Clare Hall',
-  'Cl': 'Clare',
-  'CC': 'Corpus Christi',
-  'COT': 'Champs',
-  'Dn': 'Domino',
-  'Dw': 'Darwin',
-  'D': 'Downing',
-  'E': 'Emmanuel',
-  'F': 'Fitzwilliam',
-  'FP': 'Free Press',
-  'G': 'Girton',
-  'H': 'Homerton',
-  'HH': 'Hughes Hall',
-  'Hn': 'Hornets',
-  'I': 'Ionica',
-  'IOE': 'Isle of Ely',
-  'J': 'Jesus',
-  'K': 'King\'s',
-  'L': 'LMBC',
-  'LC': 'Lucy Cavendish',
-  'LS': 'Lady Somerset',
-  'M': 'Magdalene',
-  'ME': 'Maximum Entropy',
-  'MM': 'Mott MacDonald',
-  'NH': 'New Hall',
-  'N': 'Newnham',
-  'NN': '99',
-  'Pb': 'Pembroke',
-  'Ph': 'Peterhouse',
-  'QM': 'QMABC',
-  'Q': 'Queens\'',
-  'RR': 'Rob Roy',
-  'R': 'Robinson',
-  'Sm': 'Simoco',
-  'SI': 'St Ives',
-  'SN': 'St Neots',
-  'SR': 'St Radegund',
-  'S': 'Selwyn',
-  'SS': 'Sidney Sussex',
-  'SC': 'St Catharine\'s',
-  'SE': 'St Edmund\'s',
-  'T': '1st & 3rd',
-  'TC': 'Theological Colleges',
-  'Te': 'Telephones',
-  'TH': 'Trinity Hall',
-  'US': 'Univ Sports',
-  'VS': 'Vet School',
-  'W': 'Wolfson',
-  'X': 'X-Press'
+  A: "Addenbrooke's",
+  CB: 'Camb Blue',
+  CV: 'Camb Veterans',
+  Ct: 'Cantabs',
+  Cy: 'City',
+  Ca: 'Caius',
+  CT: 'CCAT',
+  Cr: "Christ's",
+  Cu: 'Churchill',
+  CH: 'Clare Hall',
+  Cl: 'Clare',
+  CC: 'Corpus Christi',
+  COT: 'Champs',
+  Dn: 'Domino',
+  Dw: 'Darwin',
+  D: 'Downing',
+  E: 'Emmanuel',
+  F: 'Fitzwilliam',
+  FP: 'Free Press',
+  G: 'Girton',
+  H: 'Homerton',
+  HH: 'Hughes Hall',
+  Hn: 'Hornets',
+  I: 'Ionica',
+  IOE: 'Isle of Ely',
+  J: 'Jesus',
+  K: "King's",
+  L: 'LMBC',
+  LC: 'Lucy Cavendish',
+  LS: 'Lady Somerset',
+  M: 'Magdalene',
+  ME: 'Maximum Entropy',
+  MM: 'Mott MacDonald',
+  NH: 'New Hall',
+  N: 'Newnham',
+  NN: '99',
+  Pb: 'Pembroke',
+  Ph: 'Peterhouse',
+  QM: 'QMABC',
+  Q: "Queens'",
+  RR: 'Rob Roy',
+  R: 'Robinson',
+  Sm: 'Simoco',
+  SI: 'St Ives',
+  SN: 'St Neots',
+  SR: 'St Radegund',
+  S: 'Selwyn',
+  SS: 'Sidney Sussex',
+  SC: "St Catharine's",
+  SE: "St Edmund's",
+  T: '1st & 3rd',
+  TC: 'Theological Colleges',
+  Te: 'Telephones',
+  TH: 'Trinity Hall',
+  US: 'Univ Sports',
+  VS: 'Vet School',
+  W: 'Wolfson',
+  X: 'X-Press',
 };
 
-const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
-  'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX'];
+const roman = [
+  'I',
+  'II',
+  'III',
+  'IV',
+  'V',
+  'VI',
+  'VII',
+  'VIII',
+  'IX',
+  'X',
+  'XI',
+  'XII',
+  'XIII',
+  'XIV',
+  'XV',
+  'XVI',
+  'XVII',
+  'XVIII',
+  'XIX',
+  'XX',
+];
 
 export function abbreviate(event) {
   for (let div = 0; div < event.divisions.length; div++) {
     for (let pos = 0; pos < event.divisions[div].length; pos++) {
-      event.divisions[div][pos] = abbreviateCrew(event.divisions[div][pos], event.set);
+      event.divisions[div][pos] = abbreviateCrew(
+        event.divisions[div][pos],
+        event.set
+      );
     }
   }
 
   for (let div = 0; div < event.finish.length; div++) {
     for (let pos = 0; pos < event.finish[div].length; pos++) {
-      event.finish[div][pos] = abbreviateCrew(event.finish[div][pos], event.set);
+      event.finish[div][pos] = abbreviateCrew(
+        event.finish[div][pos],
+        event.set
+      );
     }
   }
 
@@ -172,7 +197,6 @@ export function abbreviate(event) {
 export function abbreviateCrew(crew, set) {
   const name = crew.replace(/[0-9]+$/, '').trim();
   const num = +crew.substring(name.length);
-
   let abbrev;
 
   switch (set) {
@@ -201,7 +225,6 @@ export function abbreviateCrew(crew, set) {
 export function expandCrew(crew, set) {
   const name = crew.replace(/[0-9]+$/, '').trim();
   const num = +crew.substring(name.length);
-
   let abbrev;
 
   switch (set) {
@@ -230,7 +253,6 @@ export function expandCrew(crew, set) {
 export function renderName(name, set) {
   // College crews are stored as an abbrevation and we replace the number with Roman numerals
   const sh = name.replace(/[0-9]/, '');
-
   let abbrev;
   let type;
 
@@ -259,8 +281,8 @@ export function renderName(name, set) {
 
     if (type === 'college' && num.length > 0) {
       name = name + ' ' + roman[+num - 1];
-    } else if (type === 'town' && num.length > 0 && (+num) > 1) {
-      name = name + ' ' + (+num);
+    } else if (type === 'town' && num.length > 0 && +num > 1) {
+      name = name + ' ' + +num;
     }
 
     return name;
@@ -270,7 +292,7 @@ export function renderName(name, set) {
       const num = name.substring(sh.length);
 
       if (num.length > 0) {
-        name = sh.trim() + (((+num) > 1) ? ' ' + roman[+num - 1] : '');
+        name = sh.trim() + (+num > 1 ? ' ' + roman[+num - 1] : '');
       }
 
       return name;
@@ -284,7 +306,6 @@ export function renderName(name, set) {
 
 function normalizeOxfordName(name) {
   const parts = name.split(/\s/);
-
   let newName = name + ' 1';
 
   roman.forEach((num, index) => {
@@ -298,60 +319,60 @@ function normalizeOxfordName(name) {
 
 export function crewColor(name) {
   const camCollegeColor = {
-    'A': '#0000ff',
-    'AR': '#ffff00',
-    'Ca': '#afe9c6',
-    'CC': '#800000',
-    'CH': '#ffff00',
-    'Cl': '#ffff00',
-    'Cr': '#000080',
-    'CT': '##ffff00',
-    'Cu': '#ff55dd',
-    'D': '#d400aa',
-    'Dw': '#000080',
-    'E': '#eeaaff',
-    'F': '#808080',
-    'G': '#005500',
-    'H': '#000000',
-    'HH': '#0096ff',
-    'HHL': '#0044aa',
-    'J': '#8b0000',
-    'K': '#5a2ca0',
-    'L': '#ff0000',
-    'LC': '#0044aa',
-    'M': '#672178',
-    'ME': '#000000',
-    'N': '#010040',
-    'NH': '#000000',
-    'Pb': '#afe9dd',
-    'Ph': '#003380',
-    'Q': '#008001',
-    'QM': '#808080',
-    'R': '#007fff',
-    'S': '#f9cc00',
-    'SC': '#9d0064',
-    'SE': '#0300fd',
-    'SS': '#000080',
-    'T': '#000080',
-    'TC': '#000000',
-    'TH': '#000000',
-    'VS': '#000000',
-    'W': '#5599ff'
+    A: '#0000ff',
+    AR: '#ffff00',
+    Ca: '#afe9c6',
+    CC: '#800000',
+    CH: '#ffff00',
+    Cl: '#ffff00',
+    Cr: '#000080',
+    CT: '##ffff00',
+    Cu: '#ff55dd',
+    D: '#d400aa',
+    Dw: '#000080',
+    E: '#eeaaff',
+    F: '#808080',
+    G: '#005500',
+    H: '#000000',
+    HH: '#0096ff',
+    HHL: '#0044aa',
+    J: '#8b0000',
+    K: '#5a2ca0',
+    L: '#ff0000',
+    LC: '#0044aa',
+    M: '#672178',
+    ME: '#000000',
+    N: '#010040',
+    NH: '#000000',
+    Pb: '#afe9dd',
+    Ph: '#003380',
+    Q: '#008001',
+    QM: '#808080',
+    R: '#007fff',
+    S: '#f9cc00',
+    SC: '#9d0064',
+    SE: '#0300fd',
+    SS: '#000080',
+    T: '#000080',
+    TC: '#000000',
+    TH: '#000000',
+    VS: '#000000',
+    W: '#5599ff',
   };
 
   const oxCollegeColor = {
-    'Oriel': '#372e63'
-  }
+    Oriel: '#372e63',
+  };
 
   const townColor = {
-    'City': '#f44336',
-    'Champs': '#f57400',
+    City: '#f44336',
+    Champs: '#f57400',
     'Rob Roy': '#8b0000',
-    'Cantabs': '#00008b',
+    Cantabs: '#00008b',
     '99': '#5197ff',
-    'Chesterton': '#ffff00',
-    'Simoco': '#ffff00',
-    'Pye': '#ffff00',
+    Chesterton: '#ffff00',
+    Simoco: '#ffff00',
+    Pye: '#ffff00',
     'St Neots': '#b9dcff',
     'X-Press': '#000000',
     'Camb Blue': '#000000',
@@ -361,7 +382,7 @@ export function crewColor(name) {
     'Isle of Ely': '#9ed5b8',
     'Max Entropy': '#f44336',
     'St Ives': '#e90000',
-    'Sharks': '#e90000'
+    Sharks: '#e90000',
   };
 
   const sh = name.replace(/[0-9]/, '');
@@ -393,7 +414,10 @@ export function isBlades(positions) {
 
 export function isSpoons(positions, bottomPosition = Number.MAX_SAFE_INTEGER) {
   for (let i = 0; i < positions.length - 1; i++) {
-    if (positions[i + 1] - positions[i] <= 0 && positions[i + 1] !== bottomPosition) {
+    if (
+      positions[i + 1] - positions[i] <= 0 &&
+      positions[i + 1] !== bottomPosition
+    ) {
       return false;
     }
   }
@@ -414,7 +438,11 @@ export function joinEvents(events, set, gender) {
       set: set,
       gender: gender,
       year: event.year,
-      divisions: event.divisions.map(d => ({ year: event.year, start: d.start, length: d.length }))
+      divisions: event.divisions.map(d => ({
+        year: event.year,
+        start: d.start,
+        length: d.length,
+      })),
     });
   });
 
@@ -426,30 +454,45 @@ export function joinEvents(events, set, gender) {
   const maxCrews = max(events.map(e => e.crews.length));
 
   uniqueCrewNames.forEach(crewName => {
-    const newCrew = { name: crewName, set: set, gender: gender, values: [], valuesSplit: [] };
+    const newCrew = {
+      name: crewName,
+      set: set,
+      gender: gender,
+      values: [],
+      valuesSplit: [],
+    };
     const numDays = 4;
 
     events.forEach(event => {
       const match = event.crews.filter(c => c.name === crewName);
-
       const day = (event.year - startYear) * (numDays + 1);
 
       if (match.length > 0) {
-        const values = match[0].values.map(v => ({ day: v.day + day, pos: v.pos }));
+        const values = match[0].values.map(v => ({
+          day: v.day + day,
+          pos: v.pos,
+        }));
 
         for (let i = values.length; i <= numDays; i++) {
           values.push({ day: i + day, pos: -1 });
         }
 
-        newCrew.values = newCrew.values
-          .concat(values);
+        newCrew.values = newCrew.values.concat(values);
 
         const positions = match[0].values.map(v => v.pos);
 
         const blades = isBlades(positions);
         const spoons = isSpoons(positions, event.crews.length);
 
-        const valuesSplit = { set: set, gender: gender, name: crewName, day: day, blades: blades, spoons: spoons, values: values };
+        const valuesSplit = {
+          set: set,
+          gender: gender,
+          name: crewName,
+          day: day,
+          blades: blades,
+          spoons: spoons,
+          values: values,
+        };
         newCrew.valuesSplit.push(valuesSplit);
       } else {
         const emptyValues = [];
@@ -469,13 +512,16 @@ export function joinEvents(events, set, gender) {
     startYear: startYear,
     endYear: endYear,
     maxCrews: maxCrews,
-    divisions: divisions
+    divisions: divisions,
   };
 }
 
 export function transformData(event) {
   if (event.days !== event.completed.length) {
-    throw new RangeError(`Expected ${event.days} but found ${event.completed.length} completed days`);
+    throw new RangeError(
+      `Expected ${event.days} but found ${event.completed
+        .length} completed days`
+    );
   }
 
   let starty = 1;
@@ -486,7 +532,6 @@ export function transformData(event) {
 
     for (let crew = 0; crew < event.divisions[div].length; crew++) {
       const position = [];
-
       let xpos = 0;
       let ypos = starty;
 
@@ -594,8 +639,7 @@ function calculatePositionInDivision(position, numDivisions, divisionSizes) {
 }
 
 function calculateDivisionBreaks(divisions) {
-  const divisionSizes = divisions
-    .map(d => d.length);
+  const divisionSizes = divisions.map(d => d.length);
 
   const divisionBreaks = divisionSizes.reduce((r, a) => {
     if (r.length > 0) {
@@ -611,10 +655,8 @@ function calculateDivisionBreaks(divisions) {
 
 function calculateResults(event) {
   let results = '';
-
   const move = event.move;
   const completed = event.completed;
-
   const numDivisions = event.divisions.length;
 
   for (let dayNum = 0; dayNum < event.days; dayNum++) {
@@ -674,10 +716,8 @@ function calculateResults(event) {
 
 function calculateTorpidsResults(event) {
   let results = '';
-
   const move = event.move;
   const completed = event.completed;
-
   const numDivisions = event.divisions.length;
 
   for (let dayNum = 0; dayNum < event.days; dayNum++) {
@@ -738,7 +778,14 @@ function addcrew(div, crew) {
 
 function processBump(move, divNum, crew, up) {
   if (crew - up < 1) {
-    console.error('Bumping up above the top of the division: div ' + divNum + ', crew ' + crew + ', up ' + up);
+    console.error(
+      'Bumping up above the top of the division: div ' +
+        divNum +
+        ', crew ' +
+        crew +
+        ', up ' +
+        up
+    );
     return false;
   }
 
@@ -776,9 +823,12 @@ function processResults(event) {
   let move = null;
 
   for (let i = 0; i < res.length; i++) {
-    while (move != null
-      && crew <= move[divNum - 1].length && crew > 0
-      && move[divNum - 1][crew - 1] !== 0) {
+    while (
+      move != null &&
+      crew <= move[divNum - 1].length &&
+      crew > 0 &&
+      move[divNum - 1][crew - 1] !== 0
+    ) {
       crew = crew - 1;
     }
 
@@ -789,7 +839,9 @@ function processResults(event) {
 
       if (divNum <= 1) {
         if (dayNum === event.days) {
-          console.error('Run out of days of racing with more results still to go');
+          console.error(
+            'Run out of days of racing with more results still to go'
+          );
           return;
         }
         move = event.move[dayNum];
@@ -809,7 +861,8 @@ function processResults(event) {
     if (res[i] === 'r') {
       // rowover
       crew--;
-    } else if (res[i] === 'u') { // bump up
+    } else if (res[i] === 'u') {
+      // bump up
       if (!processBump(move, divNum, crew, 1)) {
         return;
       }
@@ -866,7 +919,6 @@ function processResults(event) {
 
 function calculateMoves(event, crewsFirstDay, crewsAllDays, divisionSizes) {
   const numDivisions = event.divisions.length;
-
   const divisions = event.divisions;
   const move = event.move;
   const finish = event.finish;
@@ -877,24 +929,47 @@ function calculateMoves(event, crewsFirstDay, crewsAllDays, divisionSizes) {
         const division = +crewsFirstDay[crew].Division - 1;
 
         const position = +crewsFirstDay[crew]['Start position'] - 1;
-        const positionInDivision = calculatePositionInDivision(position, numDivisions, divisionSizes);
+        const positionInDivision = calculatePositionInDivision(
+          position,
+          numDivisions,
+          divisionSizes
+        );
 
-        divisions[division][positionInDivision] = `${crewsFirstDay[crew].Club} ${crewsFirstDay[crew].Crew}`;
-        move[dayNum][division][positionInDivision] = +crewsFirstDay[crew]['Start position'] - +crewsAllDays[event.days * crew + dayNum].Position;
+        divisions[division][positionInDivision] = `${crewsFirstDay[crew]
+          .Club} ${crewsFirstDay[crew].Crew}`;
+        move[dayNum][division][positionInDivision] =
+          +crewsFirstDay[crew]['Start position'] -
+          +crewsAllDays[event.days * crew + dayNum].Position;
       } else {
-        let position = +crewsAllDays[event.days * crew + dayNum - 1].Position - 1;
+        let position =
+          +crewsAllDays[event.days * crew + dayNum - 1].Position - 1;
         const divisionBreaks = calculateDivisionBreaks(divisions);
-        let division = calculateDivision(position, numDivisions, divisionBreaks);
+        let division = calculateDivision(
+          position,
+          numDivisions,
+          divisionBreaks
+        );
 
-        let positionInDivision = calculatePositionInDivision(position, numDivisions, divisionSizes);
-        move[dayNum][division][positionInDivision] = +crewsAllDays[event.days * crew + dayNum - 1].Position - +crewsAllDays[event.days * crew + dayNum].Position;
+        let positionInDivision = calculatePositionInDivision(
+          position,
+          numDivisions,
+          divisionSizes
+        );
+        move[dayNum][division][positionInDivision] =
+          +crewsAllDays[event.days * crew + dayNum - 1].Position -
+          +crewsAllDays[event.days * crew + dayNum].Position;
 
         if (dayNum === event.days - 1) {
           position = +crewsAllDays[event.days * crew + dayNum].Position - 1;
           division = calculateDivision(position, numDivisions, divisionBreaks);
 
-          positionInDivision = calculatePositionInDivision(position, numDivisions, divisionSizes);
-          finish[division][positionInDivision] = `${crewsFirstDay[crew].Club} ${crewsFirstDay[crew].Crew}`;
+          positionInDivision = calculatePositionInDivision(
+            position,
+            numDivisions,
+            divisionSizes
+          );
+          finish[division][positionInDivision] = `${crewsFirstDay[crew]
+            .Club} ${crewsFirstDay[crew].Crew}`;
         }
       }
     }
@@ -907,7 +982,6 @@ export function read_flat(data) {
   data = csvParse(data);
   const year = uniqBy(data.map(d => d.Year));
   const gender = uniqBy(data.map(d => d.Sex));
-
   const events = [];
 
   for (let yearNum = 0; yearNum < year.length; yearNum++) {
@@ -923,17 +997,21 @@ export function read_flat(data) {
         results: [],
         move: [],
         finish: [],
-        completed: []
+        completed: [],
       };
 
       event.set = 'Town Bumps';
       event.gender = gender[genderNum];
       event.year = +year[yearNum];
 
-      const crewsFirstDay = data.filter(d => +d.Year === event.year && d.Sex === event.gender && d.Day === '1');
+      const crewsFirstDay = data.filter(
+        d => +d.Year === event.year && d.Sex === event.gender && d.Day === '1'
+      );
       crewsFirstDay.sort((a, b) => +a['Start position'] - +b['Start position']);
 
-      const crewsAllDays = data.filter(d => +d.Year === event.year && d.Sex === event.gender);
+      const crewsAllDays = data.filter(
+        d => +d.Year === event.year && d.Sex === event.gender
+      );
       crewsAllDays.sort((a, b) => {
         const equality = +a['Start position'] - +b['Start position'];
         if (equality === 0) {
@@ -948,7 +1026,9 @@ export function read_flat(data) {
       const divisionSizes = new Array(numDivisions);
 
       for (let division = 0; division < numDivisions; division++) {
-        divisionSizes[division] = crewsFirstDay.filter(c => +c.Division === (division + 1)).length;
+        divisionSizes[division] = crewsFirstDay.filter(
+          c => +c.Division === division + 1
+        ).length;
       }
 
       event.divisions = new Array(numDivisions);
@@ -987,7 +1067,11 @@ export function read_tg(input) {
     result: '',
     year: 1970,
     days: 4,
-    divisions: [], results: [], move: [], finish: [], completed: []
+    divisions: [],
+    results: [],
+    move: [],
+    finish: [],
+    completed: [],
   };
 
   let curdiv = [];
@@ -1051,9 +1135,16 @@ export function read_tg(input) {
     results.push([]);
   }
 
-  event.results.filter(r => r !== '').map((r, i) => results[Math.floor(i / event.divisions.length)].push(r.trim()));
+  event.results
+    .filter(r => r !== '')
+    .map((r, i) =>
+      results[Math.floor(i / event.divisions.length)].push(r.trim())
+    );
 
-  event.results = results.filter(r => r.length > 0).map(r => r.join(' ')).join('\n');
+  event.results = results
+    .filter(r => r.length > 0)
+    .map(r => r.join(' '))
+    .join('\n');
 
   if (curdiv.length > 0) {
     event.divisions.push(curdiv);
@@ -1092,7 +1183,11 @@ export function read_ad(input) {
     result: '',
     year: 1970,
     days: 1,
-    divisions: [], results: [], move: [], finish: [], completed: []
+    divisions: [],
+    results: [],
+    move: [],
+    finish: [],
+    completed: [],
   };
 
   const info = input[0].split(/\s+/);
@@ -1109,14 +1204,10 @@ export function read_ad(input) {
   }
 
   event.year = +info[1];
-
   const info2 = input[1].trim().split(/\s+/);
-
   event.days = +info2[0];
-
   const numDivisions = +info2[1];
   const numCrews = parseInt(info2[2], 10);
-
   let currentDivision;
   let currentMove = [];
   let currentPos = [];
@@ -1131,11 +1222,11 @@ export function read_ad(input) {
 
   switch (input[2].split(' ')[3]) {
     case 'Mens':
-    case 'Men\'s':
+    case "Men's":
       event.gender = 'Men';
       break;
     case 'Womens':
-    case 'Women\'s':
+    case "Women's":
       event.gender = 'Women';
       break;
   }
@@ -1143,23 +1234,27 @@ export function read_ad(input) {
   for (let line = 2; line < numDivisions + numCrews + 2; line++) {
     if (input[line][0] === ' ') {
       currentDivision = [];
-      event.divisions.push(currentDivision)
+      event.divisions.push(currentDivision);
     } else {
       const crewName = input[line].replace(/-?[0-9]+/g, '').trim();
-      const moves = input[line].replace(/([^\d- ]|-\D)/g, '').trim().split(/\s+/g);
+      const moves = input[line]
+        .replace(/([^\d- ]|-\D)/g, '')
+        .trim()
+        .split(/\s+/g);
 
       for (let day = 0; day < event.days; day++) {
         currentMove[day].push(+moves[day]);
       }
 
       currentDivision.push(normalizeOxfordName(crewName));
-      currentMove.push()
+      currentMove.push();
     }
   }
 
   for (let day = 1; day < event.days + 1; day++) {
     for (let crew = 0; crew < numCrews; crew++) {
-      currentPos[day][crew] = currentPos[day - 1][crew] - currentMove[day - 1][crew];
+      currentPos[day][crew] =
+        currentPos[day - 1][crew] - currentMove[day - 1][crew];
     }
   }
 
@@ -1171,7 +1266,9 @@ export function read_ad(input) {
       event.move[day].push([]);
       event.completed[day].push(true);
       for (let crew = 0; crew < event.divisions[div].length; crew++) {
-        event.move[day][div].push(currentMove[day][currentPos[day].indexOf(count)]);
+        event.move[day][div].push(
+          currentMove[day][currentPos[day].indexOf(count)]
+        );
         count++;
       }
     }
@@ -1188,12 +1285,17 @@ export function read_ad(input) {
   for (let div = 0; div < numDivisions; div++) {
     event.finish.push([]);
     for (let crew = 0; crew < event.divisions[div].length; crew++) {
-      event.finish[div].push(initialPositions[currentPos[event.days].indexOf(count)]);
+      event.finish[div].push(
+        initialPositions[currentPos[event.days].indexOf(count)]
+      );
       count++;
     }
   }
 
-  event = (event.set === 'Torpids') ? calculateTorpidsResults(event) : calculateResults(event);
+  event =
+    event.set === 'Torpids'
+      ? calculateTorpidsResults(event)
+      : calculateResults(event);
 
   return event;
 }
@@ -1231,14 +1333,18 @@ export function write_flat(events) {
           if (position < 0 && divNum > 0) {
             position += event.divisions[correctedDivision - 1].length;
             correctedDivision -= 1;
-          } else if (position >= event.divisions[correctedDivision].length && divNum < event.divisions.length) {
+          } else if (
+            position >= event.divisions[correctedDivision].length &&
+            divNum < event.divisions.length
+          ) {
             position -= event.divisions[correctedDivision].length;
             correctedDivision += 1;
           }
 
           correctedPosition = divisionBreaks[correctedDivision] + position + 1;
 
-          ret += `${event.year},${club},${event.gender},${(dayNum + 1)},${crewNumber},${startPosition},${correctedPosition},${divNum + 1}
+          ret += `${event.year},${club},${event.gender},${dayNum +
+            1},${crewNumber},${startPosition},${correctedPosition},${divNum + 1}
 `;
         }
       }
@@ -1292,7 +1398,7 @@ export function write_ad(event) {
       break;
   }
 
-  const numCrews = event.divisions.reduce((sum, div) => sum += div.length, 0);
+  const numCrews = event.divisions.reduce((sum, div) => (sum += div.length), 0);
 
   let ret = `${setStr} ${event.year}
  ${event.days}  ${event.divisions.length}  ${numCrews}   = NDay, NDiv, NCrew
@@ -1302,10 +1408,10 @@ export function write_ad(event) {
     let genderStr;
     switch (event.gender) {
       case 'Men':
-        genderStr = 'Men\'s';
+        genderStr = "Men's";
         break;
       case 'Women':
-        genderStr = 'Women\'s';
+        genderStr = "Women's";
         break;
     }
 
@@ -1346,9 +1452,7 @@ export function write_ad(event) {
     });
 
     ret += divStr;
-
   });
 
   return ret;
 }
-

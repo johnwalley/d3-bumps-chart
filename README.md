@@ -16,8 +16,7 @@ If you use NPM, `npm install d3-bumps-chart`. Otherwise, download the [latest re
 
 <script>
   var el = document.getElementById('bumps-chart');
-  var chart = d3.chart();
-  chart.setup(el);
+  var chart = d3.bumpsChart();
 
   d3.json("./example/results.json", function(error, events) {
 
@@ -42,21 +41,17 @@ If you use NPM, `npm install d3-bumps-chart`. Otherwise, download the [latest re
       windowWidth: window.width
     };
 
-    chart.update(props);
+    d3.select(el).datum(props).call(chart);
   });
 </script>
 ```
 
 ## API Reference
 
-<a name="chart" href="#chart">#</a> d3.<b>chart</b>() [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/chart.js "Source")
+<a name="bumpsChart" href="#bumpsChart">#</a> d3.<b>bumpsChart</b>() [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/chart.js "Source")
 
 Constructs a new bumps chart generator with the default settings.
 
-<a name="chart_setup" href="#chart_setup">#</a> <i>chart</i>.<b>setup</b>(<i>element</i>) [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/chart.js#L16 "Source")
+<a name="bumpsChart" href="#bumpsChart">#</a> <i>bumpsChart</i>(<i>selection</i>) [<>](https://github.com/johnwalley/d3-tube-map/blob/master/src/map.js#L32 "Source")
 
-Sets up the svg elements which are independent of any data. Selects the *element* passed in.
-
-<a name="chart_update" href="#chart_update">#</a> <i>chart</i>.<b>update</b>(<i>props</i>) [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/chart.js#L28 "Source")
-
-Renders the bumps chart based on *props*.
+Render the bumps chart to the given *selection*, which is a [selection](https://github.com/d3/d3-selection).

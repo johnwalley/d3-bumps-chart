@@ -5,11 +5,11 @@ export default {
   external: ['hammerjs'],
   plugins: [
     babel({
-      exclude: 'node_modules/**'
+      exclude: 'node_modules/**',
     }),
     nodeResolve({
       jsnext: true,
-      main: true
+      main: true,
     }),
-  ]
+  ],
 };
