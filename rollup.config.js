@@ -3,13 +3,5 @@ import nodeResolve from 'rollup-plugin-node-resolve';
 
 export default {
   external: ['hammerjs'],
-  plugins: [
-    babel({
-      exclude: 'node_modules/**',
-    }),
-    nodeResolve({
-      jsnext: true,
-      main: true,
-    }),
-  ],
+  plugins: [babel(), nodeResolve()],
 };

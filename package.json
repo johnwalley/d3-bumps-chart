@@ -1,7 +1,7 @@
 {
   "name": "d3-bumps-chart",
-  "version": "0.9.1",
-  "description": "Draw bumps charts.",
+  "version": "0.9.2",
+  "description": "Draw bumps charts",
   "keywords": ["d3", "d3-module", "bumps"],
   "homepage": "https://github.com/johnwalley/d3-bumps-chart/",
   "license": "BSD-3-Clause",
