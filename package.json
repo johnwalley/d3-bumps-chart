@@ -18,10 +18,10 @@
   },
   "scripts": {
     "pretest":
-      "rm -rf build && mkdir build && rollup -c -f umd -n d3 -o build/d3-bumps-chart.js --extend -- index.js",
+      "rm -rf build && mkdir build && rollup -c --banner \"$(preamble)\" -f umd -n d3 -o build/d3-bumps-chart.js --extend -- index.js",
     "test": "tape test/**/*-test.js && eslint index.js src",
     "prepublish":
-      "npm run test && uglifyjs --preamble \"$(preamble)\" build/d3-bumps-chart.js -c -m -o build/d3-bumps-chart.min.js",
+      "npm run test && uglifyjs --beautify \"preamble='$(preamble)'\" build/d3-bumps-chart.js -c -m -o build/d3-bumps-chart.min.js",
     "postpublish":
       "zip -j build/d3-bumps-chart.zip -- LICENSE README.md build/d3-bumps-chart.js build/d3-bumps-chart.min.js"
   },
@@ -44,6 +44,6 @@
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-node-resolve": "^3.0.0",
     "tape": "^4.8.0",
-    "uglify-js": "3.2.2"
+    "uglify-js": "^3.2.2"
   }
 }
