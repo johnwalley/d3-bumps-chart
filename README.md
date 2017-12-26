@@ -52,6 +52,6 @@ If you use NPM, `npm install d3-bumps-chart`. Otherwise, download the [latest re
 
 Constructs a new bumps chart generator with the default settings.
 
-<a name="bumpsChart" href="#bumpsChart">#</a> <i>bumpsChart</i>(<i>selection</i>) [<>](https://github.com/johnwalley/d3-tube-map/blob/master/src/map.js#L32 "Source")
+<a name="bumpsChart" href="#bumpsChart">#</a> <i>bumpsChart</i>(<i>selection</i>) [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/chart.js#L32 "Source")
 
-Render the bumps chart to the given *selection*, which is a [selection](https://github.com/d3/d3-selection).
+Render the bumps chart to the given _[selection](https://github.com/d3/d3-selection)_.
