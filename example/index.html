@@ -20,6 +20,13 @@
 
       var chart = d3.bumpsChart();
 
+      chart
+        .year({ start: 2013, end: 2016 })
+        .windowWidth(window.document.body.clientWidth)
+        .on("selectYear", (start, end) => console.log(start + '-' + end))
+        .on("highlightCrew", crew => console.log(crew))
+        .on("toggleSelectedCrew", crew => console.log(crew));
+
       var transformedEvents = events
         .filter(e => e.gender.toLowerCase() === gender.toLowerCase())
         .filter(e => e.set === set)
@@ -28,18 +35,7 @@
 
       var data = d3.joinEvents(transformedEvents, set, gender);
 
-      var props = {
-        data: data,
-        year: { start: 2013, end: 2016 },
-        selectedCrews: new Set(),
-        highlightedCrew: null,
-        selectYear: chart.selectYear,
-        toggleSelectedCrew: chart.toggleSelectedCrew,
-        highlightCrew: chart.highlightCrew,
-        windowWidth: window.document.body.clientWidth
-      };
-
-      d3.select(el).datum(props).call(chart);
+      d3.select(el).datum(data).call(chart);
     });
   </script>
 </body>

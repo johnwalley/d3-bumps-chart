@@ -1,6 +1,7 @@
 import { scaleLinear } from 'd3-scale';
 import { line } from 'd3-shape';
 import { max, min, range } from 'd3-array';
+import { dispatch } from 'd3-dispatch';
 import 'd3-transition'; // We require the side-effects of importing
 
 import { crewColor, renderName } from './util.js';
@@ -9,9 +10,14 @@ export const widthOfOneYear = 110;
 
 export default function() {
   let svg;
-  let state;
+  let _data;
 
   let hammertime;
+
+  let yearRange;
+  let highlightedCrew;
+  let selectedCrews = new Set();
+  let windowWidth;
 
   let container;
   let g;
@@ -25,17 +31,25 @@ export default function() {
   let startYear;
   let endYear;
   let numYearsToView;
-  let selectYear;
 
   let setupComplete = false;
 
+  const listeners = dispatch(
+    'selectYear',
+    'highlightCrew',
+    'toggleSelectedCrew'
+  );
+
   function chart(selection) {
     selection.each(function(data) {
+      _data = data;
+
       if (!setupComplete) {
         setup(selection);
         setupComplete = true;
       }
-      render(data);
+
+      render();
     });
   }
 
@@ -61,6 +75,7 @@ export default function() {
             startYear,
         ]),
       ]);
+
       selectYear(shift, shift + numYearsToView - 1);
     });
 
@@ -73,17 +88,8 @@ export default function() {
     createDropShadowFilter(svg);
   }
 
-  function render(props) {
-    state = Object.assign({}, props);
-
-    const results = props.data;
-    const yearRange = props.year;
-    const selectedCrews = props.selectedCrews;
-    const highlightedCrew = props.highlightedCrew;
-    selectYear = props.selectYear;
-    const toggleSelectedCrew = props.toggleSelectedCrew;
-    const highlightCrew = props.highlightCrew;
-    const windowWidth = props.windowWidth;
+  function render() {
+    const results = _data;
 
     // If we have no results or no range of years return early
     if (
@@ -179,6 +185,7 @@ export default function() {
       .attr('transform', `translate(${xScale(-dayShift)},0)`);
 
     renderClipPath(svg, numYearsToView, viewBoxHeight, xScale);
+
     const divisionsEnter = renderDivisions(
       results,
       divisionsGroup,
@@ -265,25 +272,32 @@ export default function() {
     );
   }
 
-  chart.selectYear = function(start, end) {
-    state.year = { start: start, end: end };
-    render(state);
-  };
+  function selectYear(start, end) {
+    listeners.call('selectYear', chart, start, end);
+    yearRange = { start: start, end: end };
+    render();
+  }
 
-  chart.toggleSelectedCrew = function(name) {
-    if (state.selectedCrews.has(name)) {
-      state.selectedCrews.delete(name);
+  function toggleSelectedCrew(name) {
+    listeners.call('toggleSelectedCrew', chart, name);
+
+    if (selectedCrews.has(name)) {
+      selectedCrews.delete(name);
     } else {
-      state.selectedCrews.add(name);
+      selectedCrews.add(name);
     }
 
-    render(state);
-  };
+    render();
+  }
 
-  chart.highlightCrew = function(name) {
-    state.highlightedCrew = name;
-    render(state);
-  };
+  function highlightCrew(name) {
+    if (name !== null) {
+      listeners.call('highlightCrew', chart, name);
+    }
+
+    highlightedCrew = name;
+    render();
+  }
 
   function createKey(set, gender, postfix = '') {
     return set.replace(/ /g, '') + gender + postfix;
@@ -841,6 +855,35 @@ export default function() {
       .style('opacity', 0)
       .remove();
   }
+
+  chart.year = function(_) {
+    if (!arguments.length) return yearRange;
+    yearRange = _;
+    return chart;
+  };
+
+  chart.highlightedCrew = function(_) {
+    if (!arguments.length) return highlightedCrew;
+    highlightedCrew = _;
+    return chart;
+  };
+
+  chart.selectedCrews = function(_) {
+    if (!arguments.length) return selectedCrews;
+    selectedCrews = _;
+    return chart;
+  };
+
+  chart.windowWidth = function(_) {
+    if (!arguments.length) return windowWidth;
+    windowWidth = _;
+    return chart;
+  };
+
+  chart.on = function() {
+    const value = listeners.on.apply(listeners, arguments);
+    return value === listeners ? chart : value;
+  };
 
   return chart;
 }

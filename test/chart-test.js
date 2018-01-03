@@ -39,7 +39,7 @@ tape('chart() without data should append 4 svg groups.', function(test) {
 
   d3
     .select(el)
-    .datum([null])
+    .datum(undefined)
     .call(chart);
 
   test.equal(

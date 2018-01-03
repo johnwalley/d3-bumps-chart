@@ -1,6 +1,6 @@
 {
   "name": "d3-bumps-chart",
-  "version": "0.9.2",
+  "version": "0.10.0",
   "description": "Draw bumps charts",
   "keywords": ["d3", "d3-module", "bumps"],
   "homepage": "https://github.com/johnwalley/d3-bumps-chart/",
@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "d3-array": "^1.2.1",
+    "d3-dispatch": "^1.0.3",
     "d3-dsv": "^1.0.8",
     "d3-scale": "^1.0.7",
     "d3-shape": "^1.2.0",
