@@ -273,14 +273,12 @@ export default function() {
   }
 
   function selectYear(start, end) {
-    listeners.call('selectYear', chart, start, end);
     yearRange = { start: start, end: end };
     render();
+    listeners.call('selectYear', chart, start, end);
   }
 
   function toggleSelectedCrew(name) {
-    listeners.call('toggleSelectedCrew', chart, name);
-
     if (selectedCrews.has(name)) {
       selectedCrews.delete(name);
     } else {
@@ -288,15 +286,13 @@ export default function() {
     }
 
     render();
+    listeners.call('toggleSelectedCrew', chart, name);
   }
 
   function highlightCrew(name) {
-    if (name !== null) {
-      listeners.call('highlightCrew', chart, name);
-    }
-
     highlightedCrew = name;
     render();
+    listeners.call('toggleSelectedCrew', chart, name);
   }
 
   function createKey(set, gender, postfix = '') {
