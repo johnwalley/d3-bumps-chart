@@ -292,7 +292,7 @@ export default function() {
   function highlightCrew(name) {
     highlightedCrew = name;
     render();
-    listeners.call('toggleSelectedCrew', chart, name);
+    listeners.call('highlightCrew', chart, name);
   }
 
   function createKey(set, gender, postfix = '') {
@@ -391,7 +391,7 @@ export default function() {
       .attr('x', d => xScale(d.year - startYear) * 5)
       .attr('y', d => yScale(d.start - 0.5))
       .attr('width', xScale(4) - xScale(0))
-      .attr('height', d => yScale(d.start + d.length) - yScale(d.start))
+      .attr('height', d => yScale(d.start + d.size) - yScale(d.start))
       .style('opacity', 1e-6)
       .transition()
       .duration(transitionLength)
@@ -403,7 +403,7 @@ export default function() {
       .attr('x', d => xScale(d.year - startYear) * 5)
       .attr('y', d => yScale(d.start - 0.5))
       .attr('width', xScale(4) - xScale(0))
-      .attr('height', d => yScale(d.start + d.length) - yScale(d.start));
+      .attr('height', d => yScale(d.start + d.size) - yScale(d.start));
 
     divisionsYear
       .exit()
@@ -809,7 +809,7 @@ export default function() {
     }
 
     startYearDivisions.divisions.forEach(d => {
-      for (let i = 0; i < d.length; i++) {
+      for (let i = 0; i < d.size; i++) {
         numbers.push(i + 1);
       }
     });

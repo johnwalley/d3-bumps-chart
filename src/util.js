@@ -441,16 +441,14 @@ export function joinEvents(events, set, gender) {
       divisions: event.divisions.map(d => ({
         year: event.year,
         start: d.start,
-        length: d.length,
+        size: d.size,
       })),
     });
   });
 
   const startYear = min(years);
   const endYear = max(years);
-
   const uniqueCrewNames = uniq(crewNames);
-
   const maxCrews = max(events.map(e => e.crews.length));
 
   uniqueCrewNames.forEach(crewName => {
@@ -519,8 +517,9 @@ export function joinEvents(events, set, gender) {
 export function transformData(event) {
   if (event.days !== event.completed.length) {
     throw new RangeError(
-      `Expected ${event.days} but found ${event.completed
-        .length} completed days`
+      `Expected ${event.days} but found ${
+        event.completed.length
+      } completed days`
     );
   }
 
@@ -528,7 +527,7 @@ export function transformData(event) {
   const crews = [];
   const divisions = [];
   for (let div = 0; div < event.divisions.length; div++) {
-    divisions.push({ start: starty, length: event.divisions[div].length });
+    divisions.push({ start: starty, size: event.divisions[div].length });
 
     for (let crew = 0; crew < event.divisions[div].length; crew++) {
       const position = [];
@@ -935,8 +934,9 @@ function calculateMoves(event, crewsFirstDay, crewsAllDays, divisionSizes) {
           divisionSizes
         );
 
-        divisions[division][positionInDivision] = `${crewsFirstDay[crew]
-          .Club} ${crewsFirstDay[crew].Crew}`;
+        divisions[division][positionInDivision] = `${
+          crewsFirstDay[crew].Club
+        } ${crewsFirstDay[crew].Crew}`;
         move[dayNum][division][positionInDivision] =
           +crewsFirstDay[crew]['Start position'] -
           +crewsAllDays[event.days * crew + dayNum].Position;
@@ -968,8 +968,9 @@ function calculateMoves(event, crewsFirstDay, crewsAllDays, divisionSizes) {
             numDivisions,
             divisionSizes
           );
-          finish[division][positionInDivision] = `${crewsFirstDay[crew]
-            .Club} ${crewsFirstDay[crew].Crew}`;
+          finish[division][positionInDivision] = `${crewsFirstDay[crew].Club} ${
+            crewsFirstDay[crew].Crew
+          }`;
         }
       }
     }

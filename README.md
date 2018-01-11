@@ -52,6 +52,18 @@ If you use NPM, `npm install d3-bumps-chart`. Otherwise, download the [latest re
 
 Constructs a new bumps chart generator with the default settings.
 
-<a name="bumpsChart" href="#bumpsChart">#</a> <i>bumpsChart</i>(<i>selection</i>) [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/chart.js#L32 "Source")
+<a name="bumpsChart" href="#bumpsChart">#</a> <i>bumpsChart</i>(<i>selection</i>) [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/chart.js#L43 "Source")
 
 Render the bumps chart to the given _[selection](https://github.com/d3/d3-selection)_.
+
+<a href="#bumpsChart_on" name="bumpsChart_on">#</a> <i>bumpsChart</i>.<b>on</b>(<i>typenames</i>, [<i>listener</i>]) [<>](https://github.com/johnwalley/d3-bumps-chart/blob/master/src/chart.js#L879 "Source")
+
+If _listener_ is specified, sets the event _listener_ for the specified _typenames_ and returns the bumps chart. If an event listener was already registered for the same type and name, the existing listener is removed before the new listener is added. If _listener_ is null, removes the current event listeners for the specified _typenames_, if any. If _listener_ is not specified, returns the first currently-assigned listener matching the specified _typenames_, if any. When a specified event is dispatched, each _listener_ will be invoked with the same context and arguments as [_selection_.on](https://github.com/d3/d3-selection#selection_on) listeners: the current datum `d` and index `i`, with the `this` context as the current DOM element.
+
+The _typenames_ is a string containing one or more _typename_ separated by whitespace. Each _typename_ is a _type_, optionally followed by a period (`.`) and a _name_, such as `drag.foo` and `drag.bar`; the name allows multiple listeners to be registered for the same _type_. The _type_ must be one of the following:
+
+* `selectYear` - after the year range has changed.
+* `toggleSelectedCrew` - after a crew's selected status has been toggled.
+* `highlightCrew` - after the highlighted crew has changed.
+
+See [_dispatch_.on](https://github.com/d3/d3-dispatch#dispatch_on) for more.

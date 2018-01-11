@@ -26,12 +26,12 @@ tape('Join incomplete events correctly.', function(test) {
           ],
         },
       ],
-      divisions: [{ start: 0, length: 2 }],
+      divisions: [{ start: 0, size: 2 }],
       year: 2013,
     },
     {
       crews: [{ name: 'Cantabs 1', values: [{ day: 0, pos: 1 }] }],
-      divisions: [{ start: 0, length: 1 }],
+      divisions: [{ start: 0, size: 1 }],
       year: 2014,
     },
   ];
@@ -124,13 +124,13 @@ tape('Join incomplete events correctly.', function(test) {
     ],
     divisions: [
       {
-        divisions: [{ length: 2, start: 0, year: 2013 }],
+        divisions: [{ size: 2, start: 0, year: 2013 }],
         gender: 'Women',
         set: 'Lent Bumps',
         year: 2013,
       },
       {
-        divisions: [{ length: 1, start: 0, year: 2014 }],
+        divisions: [{ size: 1, start: 0, year: 2014 }],
         gender: 'Women',
         set: 'Lent Bumps',
         year: 2014,
