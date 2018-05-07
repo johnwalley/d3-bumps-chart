@@ -213,15 +213,15 @@ export function abbreviateCrew(crew, set) {
   let abbrev;
 
   switch (set) {
-    case 'Lent Bumps':
-    case 'May Bumps':
+    case SET.LENTS:
+    case SET.MAYS:
       abbrev = abbrevCamCollege;
       break;
-    case 'Torpids':
-    case 'Summer Eights':
+    case SET.TORPIDS:
+    case SET.EIGHTS:
       abbrev = abbrevOxCollege;
       break;
-    case 'Town Bumps':
+    case SET.TOWN:
       abbrev = abbrevCamTown;
       break;
     default:
@@ -241,15 +241,15 @@ export function expandCrew(crew, set) {
   let abbrev;
 
   switch (set) {
-    case 'Lent Bumps':
-    case 'May Bumps':
+    case SET.LENTS:
+    case SET.MAYS:
       abbrev = abbrevCamCollege;
       break;
-    case 'Torpids':
-    case 'Summer Eights':
+    case SET.TORPIDS:
+    case SET.EIGHTS:
       abbrev = abbrevOxCollege;
       break;
-    case 'Town Bumps':
+    case SET.TOWN:
       abbrev = abbrevCamTown;
       break;
     default:
@@ -270,17 +270,17 @@ export function renderName(name, set) {
   let type;
 
   switch (set) {
-    case 'Lent Bumps':
-    case 'May Bumps':
+    case SET.LENTS:
+    case SET.MAYS:
       abbrev = abbrevCamCollege;
       type = 'college';
       break;
-    case 'Torpids':
-    case 'Summer Eights':
+    case SET.TORPIDS:
+    case SET.EIGHTS:
       abbrev = abbrevOxCollege;
       type = 'college';
       break;
-    case 'Town Bumps':
+    case SET.TOWN:
       abbrev = abbrevCamTown;
       type = 'town';
       break;
@@ -1208,11 +1208,11 @@ export function read_ad(input) {
 
   switch (info[0]) {
     case 'EIGHTS':
-      event.set = 'Summer Eights';
+      event.set = SET.EIGHTS;
       event.small = 'Eights';
       break;
     case 'TORPIDS':
-      event.set = 'Torpids';
+      event.set = SET.TORPIDS;
       event.small = 'Torpids';
       break;
   }
@@ -1237,11 +1237,11 @@ export function read_ad(input) {
   switch (input[2].split(' ')[3]) {
     case 'Mens':
     case "Men's":
-      event.gender = 'Men';
+      event.gender = GENDER.MEN;
       break;
     case 'Womens':
     case "Women's":
-      event.gender = 'Women';
+      event.gender = GENDER.WOMEN;
       break;
   }
 
@@ -1404,10 +1404,10 @@ export function write_ad(event) {
   let setStr;
 
   switch (event.set) {
-    case 'Summer Eights':
+    case SET.EIGHTS:
       setStr = 'EIGHTS';
       break;
-    case 'Torpids':
+    case SET.TORPIDS:
       setStr = 'TORPIDS';
       break;
   }
@@ -1421,10 +1421,10 @@ export function write_ad(event) {
   event.divisions.forEach((div, index) => {
     let genderStr;
     switch (event.gender) {
-      case 'Men':
+      case GENDER.MEN:
         genderStr = "Men's";
         break;
-      case 'Women':
+      case GENDER.WOMEN:
         genderStr = "Women's";
         break;
     }
