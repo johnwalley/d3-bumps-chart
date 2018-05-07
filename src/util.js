@@ -8,6 +8,19 @@ import { min, max } from 'd3-array';
 
 import { widthOfOneYear } from './chart';
 
+export const GENDER = {
+  MEN: 'Men',
+  WOMEN: 'Women',
+};
+
+export const SET = {
+  EIGHTS: 'Summer Eights',
+  TORPIDS: 'Torpids',
+  LENTS: 'Lent Bumps',
+  MAYS: 'May Bumps',
+  TOWN: 'Town Bumps',
+};
+
 export const abbrevCamCollege = {
   A: "Addenbrooke's",
   AR: 'Anglia Ruskin',

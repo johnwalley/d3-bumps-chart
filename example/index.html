@@ -14,8 +14,8 @@
   </div>
   <script>
     d3.json("./results.json", function (error, events) {
-      var gender = "Women";
-      var set = "Town Bumps";
+      var gender = d3.GENDER.WOMEN;
+      var set = d3.SET.TOWN;
       var el = document.getElementById('bumps-chart');
 
       var chart = d3.bumpsChart();
