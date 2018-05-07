@@ -705,6 +705,16 @@ function calculateResults(event) {
           crew -= 1;
         } else if (m[crew] === -3) {
           crew -= 1;
+        } else if (m[crew] === 5) {
+          results += 'o5';
+          crew -= 1;
+        } else if (m[crew] === -5) {
+          crew -= 1;
+        } else if (m[crew] === 7) {
+          results += 'o7';
+          crew -= 1;
+        } else if (m[crew] === -7) {
+          crew -= 1;
         } else {
           crew -= 1;
         }
