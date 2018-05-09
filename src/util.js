@@ -672,20 +672,15 @@ function calculateResults(event) {
   const numDivisions = event.divisions.length;
 
   for (let dayNum = 0; dayNum < event.days; dayNum++) {
-    let sandwichSuccess = false;
-    let sandwichSuccessResult = '';
+    let sandwichSuccess = 0;
 
     for (let divNum = numDivisions - 1; divNum >= 0; divNum--) {
       completed[dayNum][divNum] = true;
 
-      const m = move[dayNum][divNum];
+      const m = move[dayNum][divNum].slice();
 
-      if (sandwichSuccess) {
-        if (sandwichSuccessResult !== '') {
-          results += sandwichSuccessResult;
-        }
-      } else if (divNum < numDivisions - 1) {
-        results += 'r';
+      if (divNum < numDivisions - 1) {
+        m.push(sandwichSuccess);
       }
 
       let crew = m.length - 1;
@@ -769,6 +764,22 @@ function calculateResults(event) {
               results += 'o5';
             }
             break;
+          case 6:
+            if (crew === 1) {
+              // Sandwich boat in next division
+              results += 'u';
+              crew -= 1;
+            } else if (crew === 3) {
+              // Sandwich boat in next division
+              results += 'o3';
+            } else if (crew === 5) {
+              // Sandwich boat in next division
+              results += 'o5';
+            } else {
+              // Simple move
+              results += 'e6';
+            }
+            break;
           case 7:
             if (m[crew - 7] !== -7) {
               // Not swapping places with crew seven above
@@ -805,14 +816,8 @@ function calculateResults(event) {
             }
             break;
           case -1:
-            if (
-              crew < m.length - 1 ||
-              (sandwichSuccessResult !== '' &&
-                sandwichSuccessResult !== 'u' &&
-                crew === m.length - 1)
-            )
-              // Should not get here if it's a simple position swap
-              results += 'e-1';
+            // Should not get here if it's a simple position swap
+            results += 'e-1';
             break;
           case -2:
             results += 'e-2';
@@ -873,45 +878,15 @@ function calculateResults(event) {
         crew -= 1;
       }
 
-      if (m[0] > 0) {
-        sandwichSuccess = true;
-        if (m[0] === 2) {
-          sandwichSuccessResult = 'e2';
-        } else if (m[0] === 3) {
-          sandwichSuccessResult = 'o3';
-        } else {
-          // FIXME: Can't know if this should be u or e1
-          sandwichSuccessResult = 'u';
+      sandwichSuccess = 0;
+      crew = 0;
+      while (crew < m.length) {
+        if (m[crew] > crew) {
+          // Sandwich boat
+          sandwichSuccess = m[crew] - crew;
+          break;
         }
-      } else if (m[1] > 1) {
-        sandwichSuccess = true;
-        if (m[1] === 2) {
-          sandwichSuccessResult = 'u';
-        } else if (m[1] === 3) {
-          sandwichSuccessResult = 'e2';
-        } else if (m[1] === 4) {
-          sandwichSuccessResult = 'o3';
-        } else if (m[1] === 5) {
-          sandwichSuccessResult = 'e4';
-        }
-      } else if (m[2] > 2) {
-        sandwichSuccess = true;
-        if (m[2] === 3) {
-          sandwichSuccessResult = 'u';
-        }
-      } else if (m[3] > 3) {
-        sandwichSuccess = true;
-        if (m[3] === 4) {
-          sandwichSuccessResult = 'u';
-        }
-      } else if (m[5] > 5) {
-        sandwichSuccess = true;
-        if (m[5] === 8) {
-          sandwichSuccessResult = 'o3';
-        }
-      } else {
-        sandwichSuccess = false;
-        sandwichSuccessResult = '';
+        crew += 1;
       }
 
       if (divNum > 0) {
