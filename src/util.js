@@ -673,14 +673,17 @@ function calculateResults(event) {
 
   for (let dayNum = 0; dayNum < event.days; dayNum++) {
     let sandwichSuccess = false;
+    let sandwichSuccessResult = '';
+
     for (let divNum = numDivisions - 1; divNum >= 0; divNum--) {
       completed[dayNum][divNum] = true;
 
       const m = move[dayNum][divNum];
 
       if (sandwichSuccess) {
-        results += 'u';
-        sandwichSuccess = false;
+        if (sandwichSuccessResult !== '') {
+          results += sandwichSuccessResult;
+        }
       } else if (divNum < numDivisions - 1) {
         results += 'r';
       }
@@ -688,40 +691,227 @@ function calculateResults(event) {
       let crew = m.length - 1;
 
       while (crew >= 0) {
-        if (m[crew] === 0) {
-          results += 'r';
-          crew -= 1;
-        } else if (m[crew] === 1 && crew === 0) {
-          results += 'r';
-          crew -= 1;
-        } else if (m[crew] === 1 && crew > 0) {
-          results += 'u';
-          crew -= 2;
-        } else if (m[crew] === 2 && crew === 1) {
-          results += 'u';
-          crew -= 2;
-        } else if (m[crew] === 3) {
-          results += 'o3';
-          crew -= 1;
-        } else if (m[crew] === -3) {
-          crew -= 1;
-        } else if (m[crew] === 5) {
-          results += 'o5';
-          crew -= 1;
-        } else if (m[crew] === -5) {
-          crew -= 1;
-        } else if (m[crew] === 7) {
-          results += 'o7';
-          crew -= 1;
-        } else if (m[crew] === -7) {
-          crew -= 1;
-        } else {
-          crew -= 1;
+        switch (m[crew]) {
+          case 0:
+            results += 'r';
+            break;
+          case 1:
+            if (crew === 0) {
+              // Sandwich boat in next division
+              results += 'r';
+            } else {
+              if (m[crew - 1] !== -1) {
+                // Not swapping places with crew above
+                results += 'e1';
+              } else {
+                // Swap places
+                results += 'u';
+                crew -= 1;
+              }
+            }
+            break;
+          case 2:
+            if (crew === 1) {
+              // Sandwich boat in next division
+              results += 'u';
+              crew -= 1;
+            } else if (crew === 0) {
+              // Top of division
+              results += 'r';
+            } else {
+              results += 'e2';
+            }
+            break;
+          case 3:
+            if (m[crew - 3] !== -3) {
+              if (crew === 0) {
+                // Top of division
+                results += 'r';
+              } else if (crew === 1) {
+                // Sandwich boat in next division
+                results += 'u';
+                crew -= 1;
+              } else if (crew === 2) {
+                // Sandwich boat in next division
+                results += 'e2';
+              } else {
+                // Not swapping places with crew three above
+                results += 'e3';
+              }
+            } else {
+              // Overbump
+              results += 'o3';
+            }
+            break;
+          case 4:
+            if (crew === 1) {
+              // Sandwich boat in next division
+              results += 'u';
+              crew -= 1;
+            } else if (crew === 3) {
+              // Sandwich boat in next division
+              results += 'o3';
+            } else {
+              // Simple move
+              results += 'e4';
+            }
+            break;
+          case 5:
+            if (crew === 1) {
+              // Sandwich boat in next division
+              results += 'u';
+              crew -= 1;
+            } else if (m[crew - 5] !== -5) {
+              // Not swapping places with crew five above
+              results += 'e5';
+            } else {
+              // Double overbump
+              results += 'o5';
+            }
+            break;
+          case 7:
+            if (m[crew - 7] !== -7) {
+              // Not swapping places with crew seven above
+              results += 'e7';
+            } else {
+              // Triple overbump
+              results += 'o7';
+            }
+            break;
+          case 8:
+            if (crew === 1) {
+              // Sandwich boat in next division
+              results += 'u';
+              crew -= 1;
+            } else if (crew === 5) {
+              // Sandwich boat in next division
+              results += 'o5';
+            } else {
+              // Simple move
+              results += 'e8';
+            }
+            break;
+          case 9:
+            if (crew === 1) {
+              // Sandwich boat in next division
+              results += 'u';
+              crew -= 1;
+            } else if (m[crew - 9] !== -9) {
+              // Not swapping places with crew nine above
+              results += 'e9';
+            } else {
+              // Double overbump
+              results += 'o9';
+            }
+            break;
+          case -1:
+            if (
+              crew < m.length - 1 ||
+              (sandwichSuccessResult !== '' &&
+                sandwichSuccessResult !== 'u' &&
+                crew === m.length - 1)
+            )
+              // Should not get here if it's a simple position swap
+              results += 'e-1';
+            break;
+          case -2:
+            results += 'e-2';
+            break;
+          case -3:
+            if (m[crew + 3] > 3 && crew === 0) {
+              // Overbumped by crew which went on to be a successful sandwich boat
+            } else if (crew + 3 === m.length) {
+              // Overbumped by crew which was a successful sandwich boat
+            } else if (m[crew + 3] !== 3) {
+              // Not swapping places with crew three below
+              results += 'e-3';
+            }
+            break;
+          case -4:
+            results += 'e-4';
+            break;
+          case -5:
+            if (m[crew + 5] > 5 && crew === 0) {
+              // Double overbumped by crew which went on to be a successful sandwich boat
+            } else if (crew + 5 === m.length) {
+              // Double overbumped by crew which was a successful sandwich boat
+            } else if (m[crew + 5] !== 5) {
+              // Not swapping places with crew three below
+              results += 'e-5';
+            }
+            break;
+          case -6:
+            results += 'e-6';
+            break;
+          case -7:
+            if (m[crew + 7] > 7 && crew === 0) {
+              // Overbumped by crew which went on to be a successful sandwich boat
+            } else if (crew + 7 === m.length) {
+              // Overbumped by crew which was a successful sandwich boat
+            } else if (m[crew + 7] !== 7) {
+              // Not swapping places with crew three below
+              results += 'e-7';
+            }
+            break;
+          case -8:
+            results += 'e-8';
+            break;
+          case -9:
+            results += 'e-9';
+            break;
+          case -10:
+            results += 'e-10';
+            break;
+          case -11:
+            results += 'e-11';
+            break;
+          case -12:
+            results += 'e-12';
+            break;
         }
+
+        crew -= 1;
       }
 
-      if (m[0] === 1 || m[1] === 2 || m[1] === 4) {
+      if (m[0] > 0) {
         sandwichSuccess = true;
+        if (m[0] === 2) {
+          sandwichSuccessResult = 'e2';
+        } else if (m[0] === 3) {
+          sandwichSuccessResult = 'o3';
+        } else {
+          // FIXME: Can't know if this should be u or e1
+          sandwichSuccessResult = 'u';
+        }
+      } else if (m[1] > 1) {
+        sandwichSuccess = true;
+        if (m[1] === 2) {
+          sandwichSuccessResult = 'u';
+        } else if (m[1] === 3) {
+          sandwichSuccessResult = 'e2';
+        } else if (m[1] === 4) {
+          sandwichSuccessResult = 'o3';
+        } else if (m[1] === 5) {
+          sandwichSuccessResult = 'e4';
+        }
+      } else if (m[2] > 2) {
+        sandwichSuccess = true;
+        if (m[2] === 3) {
+          sandwichSuccessResult = 'u';
+        }
+      } else if (m[3] > 3) {
+        sandwichSuccess = true;
+        if (m[3] === 4) {
+          sandwichSuccessResult = 'u';
+        }
+      } else if (m[5] > 5) {
+        sandwichSuccess = true;
+        if (m[5] === 8) {
+          sandwichSuccessResult = 'o3';
+        }
+      } else {
+        sandwichSuccess = false;
+        sandwichSuccessResult = '';
       }
 
       if (divNum > 0) {

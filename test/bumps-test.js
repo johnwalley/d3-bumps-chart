@@ -448,6 +448,1062 @@ e1e1e-2e1e-1re2re1e-3re3e-1 rre1e-3e1e1e-2e2re1e-3e2e-1 re-1e1e-1rrrre1e-1e1e-1r
   test.end();
 });
 
+tape(
+  'read_ad() returns a correct intermediate object for Summer Eights.',
+  function(test) {
+    var data = `EIGHTS 2016
+ 4  7  92   = NDay, NDiv, NCrew
+ 13  Men's Div I (6.45)
+Oriel                       0   0   0   0
+Christ Church               0   0   0   0
+Pembroke                    0   0   0  -1
+Magdalen                   -1  -1  -1   0
+Wolfson                     1   0  -1   0
+Keble                       0   1   1   1
+Trinity                    -1  -1  -1  -1
+University                  1   0   1   0
+S.E.H.                      0   1   0  -1
+Balliol                    -1  -1   0   0
+Wadham                      1   0   1   1
+New College                 0   1   0   1
+Hertford                    0   0   0   0
+ 13  Men's Div II (5.45)
+Worcester                  -1  -1  -1  -1
+St Catherine's              1   0   0   0
+Brasenose                  -1  -1  -1  -1
+L.M.H.                      1   1   0   0
+Mansfield                   0   1   1   0
+Lincoln                     0   0   1   1
+Jesus                       0   0   0   1
+St John's                   0  -1  -1  -1
+Oriel II                   -1  -1  -1   0
+Pembroke II                 1   1   0   0
+St Anne's                  -1  -1   0   0
+Queen's                     1   1   1   0
+St Peter's                 -1   0  -1  -1
+ 13  Men's Div III (4.45)
+Exeter                     -1   0   1   0
+St Hugh's                   2   1   1   1
+Christ Church II           -1  -1  -1   1
+Corpus Christi              1   0  -1   0
+New College II             -1   0   1  -1
+Merton                      1   1   1   1
+Somerville                  0   0   0  -1
+St Antony's                 0   0   0   1
+Linacre                    -1   0  -1  -1
+University II               1   0   0   0
+Wadham II                   0   0   1   0
+Magdalen II                -1  -1  -1  -1
+Balliol II                  1   0  -1   0
+ 13  Men's Div IV (3.40)
+Trinity II                  0  -1   1   0
+S.E.H. II                  -1  -1   1   1
+Keble II                    1   2   1   1
+Jesus II                    0   1  -1   0
+Osler House                 0  -1  -1  -1
+Brasenose II               -1  -1  -1  -1
+Wolfson II                  1   1   0   0
+Worcester II               -1  -1  -1  -1
+Hertford II                 1   1   1   0
+St Catherine's II           0   1   1   1
+St John's II               -1  -1  -1  -1
+Green Templeton             1   0   1   1
+St Hilda's                 -1   0   1   0
+ 13  Men's Div V (2.20)
+Merton II                   1   1   0   1
+Lincoln II                  0   0   0   1
+Exeter II                   0   0   0   0
+St Peter's II               0  -1   0  -1
+Wolfson III                -1  -1   1   1
+Regent's Park               1   1   0   0
+Pembroke III                0   1  -1   0
+Jesus III                  -1  -1  -1  -1
+Queen's II                 -1   1   0  -1
+St Benet's Hall             2   0   0   0
+St Anne's II               -1   0  -1  -1
+University III              1   0   1   1
+Wadham III                 -1  -1  -1   0
+ 13  Men's Div VI (1.15)*
+Somerville II               1  -1   0  -1
+Oriel III                  -1  -1  -1   0
+L.M.H. II                   1   2   1   1
+S.E.H. III                 -1  -1   0   0
+Mansfield II                1   1   1   2
+Keble III                   0   1   1   0
+Pembroke IV                -1  -1  -1  -1
+New College III             1   0  -1  -1
+Linacre II                 -1  -1  -1   0
+St John's III               1   1   1   0
+St Hugh's II                0   1   1   1
+Hertford III                0  -1   0  -1
+Merton III                 -1  -1  -1  -1
+ 14  Men's Div VII (12.00)*
+Balliol III                 1   1   1   1
+Keble IV                   -1  -1  -1  -5
+Jesus IV                    1   1   0  -1
+Mansfield III              -1  -1   0  -1
+St Antony's II              1   1   1   2
+University IV               0   1   1   1
+Corpus Christi II           0  -1   0  -1
+L.M.H. III                 -3  -1   0  -1
+Lincoln III                -1   0  -1   0
+St Hilda's II               1   0  -1   5
+St Catherine's III          3   1   0   1
+St Antony's III            -1  -1   0   0
+Balliol IV                  1   1   2   1
+Corpus Christi III          0   1   0   1
+`;
+
+    var expected = {
+      set: 'Summer Eights',
+      small: 'Eights',
+      gender: 'Men',
+      result: '',
+      year: 2016,
+      days: 4,
+      divisions: [
+        [
+          'Oriel 1',
+          'Christ Church 1',
+          'Pembroke 1',
+          'Magdalen 1',
+          'Wolfson 1',
+          'Keble 1',
+          'Trinity 1',
+          'University 1',
+          'S.E.H. 1',
+          'Balliol 1',
+          'Wadham 1',
+          'New College 1',
+          'Hertford 1',
+        ],
+        [
+          'Worcester 1',
+          "St Catherine's 1",
+          'Brasenose 1',
+          'L.M.H. 1',
+          'Mansfield 1',
+          'Lincoln 1',
+          'Jesus 1',
+          "St John's 1",
+          'Oriel 2',
+          'Pembroke 2',
+          "St Anne's 1",
+          "Queen's 1",
+          "St Peter's 1",
+        ],
+        [
+          'Exeter 1',
+          "St Hugh's 1",
+          'Christ Church 2',
+          'Corpus Christi 1',
+          'New College 2',
+          'Merton 1',
+          'Somerville 1',
+          "St Antony's 1",
+          'Linacre 1',
+          'University 2',
+          'Wadham 2',
+          'Magdalen 2',
+          'Balliol 2',
+        ],
+        [
+          'Trinity 2',
+          'S.E.H. 2',
+          'Keble 2',
+          'Jesus 2',
+          'Osler House 1',
+          'Brasenose 2',
+          'Wolfson 2',
+          'Worcester 2',
+          'Hertford 2',
+          "St Catherine's 2",
+          "St John's 2",
+          'Green Templeton 1',
+          "St Hilda's 1",
+        ],
+        [
+          'Merton 2',
+          'Lincoln 2',
+          'Exeter 2',
+          "St Peter's 2",
+          'Wolfson 3',
+          "Regent's Park 1",
+          'Pembroke 3',
+          'Jesus 3',
+          "Queen's 2",
+          "St Benet's Hall 1",
+          "St Anne's 2",
+          'University 3',
+          'Wadham 3',
+        ],
+        [
+          'Somerville 2',
+          'Oriel 3',
+          'L.M.H. 2',
+          'S.E.H. 3',
+          'Mansfield 2',
+          'Keble 3',
+          'Pembroke 4',
+          'New College 3',
+          'Linacre 2',
+          "St John's 3",
+          "St Hugh's 2",
+          'Hertford 3',
+          'Merton 3',
+        ],
+        [
+          'Balliol 3',
+          'Keble 4',
+          'Jesus 4',
+          'Mansfield 3',
+          "St Antony's 2",
+          'University 4',
+          'Corpus Christi 2',
+          'L.M.H. 3',
+          'Lincoln 3',
+          "St Hilda's 2",
+          "St Catherine's 3",
+          "St Antony's 3",
+          'Balliol 4',
+          'Corpus Christi 3',
+        ],
+      ],
+      results:
+        'ruo3urruur urruuruur uue2e-1e-1rurrrr uuruurrur rururruuu uuurrrruu rrrurururrr\nuurruuuu ruuuruuu urruruurrr ruruuuuu urrrrrrrurrr ruuurruur rrurururrrr\nrrre2e-1e-1rrruur rruuuruur ruurrurrrrr uruuuruu ruurrruuu rruurruurr rrrruruurrr\nruro5uuuu uruurrrrru uuurrurru rruuurrrur rrurruurur rrrurruurrr rrruurrrurr\n',
+      move: [
+        [
+          [0, 0, 0, -1, 1, 0, -1, 1, 0, -1, 1, 0, 0],
+          [-1, 1, -1, 1, 0, 0, 0, 0, -1, 1, -1, 1, -1],
+          [-1, 2, -1, 1, -1, 1, 0, 0, -1, 1, 0, -1, 1],
+          [0, -1, 1, 0, 0, -1, 1, -1, 1, 0, -1, 1, -1],
+          [1, 0, 0, 0, -1, 1, 0, -1, -1, 2, -1, 1, -1],
+          [1, -1, 1, -1, 1, 0, -1, 1, -1, 1, 0, 0, -1],
+          [1, -1, 1, -1, 1, 0, 0, -3, -1, 1, 3, -1, 1, 0],
+        ],
+        [
+          [0, 0, 0, 0, -1, 1, 0, -1, 1, 0, -1, 1, 0],
+          [0, -1, 1, -1, 1, 0, 0, -1, 1, -1, 1, -1, 1],
+          [0, 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0, -1],
+          [-1, 2, -1, 1, -1, 1, -1, 1, -1, 1, 0, -1, 1],
+          [0, 0, 0, -1, 1, -1, 1, 0, -1, 1, 0, 0, -1],
+          [-1, 2, -1, 1, -1, 1, 0, -1, 1, -1, 1, -1, 1],
+          [-1, 1, -1, 1, -1, 1, -1, 1, 0, 0, -1, 1, -1, 1],
+        ],
+        [
+          [0, 0, 0, -1, 1, -1, 1, 0, -1, 1, 0, 0, 0],
+          [0, 0, -1, 1, -1, 1, 0, 0, -1, 1, -1, 1, 0],
+          [-1, 1, -1, 1, -1, 1, 0, 0, 0, -1, 1, -1, 1],
+          [-1, 1, -1, 1, 0, -1, 1, -1, 1, -1, 1, 0, -1],
+          [1, 0, 0, 0, 0, -1, 1, 0, 0, -1, 1, -1, 1],
+          [0, -1, 1, -1, 1, 0, -1, 1, -1, 1, -1, 1, 0],
+          [0, -1, 1, -1, 1, 0, 0, 0, -1, -1, 2, 0, 0, 0],
+        ],
+        [
+          [0, 0, -1, 1, 0, 0, 0, -1, 1, -1, 1, 0, 0],
+          [0, 0, 0, -1, 1, -1, 1, 0, 0, -1, 1, 0, 0],
+          [0, -1, 1, 0, -1, 1, -1, 1, 0, 0, -1, 1, 0],
+          [0, -1, 1, 0, 0, 0, -1, 1, -1, 1, -1, 1, 0],
+          [-1, 1, 0, 0, -1, 1, 0, 0, -1, 1, -1, 1, -1],
+          [-1, 2, 0, 0, 0, 0, 0, -1, 1, -1, 1, 0, -1],
+          [-1, 2, -1, 1, -5, -1, 1, -1, 1, 5, 0, -1, 1, 0],
+        ],
+      ],
+      finish: [
+        [
+          'Oriel 1',
+          'Christ Church 1',
+          'Keble 1',
+          'Pembroke 1',
+          'Wolfson 1',
+          'University 1',
+          'Magdalen 1',
+          'Wadham 1',
+          'S.E.H. 1',
+          'New College 1',
+          'Trinity 1',
+          'Balliol 1',
+          'Hertford 1',
+        ],
+        [
+          "St Catherine's 1",
+          'L.M.H. 1',
+          'Mansfield 1',
+          'Lincoln 1',
+          'Worcester 1',
+          'Jesus 1',
+          'Brasenose 1',
+          'Pembroke 2',
+          "Queen's 1",
+          "St Hugh's 1",
+          "St John's 1",
+          'Oriel 2',
+          "St Anne's 1",
+        ],
+        [
+          'Exeter 1',
+          'Merton 1',
+          "St Peter's 1",
+          'Corpus Christi 1',
+          'Christ Church 2',
+          'New College 2',
+          "St Antony's 1",
+          'Somerville 1',
+          'University 2',
+          'Wadham 2',
+          'Keble 2',
+          'Linacre 1',
+          'Balliol 2',
+        ],
+        [
+          'Trinity 2',
+          'S.E.H. 2',
+          'Magdalen 2',
+          'Jesus 2',
+          'Wolfson 2',
+          'Hertford 2',
+          "St Catherine's 2",
+          'Osler House 1',
+          'Green Templeton 1',
+          'Brasenose 2',
+          'Merton 2',
+          'Worcester 2',
+          "St Hilda's 1",
+        ],
+        [
+          'Lincoln 2',
+          "St John's 2",
+          'Exeter 2',
+          "Regent's Park 1",
+          'Wolfson 3',
+          "St Peter's 2",
+          'Pembroke 3',
+          "St Benet's Hall 1",
+          'University 3',
+          "Queen's 2",
+          'L.M.H. 2',
+          'Jesus 3',
+          'Mansfield 2',
+        ],
+        [
+          "St Anne's 2",
+          'Somerville 2',
+          'Wadham 3',
+          'Keble 3',
+          'Oriel 3',
+          'S.E.H. 3',
+          "St John's 3",
+          "St Hugh's 2",
+          'New College 3',
+          'Balliol 3',
+          'Pembroke 4',
+          'Linacre 2',
+          "St Antony's 2",
+        ],
+        [
+          'Hertford 3',
+          'Jesus 4',
+          'University 4',
+          'Merton 3',
+          "St Hilda's 2",
+          "St Catherine's 3",
+          'Mansfield 3',
+          'Balliol 4',
+          'Corpus Christi 2',
+          'Keble 4',
+          'Lincoln 3',
+          'Corpus Christi 3',
+          'L.M.H. 3',
+          "St Antony's 3",
+        ],
+      ],
+      completed: [
+        [true, true, true, true, true, true, true],
+        [true, true, true, true, true, true, true],
+        [true, true, true, true, true, true, true],
+        [true, true, true, true, true, true, true],
+      ],
+    };
+
+    var actual = bumps.read_ad(data);
+
+    test.deepEqual(actual, expected);
+    test.end();
+  }
+);
+
+tape(
+  'read_ad() returns a correct intermediate object for Summer Eights (second example).',
+  function(test) {
+    var data = `EIGHTS 2014
+ 4  6  79   = NDay, NDiv, NCrew
+ 13  Women's Div I (6.15)
+St John's                   0  -1   0   0
+Wadham                      0   1   0   0
+S.E.H.                      0   0   0   0
+Pembroke                   -1   0   1   0
+Magdalen                    1   0  -1   0
+Balliol                    -1   0   0   0
+Christ Church               1   0   0   0
+University                  0   0   0   0
+Hertford                    0  -1  -1   0
+Merton                     -1  -1  -1  -1
+Keble                       1   1   0   0
+Oriel                      -1   0   1   0
+Wolfson                     1   1   1   0
+ 13  Women's Div II (5.15)
+Somerville                  0   0   0   1
+Worcester                   0   0   0  -1
+St Catherine's             -1  -1  -1  -1
+Jesus                       1   0  -1   0
+New College                 0   1   1   1
+Exeter                     -1  -1  -1  -1
+St Anne's                   1   0   1   0
+Lincoln                     0   1   0   1
+Linacre                    -1   0  -3  -1
+Trinity                     1   0   1   0
+Mansfield                   0  -1   1   0
+Wadham II                   0   1  -1   0
+Queen's                    -1  -1  -1  -1
+ 13  Women's Div III (4.15)
+St Hugh's                   1   0   3   1
+Corpus Christi              0   1   0   1
+St Hilda's                 -1  -1  -1  -1
+Brasenose                   1   0   1   0
+L.M.H.                      0   1   0   1
+St John's II               -1  -1   0   0
+Wolfson II                  1   0   1   0
+St Antony's                -1   0   0   0
+St Peter's                  1   1   0   1
+Pembroke II                 0  -1  -1  -1
+Christ Church II           -1  -1  -1   0
+Linacre II                  1   1   0  -1
+Worcester II               -1   0   1   1
+ 13  Women's Div IV (3.00)
+Hertford II                -1  -1  -1  -1
+University II               2   1   1   1
+Merton II                  -1  -1  -1  -1
+Lincoln II                  1   1   0  -1
+Green Templeton             0   1   1   1
+Magdalen II                 0   0   1   1
+Trinity II                  0  -1   0  -1
+L.M.H. II                  -1  -1  -2  -1
+Oriel II                    1   1   0   1
+Lincoln III                -1  -1   1   0
+New College II              1   1   0   1
+S.E.H. II                  -1  -1  -1   0
+Balliol II                  1   1   1   0
+ 13  Women's Div V (1.45)*
+St Catherine's II           0   1   0   1
+Regent's Park               0   0   1   0
+Worcester III              -1  -1  -1  -1
+St Anne's II                1   0   0   0
+Brasenose II               -1  -1  -1   0
+St John's III               1   1   0  -1
+Queen's II                 -1  -1  -1  -1
+Green Templeton II          1   1   1   1
+Jesus II                    0   1   1   1
+Jesus III                   0  -1  -1  -1
+University III             -1  -1  -1  -1
+Somerville II               1   1   1   0
+Pembroke III               -1  -1  -1  -1
+ 14  Women's Div VI (12.40)*
+St Hugh's II                1   1   1   1
+Oriel III                  -1  -1  -3  -1
+Green Templeton III         1   1   1   1
+Keble II                    0   1   1   1
+Christ Church III           0  -1   1   0
+New College III             0   1  -1   0
+Mansfield II               -1   0  -1   0
+Corpus Christi II           1   0   3   1
+University IV               0  -1   0  -1
+Keble III                  -1   0  -1  -1
+St Hugh's III               1   1   1   1
+University V                0  -1   0   1
+St Anne's III              -1   0   0   0
+St Peter's II               1   1   1   1
+`;
+
+    var expected = {
+      set: 'Summer Eights',
+      small: 'Eights',
+      gender: 'Women',
+      result: '',
+      year: 2014,
+      days: 4,
+      divisions: [
+        [
+          "St John's 1",
+          'Wadham 1',
+          'S.E.H. 1',
+          'Pembroke 1',
+          'Magdalen 1',
+          'Balliol 1',
+          'Christ Church 1',
+          'University 1',
+          'Hertford 1',
+          'Merton 1',
+          'Keble 1',
+          'Oriel 1',
+          'Wolfson 1',
+        ],
+        [
+          'Somerville 1',
+          'Worcester 1',
+          "St Catherine's 1",
+          'Jesus 1',
+          'New College 1',
+          'Exeter 1',
+          "St Anne's 1",
+          'Lincoln 1',
+          'Linacre 1',
+          'Trinity 1',
+          'Mansfield 1',
+          'Wadham 2',
+          "Queen's 1",
+        ],
+        [
+          "St Hugh's 1",
+          'Corpus Christi 1',
+          "St Hilda's 1",
+          'Brasenose 1',
+          'L.M.H. 1',
+          "St John's 2",
+          'Wolfson 2',
+          "St Antony's 1",
+          "St Peter's 1",
+          'Pembroke 2',
+          'Christ Church 2',
+          'Linacre 2',
+          'Worcester 2',
+        ],
+        [
+          'Hertford 2',
+          'University 2',
+          'Merton 2',
+          'Lincoln 2',
+          'Green Templeton 1',
+          'Magdalen 2',
+          'Trinity 2',
+          'L.M.H. 2',
+          'Oriel 2',
+          'Lincoln 3',
+          'New College 2',
+          'S.E.H. 2',
+          'Balliol 2',
+        ],
+        [
+          "St Catherine's 2",
+          "Regent's Park 1",
+          'Worcester 3',
+          "St Anne's 2",
+          'Brasenose 2',
+          "St John's 3",
+          "Queen's 2",
+          'Green Templeton 2',
+          'Jesus 2',
+          'Jesus 3',
+          'University 3',
+          'Somerville 2',
+          'Pembroke 3',
+        ],
+        [
+          "St Hugh's 2",
+          'Oriel 3',
+          'Green Templeton 3',
+          'Keble 2',
+          'Christ Church 3',
+          'New College 3',
+          'Mansfield 2',
+          'Corpus Christi 2',
+          'University 4',
+          'Keble 3',
+          "St Hugh's 3",
+          'University 5',
+          "St Anne's 3",
+          "St Peter's 2",
+        ],
+      ],
+      results:
+        'urururrrur uurruuurr ruuurrruu uuruururr urrurururr ruurruurrr\nrururruuu ruuuuurrr uuuuruur ruurururu rrurrururrr rruurrrrrru\nrruruo3uur uuuuurru rre1e1e-2rrruurr uurrrrurur ro3uuruurr ruurrrrurrr\nruururruu ruurruurrr rurruuuur ruurrururr urrururrur urrrrrrrrrrrr\n',
+      move: [
+        [
+          [0, 0, 0, -1, 1, -1, 1, 0, 0, -1, 1, -1, 1],
+          [0, 0, -1, 1, 0, -1, 1, 0, -1, 1, 0, 0, -1],
+          [1, 0, -1, 1, 0, -1, 1, -1, 1, 0, -1, 1, -1],
+          [-1, 2, -1, 1, 0, 0, 0, -1, 1, -1, 1, -1, 1],
+          [0, 0, -1, 1, -1, 1, -1, 1, 0, 0, -1, 1, -1],
+          [1, -1, 1, 0, 0, 0, -1, 1, 0, -1, 1, 0, -1, 1],
+        ],
+        [
+          [-1, 1, 0, 0, 0, 0, 0, 0, -1, 1, -1, 1, 0],
+          [0, 0, 0, -1, 1, 0, -1, 1, 0, 0, -1, 1, 0],
+          [-1, 1, 0, -1, 1, 0, -1, 1, 0, -1, 1, -1, 1],
+          [0, -1, 1, -1, 1, 0, -1, 1, -1, 1, -1, 1, -1],
+          [1, 0, 0, -1, 1, -1, 1, -1, 1, -1, 1, -1, 1],
+          [-1, 1, -1, 1, -1, 1, 0, 0, -1, 1, 0, -1, 1, 0],
+        ],
+        [
+          [0, 0, 0, -1, 1, 0, 0, 0, 0, -1, 1, -1, 1],
+          [0, 0, -1, 1, -1, 1, 0, -1, 1, -3, -1, 1, 3],
+          [0, -1, 1, 0, -1, 1, 0, 0, 0, 0, -1, 1, -1],
+          [1, 0, -1, 1, -1, 1, 0, 0, 0, -2, 1, 1, 0],
+          [-1, 1, 0, 0, -1, 1, -1, 1, -1, 1, -1, 1, -1],
+          [1, -1, 1, -3, -1, 1, 3, -1, 1, 0, -1, 1, 0, 0],
+        ],
+        [
+          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1],
+          [1, -1, 1, 0, 0, -1, 1, 0, -1, 1, 0, 0, -1],
+          [1, 0, -1, 1, 0, -1, 1, 0, 0, -1, 1, -1, 1],
+          [0, -1, 1, -1, 1, -1, 1, -1, 1, 0, 0, -1, 1],
+          [0, 0, 0, -1, 1, -1, 1, 0, 0, -1, 1, -1, 1],
+          [-1, 1, -1, 1, 0, 0, -1, 1, 0, -1, 1, -1, 1, 0],
+        ],
+      ],
+      finish: [
+        [
+          'Wadham 1',
+          "St John's 1",
+          'S.E.H. 1',
+          'Pembroke 1',
+          'Magdalen 1',
+          'Christ Church 1',
+          'Balliol 1',
+          'University 1',
+          'Keble 1',
+          'Wolfson 1',
+          'Hertford 1',
+          'Oriel 1',
+          'Somerville 1',
+        ],
+        [
+          'Merton 1',
+          'New College 1',
+          'Worcester 1',
+          'Jesus 1',
+          "St Anne's 1",
+          'Lincoln 1',
+          "St Catherine's 1",
+          'Trinity 1',
+          "St Hugh's 1",
+          'Exeter 1',
+          'Mansfield 1',
+          'Wadham 2',
+          'Corpus Christi 1',
+        ],
+        [
+          'Linacre 1',
+          'Brasenose 1',
+          'L.M.H. 1',
+          "Queen's 1",
+          'Wolfson 2',
+          "St Peter's 1",
+          "St Hilda's 1",
+          "St John's 2",
+          "St Antony's 1",
+          'University 2',
+          'Linacre 2',
+          'Worcester 2',
+          'Pembroke 2',
+        ],
+        [
+          'Christ Church 2',
+          'Green Templeton 1',
+          'Lincoln 2',
+          'Magdalen 2',
+          'Hertford 2',
+          'Oriel 2',
+          'Merton 2',
+          'New College 2',
+          'Trinity 2',
+          'Balliol 2',
+          'Lincoln 3',
+          "St Catherine's 2",
+          'L.M.H. 2',
+        ],
+        [
+          "Regent's Park 1",
+          'S.E.H. 2',
+          "St Anne's 2",
+          'Green Templeton 2',
+          "St John's 3",
+          'Jesus 2',
+          'Worcester 3',
+          'Brasenose 2',
+          'Somerville 2',
+          "St Hugh's 2",
+          "Queen's 2",
+          'Green Templeton 3',
+          'Jesus 3',
+        ],
+        [
+          'Keble 2',
+          'University 3',
+          'Corpus Christi 2',
+          'Pembroke 3',
+          'Christ Church 3',
+          'New College 3',
+          "St Hugh's 3",
+          'Oriel 3',
+          'Mansfield 2',
+          "St Peter's 2",
+          'University 4',
+          'University 5',
+          'Keble 3',
+          "St Anne's 3",
+        ],
+      ],
+      completed: [
+        [true, true, true, true, true, true],
+        [true, true, true, true, true, true],
+        [true, true, true, true, true, true],
+        [true, true, true, true, true, true],
+      ],
+    };
+
+    var actual = bumps.read_ad(data);
+
+    test.deepEqual(actual, expected);
+    test.end();
+  }
+);
+
+tape(
+  'read_ad() returns a correct intermediate object for Summer Eights (third example).',
+  function(test) {
+    var data = `EIGHTS 2013
+ 4  6  79   = NDay, NDiv, NCrew
+ 13  Women's Div I (6.15)
+Pembroke                    0  -1  -1  -1
+Wadham                     -1   0   1   0
+St John's                   1   1   0   0
+Balliol                     0  -1   0  -1
+Hertford                   -1  -1  -1  -1
+S.E.H.                      1   1   0   1
+Christ Church              -1   0   1   0
+Magdalen                    1   1   0   1
+University                  0   0   0   1
+Merton                      0   0  -1   1
+Osler House                -1  -1  -1  -1
+Keble                       1   0   1  -1
+Oriel                       0   1   0   0
+ 13  Women's Div II (5.15)
+Wolfson                     0   0  -1   2
+St Catherine's              0  -1  -1   0
+New College                -1  -1  -1   0
+Somerville                  1   1   2  -1
+St Anne's                  -1  -1   0  -1
+Worcester                   1   1   1   0
+Jesus                       0   1   1   0
+Exeter                      0   0   0   1
+Lincoln                     0   0   0   0
+Linacre                     0  -1   1   0
+Mansfield                   0   1  -1  -1
+St Hugh's                  -1   0  -1  -1
+Trinity                     1   0   0   1
+ 13  Women's Div III (4.15)
+St Hilda's                 -1  -1  -1   0
+Queen's                     1   0   1  -1
+L.M.H.                     -1  -1   0  -1
+Wadham II                   1   1   0   2
+Corpus Christi              0   1   1   0
+St Peter's                 -1  -1  -1  -1
+Brasenose                   1   0   0   1
+Christ Church II           -1  -1  -1  -1
+Wolfson II                  1   1   0  -1
+St John's II                0   1   1   1
+St Antony's                 0   0   1   1
+Hertford II                 0  -1  -1  -1
+Merton II                  -1  -1  -1  -1
+ 13  Women's Div IV (3.00)
+Worcester II               -1   1   1  -1
+Pembroke II                 2   1   0   1
+Linacre II                  0   0   1   2
+University II              -1   1   0   1
+Magdalen II                 1  -1  -1  -1
+St Hilda's II              -1  -1  -1  -1
+Lincoln II                  1   0   1   0
+S.E.H. II                   0   1  -6  -1
+L.M.H. II                   0  -1   0   1
+Trinity II                  0   1   1   0
+Balliol II                 -1  -1  -1  -1
+Lincoln III                 1   0   0  -1
+New College II             -1  -1   0   2
+ 13  Women's Div V (1.45)*
+Green Templeton             1   1   5   1
+Oriel II                    0   1   2   1
+Regent's Park               0  -1   0   0
+St Anne's II               -1  -1   0  -1
+St Catherine's II           1   1   0   0
+Wadham III                 -1   0  -1  -1
+Exeter II                   1   1   0   0
+Queen's II                  0  -1  -1  -1
+Hertford III               -1  -1  -1  -1
+Worcester III               1   1   1   1
+Brasenose II                0   1   1   1
+University III             -1  -1  -1  -1
+St John's III               1   0   1   1
+ 14  Women's Div VI (12.40)*
+Green Templeton II          0   1   0   1
+Jesus II                    0   0   1   0
+Osler House II             -1   1  -3  -1
+Somerville II               1  -1  -1   0
+Pembroke III               -1  -1   0   1
+St Peter's II               1   0   1   0
+Jesus III                   0   1   3   1
+Exeter III                  0  -1  -1  -1
+Oriel III                  -1  -1  -1   0
+Magdalen III                1   1   0  -1
+Green Templeton III        -1  -1  -1   1
+St Hugh's II                1   1   1   1
+St Antony's II             -1   0   1  -1
+St John's IV                1   1   1   1
+`;
+
+    var expected = {
+      set: 'Summer Eights',
+      small: 'Eights',
+      gender: 'Women',
+      result: '',
+      year: 2013,
+      days: 4,
+      divisions: [
+        [
+          'Pembroke 1',
+          'Wadham 1',
+          "St John's 1",
+          'Balliol 1',
+          'Hertford 1',
+          'S.E.H. 1',
+          'Christ Church 1',
+          'Magdalen 1',
+          'University 1',
+          'Merton 1',
+          'Osler House 1',
+          'Keble 1',
+          'Oriel 1',
+        ],
+        [
+          'Wolfson 1',
+          "St Catherine's 1",
+          'New College 1',
+          'Somerville 1',
+          "St Anne's 1",
+          'Worcester 1',
+          'Jesus 1',
+          'Exeter 1',
+          'Lincoln 1',
+          'Linacre 1',
+          'Mansfield 1',
+          "St Hugh's 1",
+          'Trinity 1',
+        ],
+        [
+          "St Hilda's 1",
+          "Queen's 1",
+          'L.M.H. 1',
+          'Wadham 2',
+          'Corpus Christi 1',
+          "St Peter's 1",
+          'Brasenose 1',
+          'Christ Church 2',
+          'Wolfson 2',
+          "St John's 2",
+          "St Antony's 1",
+          'Hertford 2',
+          'Merton 2',
+        ],
+        [
+          'Worcester 2',
+          'Pembroke 2',
+          'Linacre 2',
+          'University 2',
+          'Magdalen 2',
+          "St Hilda's 2",
+          'Lincoln 2',
+          'S.E.H. 2',
+          'L.M.H. 2',
+          'Trinity 2',
+          'Balliol 2',
+          'Lincoln 3',
+          'New College 2',
+        ],
+        [
+          'Green Templeton 1',
+          'Oriel 2',
+          "Regent's Park 1",
+          "St Anne's 2",
+          "St Catherine's 2",
+          'Wadham 3',
+          'Exeter 2',
+          "Queen's 2",
+          'Hertford 3',
+          'Worcester 3',
+          'Brasenose 2',
+          'University 3',
+          "St John's 3",
+        ],
+        [
+          'Green Templeton 2',
+          'Jesus 2',
+          'Osler House 2',
+          'Somerville 2',
+          'Pembroke 3',
+          "St Peter's 2",
+          'Jesus 3',
+          'Exeter 3',
+          'Oriel 3',
+          'Magdalen 3',
+          'Green Templeton 3',
+          "St Hugh's 2",
+          "St Antony's 2",
+          "St John's 4",
+        ],
+      ],
+      results:
+        'uuurruurr rururuurrr uurrruuru urrruuruu rurrrrruurr rrurruurur\nruuuururr uruuruuu ruruururu ruruuruur rrrurruuur rurrrruuru\nuuurro3uu rruuurrrrrr e2e-1e5rrue-6urur uruurrrurr ururrruuu urururrrur\nuruuurrur ruuuurrru uuururuu uuuuurru uurrurrrru uruuruurr\n',
+      move: [
+        [
+          [0, -1, 1, 0, -1, 1, -1, 1, 0, 0, -1, 1, 0],
+          [0, 0, -1, 1, -1, 1, 0, 0, 0, 0, 0, -1, 1],
+          [-1, 1, -1, 1, 0, -1, 1, -1, 1, 0, 0, 0, -1],
+          [-1, 2, 0, -1, 1, -1, 1, 0, 0, 0, -1, 1, -1],
+          [1, 0, 0, -1, 1, -1, 1, 0, -1, 1, 0, -1, 1],
+          [0, 0, -1, 1, -1, 1, 0, 0, -1, 1, -1, 1, -1, 1],
+        ],
+        [
+          [-1, 1, 0, -1, 1, -1, 1, 0, 0, 0, 0, -1, 1],
+          [0, -1, 1, -1, 1, -1, 1, 0, 0, -1, 1, 0, 0],
+          [0, -1, 1, -1, 1, 0, -1, 1, -1, 1, 0, -1, 1],
+          [-1, 1, 0, -1, 1, 0, -1, 1, -1, 1, 0, -1, 1],
+          [-1, 1, -1, 1, -1, 1, 0, -1, 1, -1, 1, 0, -1],
+          [1, 0, -1, 1, 0, -1, 1, -1, 1, -1, 1, -1, 1, 0],
+        ],
+        [
+          [0, -1, 1, 0, 0, 0, -1, 1, 0, -1, 1, 0, -1],
+          [-1, 2, -1, 1, -1, 1, 0, 0, 0, -1, 1, 0, -1],
+          [1, 0, -1, 1, 0, 0, 0, -1, 1, -1, 1, 0, -1],
+          [1, -1, 1, 0, -1, 1, -6, -1, 1, 0, 0, 5, -1],
+          [2, 0, 0, 0, 0, 0, -1, 1, -1, 1, -1, 1, 0],
+          [-1, 1, -3, -1, 1, 3, 0, 0, -1, 1, -1, 1, -1, 1],
+        ],
+        [
+          [0, 0, -1, 1, -1, 1, 0, -1, 1, -1, 1, 0, -1],
+          [-1, 2, 0, 0, 0, 0, -1, 1, 0, 0, -1, 1, -1],
+          [-1, 2, 0, 0, -1, 1, -1, 1, -1, 1, -1, 1, -1],
+          [-1, 2, -1, 1, 0, -1, 1, 0, -1, 1, -1, 1, -1],
+          [-1, 2, 0, 0, 0, -1, 1, -1, 1, -1, 1, -1, 1],
+          [0, -1, 1, 0, 0, -1, 1, -1, 1, -1, 1, 0, -1, 1],
+        ],
+      ],
+      finish: [
+        [
+          "St John's 1",
+          'Wadham 1',
+          'S.E.H. 1',
+          'Pembroke 1',
+          'Magdalen 1',
+          'Balliol 1',
+          'Christ Church 1',
+          'University 1',
+          'Hertford 1',
+          'Merton 1',
+          'Keble 1',
+          'Oriel 1',
+          'Wolfson 1',
+        ],
+        [
+          'Somerville 1',
+          'Osler House 1',
+          'Worcester 1',
+          "St Catherine's 1",
+          'Jesus 1',
+          'New College 1',
+          'Exeter 1',
+          "St Anne's 1",
+          'Lincoln 1',
+          'Linacre 1',
+          'Trinity 1',
+          'Mansfield 1',
+          'Wadham 2',
+        ],
+        [
+          "Queen's 1",
+          "St Hugh's 1",
+          'Corpus Christi 1',
+          "St Hilda's 1",
+          'Brasenose 1',
+          'L.M.H. 1',
+          "St John's 2",
+          'Wolfson 2',
+          "St Antony's 1",
+          "St Peter's 1",
+          'Pembroke 2',
+          'Christ Church 2',
+          'Linacre 2',
+        ],
+        [
+          'Worcester 2',
+          'Hertford 2',
+          'University 2',
+          'Merton 2',
+          'Lincoln 2',
+          'Green Templeton 1',
+          'Magdalen 2',
+          'Trinity 2',
+          'L.M.H. 2',
+          "St Hilda's 2",
+          'Oriel 2',
+          'Lincoln 3',
+          'New College 2',
+        ],
+        [
+          'S.E.H. 2',
+          'Balliol 2',
+          "St Catherine's 2",
+          "Regent's Park 1",
+          'Exeter 2',
+          'Worcester 3',
+          "St Anne's 2",
+          'Brasenose 2',
+          'Wadham 3',
+          "St John's 3",
+          "Queen's 2",
+          'Green Templeton 2',
+          'Hertford 3',
+        ],
+        [
+          'Jesus 2',
+          'Jesus 3',
+          'University 3',
+          "St Peter's 2",
+          'Somerville 2',
+          'Pembroke 3',
+          'Osler House 2',
+          "St Hugh's 2",
+          'Magdalen 3',
+          "St John's 4",
+          'Exeter 3',
+          'Oriel 3',
+          'Green Templeton 3',
+          "St Antony's 2",
+        ],
+      ],
+      completed: [
+        [true, true, true, true, true, true],
+        [true, true, true, true, true, true],
+        [true, true, true, true, true, true],
+        [true, true, true, true, true, true],
+      ],
+    };
+
+    var actual = bumps.read_ad(data);
+
+    test.deepEqual(actual, expected);
+    test.end();
+  }
+);
+
 tape('write_flat() returns the correct flat format output.', function(test) {
   var events = [
     {
