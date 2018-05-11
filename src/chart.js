@@ -176,7 +176,7 @@ export default function() {
       .attr('x', 0)
       .attr('y', 0)
       .attr('width', width)
-      .attr('height', viewBoxHeight + 2)
+      .attr('height', viewBoxHeight + 16)
       .attr('fill', 'transparent');
 
     g
@@ -344,7 +344,7 @@ export default function() {
       .select('rect')
       .datum(numYearsToView)
       .attr('width', w => xScale(5 * w - 1) - xScale(0))
-      .attr('height', viewBoxHeight + 2); // TODO: Work out why we need to extend the height
+      .attr('height', viewBoxHeight + 16); // TODO: Work out why we need to extend the height
   }
 
   function renderDivisions(
@@ -481,7 +481,9 @@ export default function() {
         'stroke-opacity',
         d =>
           selectedCrews.size > 0
-            ? d.highlighted || d.hover ? '1' : '0.5'
+            ? d.highlighted || d.hover
+              ? '1'
+              : '0.5'
             : '1'
       );
 
@@ -500,7 +502,9 @@ export default function() {
         'stroke-opacity',
         d =>
           selectedCrews.size > 0
-            ? d.highlighted || d.hover ? '1' : '0.5'
+            ? d.highlighted || d.hover
+              ? '1'
+              : '0.5'
             : '1'
       );
 
