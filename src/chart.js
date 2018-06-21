@@ -179,10 +179,7 @@ export default function() {
       .attr('height', viewBoxHeight + 16)
       .attr('fill', 'transparent');
 
-    g
-      .transition()
-      .duration(transitionLength)
-      .attr('transform', `translate(${xScale(-dayShift)},0)`);
+    g.attr('transform', `translate(${xScale(-dayShift)},0)`);
 
     renderClipPath(svg, numYearsToView, viewBoxHeight, xScale);
 
