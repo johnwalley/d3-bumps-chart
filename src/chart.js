@@ -162,8 +162,7 @@ export default function() {
     const maxDays = max(
       results.crews.map(
         c =>
-          c.values.filter(v => v.pos > -1 || v.day < finishLabelIndex - 5)
-            .length
+          max(c.values.filter(v => v.pos > -1 || v.day < finishLabelIndex - 5))
       )
     );
 
@@ -587,11 +586,14 @@ export default function() {
     highlightCrew
   ) {
     const calculateFinishLabelPosition = d =>
-      d.values[
-        d.values[finishLabelIndex].pos === -1 && finishLabelIndex % 5 !== 0
-          ? finishLabelIndex - 1
-          : finishLabelIndex
-      ].pos;
+    {
+      let index = finishLabelIndex;
+      while (d.values.find(v => v.day === index) === undefined && index > -1) {
+        index -= 1;
+      }
+
+      return d.values.find(v => v.day === index).pos;
+    }
 
     const finishLabel = labelsGroup
       .selectAll('.finish-label')
@@ -738,11 +740,14 @@ export default function() {
     transitionLength
   ) {
     const calculateFinishLabelPosition = d =>
-      d.values[
-        d.values[finishLabelIndex].pos === -1
-          ? finishLabelIndex - 1
-          : finishLabelIndex
-      ].pos;
+    {
+      let index = finishLabelIndex;
+      while (d.values.find(v => v.day === index) === undefined && index > -1) {
+        index -= 1;
+      }
+
+      return d.values.find(v => v.day === index).pos;
+    }
 
     const numbersRight = labelsGroup
       .selectAll('.position-label-right')
