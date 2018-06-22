@@ -449,6 +449,113 @@ e1e1e-2e1e-1re2re1e-3re3e-1 rre1e-3e1e1e-2e2re1e-3e2e-1 re-1e1e-1rrrre1e-1e1e-1r
 });
 
 tape(
+  'read_ad() returns a correct intermediate object for Torpids when no racing occured.',
+  function(test) {
+    var data = `TORPIDS 2000                   0 days                                           
+  STARTING ORDER - NO RACING     6 divisions                                      
+    MEN'S DIV I                 12 crews                                          
+  Pembroke                                                                        
+  Oriel                                                                           
+  New College                                                                     
+  Exeter                                                                          
+  Christ Church                                                                   
+  Worcester                                                                       
+  Magdalen                                                                        
+  Brasenose                                                                       
+  Queen's                                                                         
+  St. Catherine's                                                                 
+  Lincoln                                                                         
+  Merton                                                                          
+    MEN'S DIV II                12 crews                                          
+  Oriel II                                                                        
+  Wadham                                                                          
+  L.M.H.                                                                          
+  St. Peter's                                                                     
+  Trinity                                                                         
+  S.E.H.                                                                          
+  St. John's                                                                      
+  Keble                                                                           
+  Balliol                                                                         
+  University                                                                      
+  Jesus                                                                           
+  Hertford                                                                        
+    MEN'S DIV III               12 crews                                          
+  Mansfield                                                                       
+  Osler-Green                                                                     
+  Wolfson                                                                         
+  Corpus Christi                                                                  
+  Christ Church II                                                                
+  St. Anne's                                                                      
+  Linacre                                                                         
+  Magdalen II                                                                     
+  Pembroke II                                                                     
+  Somerville                                                                      
+  St. Hugh's                                                                      
+  Keble II                                                                        
+    MEN'S DIV IV                12 crews                                          
+  Oriel III                                                                       
+  Balliol II                                                                      
+  Lincoln II                                                                      
+  St. John's II                                                                   
+  Brasenose II                                                                    
+  New College II                                                                  
+  Exeter II                                                                       
+  S.E.H. II                                                                       
+  University II                                                                   
+  L.M.H. II                                                                       
+  St. Catherine's II                                                              
+  Wadham II                                                                       
+    MEN'S DIV V                 12 crews                                          
+  Jesus II                                                                        
+  St. Anne's II                                                                   
+  Queen's II                                                                      
+  St. Peter's II                                                                  
+  Magdalen III                                                                    
+  Hertford II                                                                     
+  Trinity II                                                                      
+  Merton II                                                                       
+  St. Benet's Hall                                                                
+  Wolfson II                                                                      
+  University III                                                                  
+  Regent's Park                                                                   
+    MEN'S DIV VI                13 crews                                          
+  Worcester II                                                                    
+  Wolfson III                                                                     
+  Pembroke III                                                                    
+  Balliol III                                                                     
+  Linacre II                                                                      
+  Mansfield II                                                                    
+  University IV                                                                   
+  Christ Church III                                                               
+  Somerville II                                                                   
+  Keble III                                                                       
+  Christ Church IV                                                                
+  S.E.H. III                                                                      
+  Oriel IV                                                                        
+  `;
+
+    var expected = {
+      set: 'Torpids',
+      small: 'Torpids',
+      gender: 'Men',
+      result: '',
+      year: 2000,
+      days: 0,
+      divisions: [],
+      results: '',
+      move: [],
+      finish: [],
+      completed: [],
+    };
+
+    var actual = bumps.read_ad(data);
+
+    test.deepEqual(actual, expected);
+    test.end();
+  }
+);
+
+tape(
   'read_ad() returns a correct intermediate object for Summer Eights.',
   function(test) {
     var data = `EIGHTS 2016

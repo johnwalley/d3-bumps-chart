@@ -1394,7 +1394,15 @@ export function read_ad(input) {
 
   event.year = +info[1];
   const info2 = input[1].trim().split(/\s+/);
-  event.days = +info2[0];
+
+  const reNoRacing = /NO RACING/i;
+
+  if (reNoRacing.test(input[1])) {
+    event.days = 0;
+  } else {
+    event.days = +info2[0];
+  }
+
   const numDivisions = +info2[1];
   const numCrews = parseInt(info2[2], 10);
   let currentDivision;
@@ -1409,15 +1417,13 @@ export function read_ad(input) {
     }
   }
 
-  switch (input[2].split(' ')[3]) {
-    case 'Mens':
-    case "Men's":
-      event.gender = GENDER.MEN;
-      break;
-    case 'Womens':
-    case "Women's":
-      event.gender = GENDER.WOMEN;
-      break;
+  const reMen = /men/i;
+  const reWomen = /women/i;
+
+  if (reWomen.test(input[2])) {
+    event.gender = GENDER.WOMEN;
+  } else if (reMen.test(input[2])) {
+    event.gender = GENDER.MEN;
   }
 
   for (let line = 2; line < numDivisions + numCrews + 2; line++) {
