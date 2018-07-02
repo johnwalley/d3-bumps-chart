@@ -588,7 +588,7 @@ export default function() {
     const calculateFinishLabelPosition = d =>
     {
       let index = finishLabelIndex;
-      while (d.values.find(v => v.day === index) === undefined && index > -1) {
+      while ((d.values.find(v => v.day === index) === undefined || d.values.find(v => v.day === index).pos === -1) && index > finishLabelIndex - 4) {
         index -= 1;
       }
 
@@ -739,10 +739,11 @@ export default function() {
     yScale,
     transitionLength
   ) {
+    // TODO: Extract out into reusable function
     const calculateFinishLabelPosition = d =>
     {
       let index = finishLabelIndex;
-      while (d.values.find(v => v.day === index) === undefined && index > -1) {
+      while ((d.values.find(v => v.day === index) === undefined || d.values.find(v => v.day === index).pos === -1) && index > finishLabelIndex - 4) {
         index -= 1;
       }
 
