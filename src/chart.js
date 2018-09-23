@@ -15,6 +15,7 @@ export default function() {
   let hammertime;
 
   let yearRange;
+  let numYearsToView = 5;
   let highlightedCrew;
   let selectedCrews = new Set();
   let windowWidth;
@@ -25,12 +26,8 @@ export default function() {
   let yearsGroup;
   let labelsGroup;
   let linesGroup;
-
   let xScale;
   let dayShift;
-  let startYear;
-  let endYear;
-  let numYearsToView;
 
   let setupComplete = false;
 
@@ -66,21 +63,28 @@ export default function() {
     });
 
     hammertime.on('panend', function(ev) {
-      const x = xScale.invert(-ev.deltaX + xScale(dayShift));
-
-      const i = scan(
-        _data.divisions,
-        (a, b) => Math.abs(a.startDay - x) - Math.abs(b.startDay - x)
+      const x0 = xScale.invert(-ev.deltaX + xScale(dayShift));
+      const x1 = xScale.invert(
+        -ev.deltaX +
+          xScale(dayShift) +
+          (5 / 4) * widthOfOneYear * (numYearsToView - 1) -
+          widthOfOneYear / 4
       );
 
-      const division = _data.divisions[i];
+      const i0 = scan(
+        _data.divisions,
+        (a, b) => Math.abs(a.startDay - x0) - Math.abs(b.startDay - x0)
+      );
 
-      const shift = max([
-        startYear,
-        min([endYear - numYearsToView + 1, division.year]),
-      ]);
+      const i1 = scan(
+        _data.divisions,
+        (a, b) => Math.abs(a.startDay - x1) - Math.abs(b.startDay - x1)
+      );
 
-      selectYear(shift, shift + numYearsToView - 1);
+      const division0 = _data.divisions[i0];
+      const division1 = _data.divisions[i1];
+
+      selectYear(division0.year, division1.year);
     });
 
     divisionsGroup = g.append('g').attr('class', 'divisions');
@@ -110,10 +114,6 @@ export default function() {
     const widthWithoutLines = 310;
     const initialViewBoxX = -165;
     const initialViewBoxY = 0;
-    const startLabelPosition = 0;
-    const finishLabelPosition = 4;
-    const numbersLeftPosition = -5.6;
-    numYearsToView = yearRange.end - yearRange.start + 1;
     const yMarginTop = 10;
     const transitionLength = 400;
 
@@ -160,9 +160,6 @@ export default function() {
         `${initialViewBoxX}, ${initialViewBoxY}, ${viewBoxWidth}, ${viewBoxHeight}`
       );
 
-    startYear = results.startYear;
-    endYear = results.endYear;
-
     const startDay = results.divisions.find(d => d.year === yearRange.start)
       .startDay;
 
@@ -197,15 +194,7 @@ export default function() {
     renderClipPath(svg, numYearsToView, viewBoxHeight);
     renderDivisions(results, divisionsGroup, xScale, yScale);
 
-    renderYears(
-      results,
-      yearsGroup,
-      startYear,
-      endYear,
-      xScale,
-      yScale,
-      transitionLength
-    );
+    renderYears(results, yearsGroup, xScale, yScale, transitionLength);
 
     renderCrews(
       crews,
@@ -220,9 +209,6 @@ export default function() {
       crews,
       labelsGroup,
       finishLabelIndex,
-      finishLabelPosition,
-      numYearsToView,
-      xScale,
       yScale,
       transitionLength,
       toggleSelectedCrew,
@@ -233,8 +219,6 @@ export default function() {
       crews,
       labelsGroup,
       startLabelIndex,
-      startLabelPosition,
-      xScale,
       yScale,
       transitionLength,
       toggleSelectedCrew,
@@ -254,8 +238,6 @@ export default function() {
       results.divisions,
       labelsGroup,
       yearRange.start,
-      numbersLeftPosition,
-      xScale,
       yScale,
       transitionLength
     );
@@ -417,18 +399,10 @@ export default function() {
       .attr('height', d => yScale(d.start + d.size) - yScale(d.start));
   }
 
-  function renderYears(
-    results,
-    yearsGroup,
-    startYear,
-    endYear,
-    xScale,
-    yScale,
-    transitionLength
-  ) {
-    const years = yearsGroup
+  function renderYears(results, g, xScale, yScale, transitionLength) {
+    const years = g
       .selectAll('.year')
-      .data(range(startYear, endYear + 1), d => d);
+      .data(results.divisions.map(d => d.year), d => d);
 
     years
       .enter()
@@ -443,34 +417,24 @@ export default function() {
           return;
         }
 
-        return xScale(division.startDay + 2);
+        return xScale(division.startDay + division.numDays / 2);
       })
       .attr('y', yScale(0))
       .style('font-size', '22px')
       .attr('text-anchor', 'middle')
       .text(d => d);
 
-    years
-      .transition()
-      .duration(transitionLength)
-      .attr('x', d => {
-        const division = results.divisions.find(
-          division => division.year === d
-        );
+    years.attr('x', d => {
+      const division = results.divisions.find(division => division.year === d);
 
-        if (division === undefined) {
-          return;
-        }
+      if (division === undefined) {
+        return;
+      }
 
-        return xScale(division.startDay + 2);
-      });
+      return xScale(division.startDay + division.numDays / 2);
+    });
 
-    years
-      .exit()
-      .transition()
-      .duration(transitionLength)
-      .style('opacity', 1e-6)
-      .remove();
+    years.exit().remove();
   }
 
   function renderCrews(data, g, xScale, yScale, selectedCrews) {
@@ -601,11 +565,8 @@ export default function() {
 
   function renderFinishLabel(
     crews,
-    labelsGroup,
+    g,
     finishLabelIndex,
-    finishLabelPosition,
-    numYearsToView,
-    xScale,
     yScale,
     transitionLength,
     toggleSelectedCrew,
@@ -624,7 +585,7 @@ export default function() {
       return d.values.find(v => v.day === index).pos;
     };
 
-    const finishLabel = labelsGroup
+    const finishLabel = g
       .selectAll('.finish-label')
       .data(
         crews.filter(d => calculateFinishLabelPosition(d) > -1),
@@ -686,8 +647,6 @@ export default function() {
     crews,
     labelsGroup,
     startLabelIndex,
-    startLabelPosition,
-    xScale,
     yScale,
     transitionLength,
     toggleSelectedCrew,
@@ -825,8 +784,6 @@ export default function() {
     divisions,
     labelsGroup,
     startYear,
-    numbersLeftPosition,
-    xScale,
     yScale,
     transitionLength
   ) {
@@ -884,6 +841,12 @@ export default function() {
   chart.year = function(_) {
     if (!arguments.length) return yearRange;
     yearRange = _;
+    return chart;
+  };
+
+  chart.numYearsToView = function(_) {
+    if (!arguments.length) return numYearsToView;
+    numYearsToView = _;
     return chart;
   };
 
