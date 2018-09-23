@@ -443,20 +443,23 @@ export function joinEvents(events, set, gender) {
   const data = [];
   const divisions = [];
   let crewNames = [];
+  let day = 0;
 
   events.forEach(event => {
+    const numDays = max([...event.crews.map(crew => crew.values.length), 5]);
     crewNames = crewNames.concat(event.crews.map(crew => crew.name));
     years.push(event.year);
     divisions.push({
-      set: set,
-      gender: gender,
       year: event.year,
       divisions: event.divisions.map(d => ({
-        year: event.year,
         start: d.start,
         size: d.size,
       })),
+      startDay: day,
+      numDays: numDays - 1,
     });
+
+    day += numDays;
   });
 
   const startYear = min(years);
@@ -467,16 +470,16 @@ export function joinEvents(events, set, gender) {
   uniqueCrewNames.forEach(crewName => {
     const newCrew = {
       name: crewName,
-      set: set,
-      gender: gender,
       values: [],
       valuesSplit: [],
     };
-    const numDays = 4;
+
+    day = 0;
 
     events.forEach(event => {
       const match = event.crews.filter(c => c.name === crewName);
-      const day = (event.year - startYear) * (numDays + 1);
+      const numDays =
+        max([...event.crews.map(crew => crew.values.length), 5]) - 1;
 
       if (match.length > 0) {
         const values = match[0].values.map(v => ({
@@ -496,8 +499,6 @@ export function joinEvents(events, set, gender) {
         const spoons = isSpoons(positions, event.crews.length);
 
         const valuesSplit = {
-          set: set,
-          gender: gender,
           name: crewName,
           day: day,
           blades: blades,
@@ -513,12 +514,16 @@ export function joinEvents(events, set, gender) {
 
         newCrew.values = newCrew.values.concat(emptyValues);
       }
+
+      day += numDays + 1;
     });
 
     data.push(newCrew);
   });
 
   return {
+    set: set,
+    gender: gender,
     crews: data,
     startYear: startYear,
     endYear: endYear,
