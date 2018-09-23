@@ -16,7 +16,13 @@
   </div>
   <script>
     d3.json("./results.json", function (error, events) {
-      var chart = d3.bumpsChart();
+      var chart = d3.bumpsChart()
+        .year(2008)
+        .numYearsToView(5)
+        .windowWidth(window.document.body.clientWidth)
+        .on("selectYear", (start, end) => console.log(start + '-' + end))
+        .on("highlightCrew", crew => console.log(crew))
+        .on("toggleSelectedCrew", crew => console.log(crew));
 
       var genderMenu = d3.select("#gender")
         .on("change", change);
@@ -38,7 +44,7 @@
         .text(d => d)
         .attr('value', d => d);
 
-      setMenu.property("value", d3.SET.EIGHTS);
+      setMenu.property("value", d3.SET.TORPIDS);
 
       function change() {
         draw();
@@ -50,13 +56,6 @@
         var gender = genderMenu.property('value');
         var set = setMenu.property('value');
       var el = document.getElementById('bumps-chart');
-
-      chart
-          .year({ start: 1960, end: 1966 })
-        .windowWidth(window.document.body.clientWidth)
-        .on("selectYear", (start, end) => console.log(start + '-' + end))
-        .on("highlightCrew", crew => console.log(crew))
-        .on("toggleSelectedCrew", crew => console.log(crew));
 
       var transformedEvents = events
         .filter(e => e.gender.toLowerCase() === gender.toLowerCase())

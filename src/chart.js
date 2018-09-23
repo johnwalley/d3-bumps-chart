@@ -1,6 +1,6 @@
 import { scaleLinear } from 'd3-scale';
 import { line } from 'd3-shape';
-import { max, min, range, scan } from 'd3-array';
+import { max, range, scan } from 'd3-array';
 import { dispatch } from 'd3-dispatch';
 import 'd3-transition'; // We require the side-effects of importing
 
@@ -14,6 +14,7 @@ export default function() {
 
   let hammertime;
 
+  let year;
   let yearRange;
   let numYearsToView = 5;
   let highlightedCrew;
@@ -63,28 +64,24 @@ export default function() {
     });
 
     hammertime.on('panend', function(ev) {
-      const x0 = xScale.invert(-ev.deltaX + xScale(dayShift));
-      const x1 = xScale.invert(
-        -ev.deltaX +
-          xScale(dayShift) +
-          (5 / 4) * widthOfOneYear * (numYearsToView - 1) -
-          widthOfOneYear / 4
-      );
+      const x = xScale.invert(-ev.deltaX + xScale(dayShift));
 
-      const i0 = scan(
+      let i = scan(
         _data.divisions,
-        (a, b) => Math.abs(a.startDay - x0) - Math.abs(b.startDay - x0)
+        (a, b) => Math.abs(a.startDay - x) - Math.abs(b.startDay - x)
       );
 
-      const i1 = scan(
-        _data.divisions,
-        (a, b) => Math.abs(a.startDay - x1) - Math.abs(b.startDay - x1)
+      // Too far to the right
+      if (i + numYearsToView > _data.divisions.length) {
+        i = _data.divisions.length - numYearsToView;
+      }
+
+      year = _data.divisions[i].year;
+
+      selectYear(
+        _data.divisions[i].year,
+        _data.divisions[i + numYearsToView - 1].year
       );
-
-      const division0 = _data.divisions[i0];
-      const division1 = _data.divisions[i1];
-
-      selectYear(division0.year, division1.year);
     });
 
     divisionsGroup = g.append('g').attr('class', 'divisions');
@@ -108,6 +105,21 @@ export default function() {
       return;
     }
 
+    let i = scan(
+      _data.divisions,
+      (a, b) => Math.abs(a.year - year) - Math.abs(b.year - year)
+    );
+
+    // Too far to the right
+    if (i + numYearsToView > _data.divisions.length) {
+      i = _data.divisions.length - numYearsToView;
+    }
+
+    yearRange = {
+      start: _data.divisions[i].year,
+      end: _data.divisions[i + numYearsToView - 1].year,
+    };
+
     const crews = results.crews;
 
     const heightOfOneCrew = 34;
@@ -127,14 +139,14 @@ export default function() {
 
     const xDomain = [];
     const xRange = [];
-    let year = 0;
+    let count = 0;
 
     crews[0].valuesSplit.forEach(d => {
       xDomain.push(d.values[0].day);
       xDomain.push(d.values[d.values.length - 1].day);
-      xRange.push(((year * 5) / 4) * widthOfOneYear);
-      xRange.push(((year * 5) / 4) * widthOfOneYear + widthOfOneYear);
-      year += 1;
+      xRange.push(((count * 5) / 4) * widthOfOneYear);
+      xRange.push(((count * 5) / 4) * widthOfOneYear + widthOfOneYear);
+      count += 1;
     });
 
     xScale = scaleLinear()
@@ -150,7 +162,6 @@ export default function() {
       widthWithoutLines + ((widthOfOneYear * 5) / 4) * numYearsToView;
 
     const viewBoxHeight = yDomainMax * heightOfOneCrew;
-
     const width = windowWidth;
 
     svg
@@ -191,10 +202,10 @@ export default function() {
       .attr('fill', 'transparent');
 
     g.attr('transform', `translate(${-xScale(dayShift)},0)`);
-    renderClipPath(svg, numYearsToView, viewBoxHeight);
+    renderClipPath(svg, viewBoxHeight);
     renderDivisions(results, divisionsGroup, xScale, yScale);
 
-    renderYears(results, yearsGroup, xScale, yScale, transitionLength);
+    renderYears(results, yearsGroup, xScale, yScale);
 
     renderCrews(
       crews,
@@ -305,7 +316,7 @@ export default function() {
     dropShadowMerge.append('feMergeNode').attr('in', 'SourceGraphic');
   }
 
-  function renderClipPath(svg, numYearsToView, viewBoxHeight) {
+  function renderClipPath(svg, viewBoxHeight) {
     svg
       .select('clipPath')
       .select('rect')
@@ -399,7 +410,7 @@ export default function() {
       .attr('height', d => yScale(d.start + d.size) - yScale(d.start));
   }
 
-  function renderYears(results, g, xScale, yScale, transitionLength) {
+  function renderYears(results, g, xScale, yScale) {
     const years = g
       .selectAll('.year')
       .data(results.divisions.map(d => d.year), d => d);
@@ -839,8 +850,8 @@ export default function() {
   }
 
   chart.year = function(_) {
-    if (!arguments.length) return yearRange;
-    yearRange = _;
+    if (!arguments.length) return year;
+    year = _;
     return chart;
   };
 
