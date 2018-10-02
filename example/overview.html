@@ -10,15 +10,14 @@
 <body>
   <select id="gender"></select>
   <select id="set"></select>
-  <div id="bumps-chart">
+  <div id="overview-chart">
     <svg width="100%" preserveAspectRatio="xMidYMin">
     </svg>
   </div>
   <script>
     d3.json("./results.json", function (error, events) {
-      var chart = d3.bumpsChart()
-        .year(2008)
-        .numYearsToView(1)
+      var chart = d3.overviewChart()
+        .year(1998)
         .windowWidth(window.document.body.clientWidth)
         .on("selectYear", (start, end) => console.log(start + '-' + end))
         .on("highlightCrew", crew => console.log(crew))
@@ -44,7 +43,7 @@
         .text(d => d)
         .attr('value', d => d);
 
-      setMenu.property("value", d3.SET.TORPIDS);
+      setMenu.property("value", d3.SET.EIGHTS);
 
       function change() {
         draw();
@@ -55,7 +54,7 @@
       function draw() {
         var gender = genderMenu.property('value');
         var set = setMenu.property('value');
-        var el = document.getElementById('bumps-chart');
+        var el = document.getElementById('overview-chart');
 
         var transformedEvents = events
           .filter(e => e.gender.toLowerCase() === gender.toLowerCase())
@@ -64,6 +63,10 @@
           .map(event => d3.transformData(event));
 
         var data = d3.joinEvents(transformedEvents, set, gender);
+
+        chart.selectedCrews(new Set(['J', 'J2', 'U', 'U2', 'City 1', 'Cantabs 1']));
+
+        console.log(chart.selectedCrews())
 
         d3.select(el).datum(data).call(chart);
       }
