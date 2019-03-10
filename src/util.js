@@ -265,7 +265,7 @@ export function expandCrew(crew, set) {
 
 export function renderName(name, set) {
   // College crews are stored as an abbrevation and we replace the number with Roman numerals
-  const sh = name.replace(/[0-9]/, '');
+  const sh = name.replace(/[0-9]+$/, '').trim();
   let abbrev;
   let type;
 
