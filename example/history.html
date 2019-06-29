@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>The Complete History of Bumps | Cambridge Bumps</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" media="screen" href="history.css" />
+    <script
+      defer
+      src="https://use.fontawesome.com/releases/v5.5.0/js/all.js"
+      integrity="sha384-GqVMZRt5Gn7tB9D9q7ONtcp4gtHIUEW/yG7h98J7IpE3kpi+srfFyyB/04OV6pG0"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+  </head>
+  <body>
+    <header class="page-header">
+      <div class="header-wrapper">
+        <a class="logo" href="https://www.cambridgebumps.com">
+          Cambridge Bumps
+        </a>
+        <div class="social-links">
+          <a
+            class="social share-twitter"
+            id="twitter-sharer"
+            href="#"
+            target="_blank"
+            ><i class="icon fab fa-twitter"></i
+          ></a>
+          <a
+            class="social share-facebook"
+            id="facebook-sharer"
+            href="#"
+            target="_blank"
+            ><i class="icon fab fa-facebook-f"></i
+          ></a>
+        </div>
+      </div>
+    </header>
+    <div id="header-spacer"></div>
+    <body class="container">
+      <div id="intro">
+        <div class="timestamp-container">
+          <p class="timestamp">Updated 6 December 2018</p>
+        </div>
+        <h1>The Complete History of Bumps</h1>
+        <h2 class="article-subtitle">
+          Every crew's performance for every year
+        </h2>
+        <p class="see-also">
+          More Bumps: <a class="see-also-link" href="#">How racing works</a>
+        </p>
+      </div>
+      <div class="elo-parent">
+        <div class="elo-child" style="visibility: visible;">
+          <div id="selection" style="visibility: visible; display: block;">
+            <select class="selector" id="eventselector"
+              ><optgroup label="Cambridge"
+                ><option value="lents">Lent Bumps</option
+                ><option value="mays">May Bumps</option>
+                <option value="town">Town Bumps</option></optgroup
+              ><optgroup label="Oxford">
+                <option value="torpids">Torpids</option
+                ><option value="eights">Summer Eights</option></optgroup
+              ></select
+            >
+            <div class="team-select selector">
+              <div id="team-header">Town Bumps</div>
+              <div class="select-arrows"></div>
+            </div>
+          </div>
+          <div id="selection" style="visibility: visible; display: block;">
+            <select class="selector" id="genderselector"
+              ><option value="women">Women</option
+              ><option value="men">Men</option></select
+            >
+            <div class="team-select selector">
+              <div id="team-header">Women</div>
+              <div class="select-arrows"></div>
+            </div>
+          </div>
+          <div id="selection" style="visibility: visible; display: block;">
+            <select class="selector" id="teamselector"
+              ><option value="City">City of Cambridge</option
+              ><option value="99">99</option></select
+            >
+            <div class="team-select selector">
+              <div id="team-header">City of Cambridge</div>
+              <div class="select-arrows"></div>
+              <div class="franchise">
+                <div id="franchise-text" style="opacity: 1;">
+                  <div id="franch">City of Cambridge (1950-)<br /></div>
+                  <div id="champ"><span id="star">● </span>One headship</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="compare-toggle">
+            <span class="compare-lead">Compare with another club</span>
+            <div class="hidden" id="second-selection">
+              <span class="arrow"></span
+              ><select id="secondselector"
+                ><option selected="" style="display:none" value="none"
+                  >Choose second team</option
+                ><option value="City">City of Cambridge</option
+                ><option value="99">99</option></select
+              >
+            </div>
+            <div class="remove-second-team hidden"><p>+</p></div>
+          </div>
+          <div class="chart"></div>
+          <div class="mobile-table">
+            <table class="current" style="display: none;">
+              <thead>
+                <tr>
+                  <th colspan="2">current elo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="elo" rowspan="2" id="current-elo"></td>
+                  <td><span id="current-game"></span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <span id="current-date"></span
+                    ><span id="current-record"></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="highest">
+              <thead>
+                <tr>
+                  <th colspan="2">highest elo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td
+                    class="elo"
+                    rowspan="2"
+                    id="highest-elo"
+                    style="color: rgb(157, 125, 45);"
+                  >
+                    1739
+                  </td>
+                  <td>
+                    <span id="highest-game"
+                      >W 26-23 vs.
+                      <span class="opponent" id="atl">ATL</span></span
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <span id="highest-date">Dec 13, 2009</span
+                    ><span id="highest-record"> | 13-0</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="lowest">
+              <thead>
+                <tr>
+                  <th colspan="2">lowest elo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td
+                    class="elo"
+                    rowspan="2"
+                    id="lowest-elo"
+                    style="color: rgb(157, 125, 45);"
+                  >
+                    1220
+                  </td>
+                  <td>
+                    <span id="lowest-game"
+                      >L 14-10 vs.
+                      <span class="opponent" id="pit">PIT</span></span
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <span id="lowest-date">Oct 29, 1967</span
+                    ><span id="lowest-record"> | 0-7</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="container">
+          <div class="body-container" style="display: block;">
+            <p class="article-text">
+              How do you rate an NFL team across decades of play? One method is
+              Elo, a simple measure of strength based on game-by-game results.
+              We calculated Elo ratings for every game in league history — over
+              30,000 ratings in total.
+            </p>
+            <p class="article-text">
+              Elo is set so that an average NFL team has a rating of about 1500,
+              although the league average can be slightly higher or lower,
+              depending on how recently the league has expanded — expansion
+              teams start with a rating of 1300. You can
+              <a
+                href="http://fivethirtyeight.com/datalab/nfl-elo-ratings-are-back/"
+                >read more about our methodology here</a
+              >; all game results are from
+              <a href="http://www.pro-football-reference.com/" target="_blank"
+                >Pro-Football-Reference.com</a
+              >. “Championships” include Super Bowl wins and pro league titles
+              from before the Super Bowl era, including the winners of the
+              National Football League, American Football League, and American
+              Professional Football Association (but excluding those of the
+              All-America Football Conference). There are over 90 defunct
+              franchises in pro football history, but only those that played at
+              least 40 games can be selected above.
+            </p>
+            <p class="article-text">
+              Choose your favorite club, and zoom in to explore the entire
+              history of Bumps.
+            </p>
+            <h4>City of Cambridge's Women's Incredible Run</h4>
+            <img
+              src="https://fivethirtyeight.com/wp-content/uploads/2015/09/49ers1.png"
+              alt="49ers history"
+            />
+            <p class="article-text">
+              Before the New England Patriots’ Super Bowl win last season, we
+              tried to calculate whether they had become the
+              <a
+                href="http://fivethirtyeight.com/features/the-patriots-are-the-nfls-greatest-dynasty/"
+                >greatest NFL dynasty ever</a
+              >. The answer, as always, was that it depends on how you count.
+              From 2001 to 2016, the Patriots’ average season-ending Elo rating
+              was 1701, the best 16-season stretch in league history. But the
+              best 17-season, 18-season and 19-season stretches belong to the
+              San Francisco 49ers of the 1980s and ’90s.
+            </p>
+            <p class="article-text">
+              San Francisco’s Elo average from 1981 to 1998 was 1683. During
+              these 18 seasons, the 49ers made the playoffs 16 times, won more
+              than 10 games 17 times, and racked up five championships. The
+              Patriots may have the highest peak Elo rating of all time — 1849,
+              after their 18-0 start to the 2007 season — but if you were born
+              in 1981, the 49ers were among the NFL’s best for your entire
+              childhood. Tom Brady and Bill Belichick aren’t quite there — at
+              least not yet.
+            </p>
+            <h4>The 1990s Cowboys — A Rebuilding Project</h4>
+            <img
+              src="https://fivethirtyeight.com/wp-content/uploads/2015/09/cowboys2.png"
+              alt="cowboys history"
+            />
+            <p class="article-text">
+              On Oct. 12, 1989, Dallas was the worst team in football. With an
+              0-5 record — coming off a 3-13 season — the Cowboys weren’t giving
+              their fans much reason to be optimistic. Then,
+              <a
+                href="http://espn.go.com/30for30/film?page=thegreattraderobbery"
+                target="_blank"
+                >The Trade</a
+              >.
+            </p>
+            <p class="article-text">
+              The Cowboys sent Pro Bowl running back Herschel Walker to
+              Minnesota in exchange for a bevy of players and picks, which led
+              to the drafting of running back Emmitt Smith, safety Darren
+              Woodson and defensive tackle Russell Maryland. All three became
+              huge contributors for Dallas, while Walker never surpassed 200
+              carries or 1,000 yards in either of his two full seasons with the
+              Vikings. It was one of the most lopsided deals in NFL history.
+            </p>
+            <p class="article-text">
+              The payoff wasn’t immediate. The Cowboys finished the 1989 season
+              at 1-15, bottoming out with a 1271 Elo rating. They’d make the
+              playoffs two years later and win the Super Bowl the following
+              season — the first of three titles in the 1990s. The Cowboys’ Elo
+              rating after that championship game, in January 1993, was 1784, a
+              gain of over 500 points in just three years.
+            </p>
+          </div>
+        </div>
+      </div>
+      <script src="./history.js"></script>
+    </body>
+  </body>
+</html>

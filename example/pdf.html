@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="./blob-stream.js"></script>
+    <script src="./pdfkit.js"></script>
+    <script>
+      function generatePDF() {
+        const doc = new PDFDocument({
+          layout: 'landscape',
+          margin: 0,
+          info: {
+            Title: 'Bumps Chart',
+            Author: 'John Walley',
+          },
+        });
+        const stream = doc.pipe(blobStream());
+
+        // draw some text
+        doc.fontSize(25).text('Here is some vector graphics...', 100, 80);
+
+        // some vector graphics
+        doc
+          .save()
+          .moveTo(100, 150)
+          .lineTo(100, 250)
+          .lineTo(200, 250)
+          .fill('#FF3300');
+
+        doc.circle(280, 200, 50).fill('#6600FF');
+
+        // an SVG path
+        doc
+          .scale(0.6)
+          .translate(470, 130)
+          .path('M 250,75 L 323,301 131,161 369,161 177,301 z')
+          .fill('red', 'even-odd')
+          .restore();
+
+        // and some justified text wrapped into columns
+        doc
+          .text('And here is some wrapped text...', 100, 300)
+          .font('Times-Roman', 13)
+          .moveDown()
+          .text('Hi', {
+            width: 412,
+            align: 'justify',
+            indent: 30,
+            columns: 2,
+            height: 300,
+            ellipsis: true,
+          });
+
+        doc.end();
+
+        stream.on('finish', function() {
+          blob = stream.toBlob('application/pdf');
+
+          const link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = 'bumps.pdf';
+
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <button onClick="generatePDF();">Generate PDF</button>
+  </body>
+</html>
