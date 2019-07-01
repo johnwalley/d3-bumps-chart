@@ -463,24 +463,16 @@ export default function() {
       .append('g')
       .attr('class', d => `line ${d.name.replace(/ /g, '-')}`)
       .classed('highlighted', d => d.highlighted)
-      .style(
-        'filter',
-        d => (d.highlighted || d.hover ? 'url(#dropShadow)' : '')
+      .style('filter', d =>
+        d.highlighted || d.hover ? 'url(#dropShadow)' : ''
       )
       .style('fill', 'none')
-      .style(
-        'stroke',
-        d => (d.highlighted || d.hover ? crewColor(d.name) : '#000000')
+      .style('stroke', d =>
+        d.highlighted || d.hover ? crewColor(d.name) : '#000000'
       )
       .style('stroke-width', d => (d.highlighted || d.hover ? '3px' : '2px'))
-      .style(
-        'stroke-opacity',
-        d =>
-          selectedCrews.size > 0
-            ? d.highlighted || d.hover
-              ? '1'
-              : '0.5'
-            : '1'
+      .style('stroke-opacity', d =>
+        selectedCrews.size > 0 ? (d.highlighted || d.hover ? '1' : '0.5') : '1'
       );
 
     crewContainerEnter
@@ -492,9 +484,8 @@ export default function() {
       .style('cursor', 'pointer')
       .classed('blades', d => d.blades)
       .classed('spoons', d => d.spoons)
-      .style(
-        'stroke-dasharray',
-        d => (d.blades ? '10,5' : d.spoons ? '5,5' : null)
+      .style('stroke-dasharray', d =>
+        d.blades ? '10,5' : d.spoons ? '5,5' : null
       )
       .attr('d', d => lineFunc(d.values));
 
@@ -510,24 +501,16 @@ export default function() {
     crewContainerEnter
       .merge(crewContainer)
       .classed('highlighted', d => d.highlighted)
-      .style(
-        'filter',
-        d => (d.highlighted || d.hover ? 'url(#dropShadow)' : '')
+      .style('filter', d =>
+        d.highlighted || d.hover ? 'url(#dropShadow)' : ''
       )
       .style('fill', 'none')
-      .style(
-        'stroke',
-        d => (d.highlighted || d.hover ? crewColor(d.name) : '#000000')
+      .style('stroke', d =>
+        d.highlighted || d.hover ? crewColor(d.name) : '#000000'
       )
       .style('stroke-width', d => (d.highlighted || d.hover ? '3px' : '2px'))
-      .style(
-        'stroke-opacity',
-        d =>
-          selectedCrews.size > 0
-            ? d.highlighted || d.hover
-              ? '1'
-              : '0.5'
-            : '1'
+      .style('stroke-opacity', d =>
+        selectedCrews.size > 0 ? (d.highlighted || d.hover ? '1' : '0.5') : '1'
       );
 
     const crews = crewContainer
@@ -539,9 +522,8 @@ export default function() {
     crews
       .classed('blades', d => d.blades)
       .classed('spoons', d => d.spoons)
-      .style(
-        'stroke-dasharray',
-        d => (d.blades ? '10,5' : d.spoons ? '5,5' : null)
+      .style('stroke-dasharray', d =>
+        d.blades ? '10,5' : d.spoons ? '5,5' : null
       )
       .attr('d', d => lineFunc(d.values));
 
@@ -552,9 +534,8 @@ export default function() {
       .style('cursor', 'pointer')
       .classed('blades', d => d.blades)
       .classed('spoons', d => d.spoons)
-      .style(
-        'stroke-dasharray',
-        d => (d.blades ? '10,5' : d.spoons ? '5,5' : null)
+      .style('stroke-dasharray', d =>
+        d.blades ? '10,5' : d.spoons ? '5,5' : null
       )
       .attr('d', d => lineFunc(d.values));
 
@@ -618,7 +599,7 @@ export default function() {
       .on('mouseout', () => {
         highlightCrew(null);
       })
-      .classed('label finish-label', true)
+      .attr('class', d => 'label finish-label ' + d.name.replace(/ /g, '-'))
       .classed('highlighted', d => d.highlighted)
       .style('font-weight', d => (d.highlighted ? 'bold' : 'normal'))
       .datum(d => ({
@@ -692,7 +673,7 @@ export default function() {
       .on('mouseout', () => {
         highlightCrew(null);
       })
-      .classed('label start-label', true)
+      .attr('class', d => 'label start-label ' + d.name.replace(/ /g, '-'))
       .classed('highlighted', d => d.highlighted)
       .style('font-weight', d => (d.highlighted ? 'bold' : 'normal'))
       .datum(d => ({
