@@ -37,7 +37,7 @@
     "lodash-es": "4"
   },
   "devDependencies": {
-    "eslint": "5.10.0",
+    "eslint": "6.3.0",
     "jsdom": "13.1.0",
     "rollup": "0.68.1",
     "rollup-plugin-node-resolve": "4.0.0",
