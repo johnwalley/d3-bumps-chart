@@ -1,6 +1,6 @@
 {
   "name": "d3-bumps-chart",
-  "version": "1.0.0-beta.1",
+  "version": "1.1.0",
   "description": "Draw bumps charts",
   "keywords": [
     "d3",
@@ -37,12 +37,13 @@
     "lodash-es": "4"
   },
   "devDependencies": {
-    "eslint": "5.10.0",
-    "jsdom": "13.1.0",
-    "rollup": "0.68.1",
-    "rollup-plugin-node-resolve": "4.0.0",
-    "rollup-plugin-terser": "^3.0.0",
-    "tape": "4.9.1"
+    "eslint": "^6.6.0",
+    "jsdom": "^15.2.1",
+    "prettier": "1.19.1",
+    "rollup": "^1.27.3",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^5.1.2",
+    "tape": "^4.11.0"
   },
   "browserslist": "> 0.25%, not dead"
 }
