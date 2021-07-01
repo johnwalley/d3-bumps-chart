@@ -30,7 +30,7 @@
     "d3-array": "2",
     "d3-dispatch": "1",
     "d3-dsv": "1",
-    "d3-scale": "2",
+    "d3-scale": "4",
     "d3-shape": "1",
     "d3-transition": "1",
     "hammerjs": "2",
