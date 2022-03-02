@@ -1,5 +1,5 @@
 import { terser } from 'rollup-plugin-terser';
-import resolve from 'rollup-plugin-node-resolve';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import * as meta from './package.json';
 
 const config = {
@@ -24,7 +24,7 @@ const config = {
         .map(key => ({ [key]: 'd3' }))
     ),
   },
-  plugins: [resolve({ only: ['lodash-es'] })],
+  plugins: [nodeResolve({ only: ['lodash-es'] })],
 };
 
 export default [
