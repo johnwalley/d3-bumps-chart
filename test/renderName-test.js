@@ -1,6 +1,16 @@
 var tape = require('tape');
 var bumps = require('../');
 
+tape('Render 1st and 3rd.', function(test) {
+  var name = '1st and 3rd 3';
+
+  var expected = '1st and 3rd III';
+  var actual = bumps.renderName(name, 'Lent Bumps');
+
+  test.equal(actual, expected);
+  test.end();
+});
+
 tape('Expand Cambridge college abbreviation.', function(test) {
   var name = 'Ca';
 

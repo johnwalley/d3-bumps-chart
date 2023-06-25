@@ -256,7 +256,7 @@ export function expandCrew(crew, set) {
       throw 'Unrecognised set: ' + set;
   }
 
-  if (abbrev.hasOwnProperty(name)) {
+  if (Object.prototype.hasOwnProperty.call(abbrev, name)) {
     return abbrev[name] + (num > 1 ? num : '');
   } else {
     return crew;
@@ -265,7 +265,7 @@ export function expandCrew(crew, set) {
 
 export function renderName(name, set) {
   // College crews are stored as an abbrevation and we replace the number with Roman numerals
-  const sh = name.replace(/[0-9]/, '');
+  const sh = name.replace(/[0-9]+$/, '').trim();
   let abbrev;
   let type;
 
@@ -288,7 +288,7 @@ export function renderName(name, set) {
       return name;
   }
 
-  if (abbrev.hasOwnProperty(sh)) {
+  if (Object.prototype.hasOwnProperty.call(abbrev, sh)) {
     const num = name.substring(sh.length);
     name = abbrev[sh];
 
@@ -400,15 +400,15 @@ export function crewColor(name) {
 
   const sh = name.replace(/[0-9]/, '');
 
-  if (camCollegeColor.hasOwnProperty(sh)) {
+  if (Object.prototype.hasOwnProperty.call(camCollegeColor, sh)) {
     return camCollegeColor[sh];
   }
 
   const club = name.substring(0, name.length - 2).trim();
 
-  if (townColor.hasOwnProperty(club)) {
+  if (Object.prototype.hasOwnProperty.call(townColor, club)) {
     return townColor[club];
-  } else if (oxCollegeColor.hasOwnProperty(club)) {
+  } else if (Object.prototype.hasOwnProperty.call(oxCollegeColor, club)) {
     return oxCollegeColor[club];
   }
 
@@ -535,9 +535,7 @@ export function joinEvents(events, set, gender) {
 export function transformData(event) {
   if (event.days !== event.completed.length) {
     throw new RangeError(
-      `Expected ${event.days} but found ${
-        event.completed.length
-      } completed days`
+      `Expected ${event.days} but found ${event.completed.length} completed days`
     );
   }
 
@@ -1127,9 +1125,9 @@ function calculateMoves(event, crewsFirstDay, crewsAllDays, divisionSizes) {
           divisionSizes
         );
 
-        divisions[division][positionInDivision] = `${
-          crewsFirstDay[crew].Club
-        } ${crewsFirstDay[crew].Crew}`;
+        divisions[division][
+          positionInDivision
+        ] = `${crewsFirstDay[crew].Club} ${crewsFirstDay[crew].Crew}`;
         move[dayNum][division][positionInDivision] =
           +crewsFirstDay[crew]['Start position'] -
           +crewsAllDays[event.days * crew + dayNum].Position;
@@ -1161,9 +1159,9 @@ function calculateMoves(event, crewsFirstDay, crewsAllDays, divisionSizes) {
             numDivisions,
             divisionSizes
           );
-          finish[division][positionInDivision] = `${crewsFirstDay[crew].Club} ${
-            crewsFirstDay[crew].Crew
-          }`;
+          finish[division][
+            positionInDivision
+          ] = `${crewsFirstDay[crew].Club} ${crewsFirstDay[crew].Crew}`;
         }
       }
     }
