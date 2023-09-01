@@ -27,7 +27,7 @@
     "postpublish": "zip -j dist/${npm_package_name}.zip -- LICENSE README.md dist/${npm_package_name}.js dist/${npm_package_name}.min.js"
   },
   "dependencies": {
-    "d3-array": "2",
+    "d3-array": "3",
     "d3-dispatch": "3",
     "d3-dsv": "1",
     "d3-scale": "2",
