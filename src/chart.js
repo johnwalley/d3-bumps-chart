@@ -137,11 +137,17 @@ export default function() {
         ? max(crews, c => max(c.values.filter(d => d !== null), v => v.pos))
         : 0;
 
+    const maxEntries = Math.max(...crews.map((c) => c.valuesSplit.length));
+
+    const maxCrewIndex = crews.findIndex(
+      (crew) => crew.valuesSplit.length === maxEntries
+    );
+
     const xDomain = [];
     const xRange = [];
     let count = 0;
 
-    crews[0].valuesSplit.forEach(d => {
+    crews[maxCrewIndex].valuesSplit.forEach((d) => {
       xDomain.push(d.values[0].day);
       xDomain.push(d.values[d.values.length - 1].day);
       xRange.push(((count * 5) / 4) * widthOfOneYear);
