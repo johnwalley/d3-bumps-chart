@@ -1,10 +1,11 @@
-import { scaleLinear } from 'd3-scale';
-import { line } from 'd3-shape';
-import { max, range, scan } from 'd3-array';
-import { dispatch } from 'd3-dispatch';
 import 'd3-transition'; // We require the side-effects of importing
 
 import { crewColor, renderName } from './util.js';
+import { max, range, scan } from 'd3-array';
+
+import { dispatch } from 'd3-dispatch';
+import { line } from 'd3-shape';
+import { scaleLinear } from 'd3-scale';
 
 export const widthOfOneYear = 110;
 

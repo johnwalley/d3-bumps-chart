@@ -1,11 +1,11 @@
+import { max, min } from 'd3-array';
+
+import { csvParse } from 'd3-dsv';
 import findKey from 'lodash-es/findKey';
-import uniq from 'lodash-es/uniq';
-import uniqBy from 'lodash-es/uniqBy';
 import padEnd from 'lodash-es/padEnd';
 import padStart from 'lodash-es/padStart';
-import { csvParse } from 'd3-dsv';
-import { min, max } from 'd3-array';
-
+import uniq from 'lodash-es/uniq';
+import uniqBy from 'lodash-es/uniqBy';
 import { widthOfOneYear } from './chart';
 
 export const GENDER = {
